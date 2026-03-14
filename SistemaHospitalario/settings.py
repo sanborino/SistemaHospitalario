@@ -1,6 +1,6 @@
 
 from pathlib import Path
-import environ
+import environ, dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +22,7 @@ SECRET_KEY = 'SECRET_KEY'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.onrender.com']
 
 """CSRF_TRUSTED_ORIGINS = [
     'http://192.168.1.186:8000',
@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'SistemaHospitalario.wsgi.application'
     }
 }"""
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sistemahospitalario',
@@ -106,20 +106,20 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': 3306
     }
-}
+}"""
 
-"""
 DATABASES = {
     'default': {
+        'default': dj_database_url.config("DATABASE_URL"),
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sistemahospitalario',
-        'USER': 'root',
-        'PASSWORD': 'toor',
-        'HOST': 'localhost',
+        'USER': 'sistemahospitalario_user',
+        'PASSWORD': '9PKq7EVO0NXk3YDP6vTUuu4z9fs9MXvW',
+        'HOST': 'dpg-d6qtakq4d50c73bjmtrg-a',
         'PORT': '5432',
     }
 }
-"""
+
 
 
 # Password validation
