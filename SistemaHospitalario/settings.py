@@ -115,8 +115,8 @@ DATABASES = {
         'NAME': 'sistemahospitalario',
         'USER': 'sistemahospitalario_user',
         'PASSWORD': '9PKq7EVO0NXk3YDP6vTUuu4z9fs9MXvW',
-        
-        'PORT': '5432','HOST': 'HOST',
+        'HOST': 'dpg-d6qtakq4d50c73bjmtrg-a.oregon-postgres.render.com',
+        'PORT': '5432',
     }
 }
 
