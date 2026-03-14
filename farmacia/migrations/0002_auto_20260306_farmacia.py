@@ -12,70 +12,41 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
+            CREATE OR REPLACE FUNCTION auditoria_generica()
+            RETURNS TRIGGER AS $$
+            BEGIN
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES (TG_TABLE_NAME, TG_OP, NEW.id);
+
+            RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql
+            
             CREATE TRIGGER trg_medicamento_ai
             AFTER INSERT ON farmacia_medicamento
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('medicamento', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_medicamento_au
-            AFTER UPDATE ON farmacia_medicamento
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('medicamento', 'UPDATE', NEW.id);
-
-            CREATE TRIGGER trg_medicamento_ad
-            AFTER DELETE ON farmacia_medicamento
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('medicamento', 'DELETE', OLD.id);
+            EXECUTE FUNCTION auditoria_generica();
 
             CREATE TRIGGER trg_receta_ai
             AFTER INSERT ON farmacia_receta
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('receta', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_receta_au
-            AFTER UPDATE ON farmacia_receta
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('receta', 'UPDATE', NEW.id);
-
-            CREATE TRIGGER trg_receta_ad
-            AFTER DELETE ON farmacia_receta
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('receta', 'DELETE', OLD.id);
-
+            EXECUTE FUNCTION auditoria_generica();
+            
             CREATE TRIGGER trg_receta_detalle_ai
             AFTER INSERT ON farmacia_recetadetalle
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('receta_detalle', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_receta_detalle_ad
-            AFTER DELETE ON farmacia_recetadetalle
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('receta_detalle', 'DELETE', OLD.id);
+            EXECUTE FUNCTION auditoria_generica();
 
             CREATE TRIGGER trg_dispensacion_ai
             AFTER INSERT ON farmacia_dispensacion
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('dispensacion', 'INSERT', NEW.id);
+            EXECUTE FUNCTION auditoria_generica();
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_medicamento_ai;
-            DROP TRIGGER IF EXISTS trg_medicamento_au;
-            DROP TRIGGER IF EXISTS trg_medicamento_ad;
             DROP TRIGGER IF EXISTS trg_receta_ai;
-            DROP TRIGGER IF EXISTS trg_receta_au;
-            DROP TRIGGER IF EXISTS trg_receta_ad;
             DROP TRIGGER IF EXISTS trg_receta_detalle_ai;
-            DROP TRIGGER IF EXISTS trg_receta_detalle_au;
-            DROP TRIGGER IF EXISTS trg_receta_detalle_ad;
+            DROP TRIGGER IF EXISTS trg_dispensacion_ai;
             """
         )
     ]

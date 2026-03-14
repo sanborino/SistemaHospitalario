@@ -12,86 +12,42 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
+            CREATE OR REPLACE FUNCTION auditoria_generica()
+            RETURNS TRIGGER AS $$
+            BEGIN
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES (TG_TABLE_NAME, TG_OP, NEW.id);
+
+            RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+            
             CREATE TRIGGER trg_estudio_ai
             AFTER INSERT ON laboratorio_estudio
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('estudio', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_estudio_au
-            AFTER UPDATE ON laboratorio_estudio
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('estudio', 'UPDATE', NEW.id);
-
-            CREATE TRIGGER trg_estudio_ad
-            AFTER DELETE ON laboratorio_estudio
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('estudio', 'DELETE', OLD.id);
+            EXECUTE FUNCTION auditoria_generica();
 
             CREATE TRIGGER trg_solicitud_ai
             AFTER INSERT ON laboratorio_solicitudlaboratorio
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('solicitud_laboratorio', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_solicitud_au
-            AFTER UPDATE ON laboratorio_solicitudlaboratorio
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('solicitud_laboratorio', 'UPDATE', NEW.id);
-
-            CREATE TRIGGER trg_solicitud_ad
-            AFTER DELETE ON laboratorio_solicitudlaboratorio
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('solicitud_laboratorio', 'DELETE', OLD.id);
+            EXECUTE FUNCTION auditoria_generica();
 
             CREATE TRIGGER trg_solicitud_detalle_ai
             AFTER INSERT ON laboratorio_solicituddetalle
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('solicitud_detalle', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_solicitud_detalle_ad
-            AFTER DELETE ON laboratorio_solicituddetalle
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('solicitud_detalle', 'DELETE', OLD.id);
+            EXECUTE FUNCTION auditoria_generica();
 
             CREATE TRIGGER trg_resultado_ai
             AFTER INSERT ON laboratorio_resultadolaboratorio
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('resultado_laboratorio', 'INSERT', NEW.id);
-
-            CREATE TRIGGER trg_resultado_au
-            AFTER UPDATE ON laboratorio_resultadolaboratorio
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('resultado_laboratorio', 'UPDATE', NEW.id);
-
-            CREATE TRIGGER trg_resultado_ad
-            AFTER DELETE ON laboratorio_resultadolaboratorio
-            FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('resultado_laboratorio', 'DELETE', OLD.id);
+            EXECUTE FUNCTION auditoria_generica();
 
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_estudio_ai;
-            DROP TRIGGER IF EXISTS trg_estudio_au;
-            DROP TRIGGER IF EXISTS trg_estudio_ad;
             DROP TRIGGER IF EXISTS trg_solicitud_ai;
-            DROP TRIGGER IF EXISTS trg_solicitud_au;
-            DROP TRIGGER IF EXISTS trg_solicitud_ad;
             DROP TRIGGER IF EXISTS trg_solicitud_detalle_au;
-            DROP TRIGGER IF EXISTS trg_solicitud_detalle_ad;
             DROP TRIGGER IF EXISTS trg_resultado_ai;
-            DROP TRIGGER IF EXISTS trg_resultado_ai;
-            DROP TRIGGER IF EXISTS trg_resultado_au;
-            DROP TRIGGER IF EXISTS trg_resultado_ad;
             """
         )
     ]
