@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
 
             RETURN NEW;
             END;
-            $$ LANGUAGE plpgsql
+            $$ LANGUAGE plpgsql;
             
             CREATE TRIGGER trg_medicamento_ai
             AFTER INSERT ON farmacia_medicamento

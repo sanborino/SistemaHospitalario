@@ -15,7 +15,6 @@ class Migration(migrations.Migration):
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
             VALUES (TG_TABLE_NAME, TG_OP, NEW.id);
 
             RETURN NEW;
@@ -25,9 +24,8 @@ class Migration(migrations.Migration):
             CREATE TRIGGER trg_medico_ai
             AFTER INSERT ON personal_medico
             FOR EACH ROW
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES ('medico', 'INSERT', NEW.id);
-
+            EXECUTE FUNCTION auditoria_generica();
+            
             CREATE TRIGGER trg_medico_au
             AFTER UPDATE ON personal_medico
             FOR EACH ROW
