@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="title">
+    <h2>Lista de Pacientes</h2>
+</div>
+<div id="content">
+    <div class="marco">
+        <table class="tabla-moderna">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Hospital</th>
+                    <th>Teléfono</th>
+                    <th>Tipo de Sangre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                <tr>
+                    <td>{{ paciente.nombre }}</td>
+                    <td>{{ paciente.apellido }}</td>
+                    <td>{{ paciente.hospital.nombre }}</td>
+                    <td>{{ paciente.telefono }}</td>
+                    <td>{{ paciente.tipo_sangre }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td>No hay pacientes registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

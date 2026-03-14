@@ -1,0 +1,85 @@
+		
+						<div>
+							<nav>
+							<ul class="menu">
+								{% if roles_usuario and roles_usuario.0 == "MÉDICO" %}
+								<li><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a href={% url "paciente:crear_paciente" %}>Crear pacientes</a></li>
+								<li><a href={% url "paciente:lista_pacientes" %}>Ver pacientes</a></li>
+								<li><a href="#">Historial Clínico</a></li>
+								<li><a href="#">Citas</a></li>	
+								<li><a href="#">Urgencias</a></li>
+								<li><a href="#">Hospitalización</a></li>
+								<li><a href="#">Personal</a></li>
+								<li><a href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+
+								{% if 'ENFERMERO' in roles_usuario %}
+								<li><a role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a  href={% url "paciente:crear_paciente" %}>Pacientes</a></li>
+								<li><a  href={% url "paciente:lista_pacientes" %}>Ver pacientes</a></li>
+								<li><a  href="#">Historial Clínico</a></li>
+								<li><a  href="#">Citas</a></li>	
+								<li><a  href="#">Urgencias</a></li>
+								<li><a  href="#">Hospitalización</a></li>
+								<li><a  href="#">Personal</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+								
+								{% if 'FARMACIA' in roles_usuario %}
+								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a  href="#">Farmacia</a></li>
+								<li><a  href="#">Personal</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+								
+								{% if 'LABORATORIO' in roles_usuario %}
+								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a  href="#">Laboratorio</a></li>
+								<li><a  href="#">Personal</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+								
+								{% if 'ADMINISTRACION' in roles_usuario %}
+								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a  href="#">Facturación</a></li>
+								<li><a  href="#">Personal</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+								
+								{% if 'DIRECCION' in roles_usuario %}
+								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a  href="#">Horarios</a></li>	
+								<li><a  href="#">Turnos</a></li>
+								<li><a  href="#">Infraestructura</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+								
+								{% if 'MANTENIMIENTO' in roles_usuario %}
+								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
+								<li><a  href="#">Infraestructura</a></li>	
+								<li><a  href="#">Personal</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}
+								
+								{% if roles_usuario and roles_usuario.0 == "SISTEMAS" %}
+								<li><a  href={% url "hospital:hospital" %}>Inicio</a></li>	
+								<li><a  href="#">Auditoria</a></li>
+								<li><a  href="#">Citas</a></li>	
+								<li><a  href="#">Facturacion</a></li>
+								<li><a  href="#">Farmacia</a></li>	
+								<li><a  href="#">Historial</a></li>
+								<li><a  href="#">Hospital</a></li>	
+								<li><a  href="#">Infraestructura</a></li>
+								<li><a  href="#">Inventario</a></li>	
+								<li><a  href="#">Laboratorio</a></li>
+								<li><a  href={% url "paciente:crear_paciente" %}>Crear pacientes</a></li>
+								<li><a  href={% url "paciente:lista_pacientes" %}>Ver pacientes</a></li>	
+								<li><a  href="#">Personal</a></li>
+								<li><a  href="#">Turnos</a></li>	
+								<li><a  href="#">Urgencias</a></li>
+								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% endif %}				
+							</ul>
+						</nav>
+					</div>
