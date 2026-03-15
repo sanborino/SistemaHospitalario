@@ -109,16 +109,18 @@ WSGI_APPLICATION = 'SistemaHospitalario.wsgi.application'
 }"""
 
 DATABASES = {
-    'default': {
-        'default': dj_database_url.config("DATABASE_URL"),
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sistemahospitalario',
-        'USER': 'sistemahospitalario_user',
-        'PASSWORD': '9PKq7EVO0NXk3YDP6vTUuu4z9fs9MXvW',
-        'HOST': 'HOST',
-        'PORT': '5432',
+    'default': dj_database_url.config( 
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
+
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'NAME': 'sistemahospitalario',
+        #'USER': 'sistemahospitalario_user',
+        #'PASSWORD': 'PASSWORD',
+        #'HOST': 'HOST',
+        #'PORT': '5432',
     }
-}
 
 
 
