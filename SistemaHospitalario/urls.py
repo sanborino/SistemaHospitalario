@@ -9,6 +9,7 @@ from django.http import HttpResponseNotFound
 urlpatterns = [
     path('admin/', admin.site.urls),    
     path('', include("acceso.urls")),
+    path('acceso/', include('django.contrib.auth.urls')),
     path('hospital/', include("hospital.urls")),
     path('pacientes/', include("paciente.urls", namespace="paciente")),
     path("historial/", include("historial.urls")),
