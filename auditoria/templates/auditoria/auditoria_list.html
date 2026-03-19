@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Registros de Auditoría</h2>
+<div id="content">
+    <div class="marco">
+        <ul>
+            {% for a in object_list %}
+                <div class="formulrio">
+                    <strong>{{ a.tabla }}</strong> - {{ a.operacion }}  
+                    (ID: {{ a.registro_id }})  
+                    {{ a.fecha }}
+                <a class="btn" href="{% url 'auditoria:auditoria_detail' a.id %}">Ver detalle</a>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

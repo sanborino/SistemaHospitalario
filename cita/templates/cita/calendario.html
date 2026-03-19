@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Calendario de Citas</h2>
+<p><strong>Hoy:</strong> {{ hoy }}</p>
+
+<p>
+  <a class="btn" href="{% url 'cita:lista_cita' %}">Volver a lista</a>
+  <a class="btn" href="{% url 'cita:crear_cita' %}">Nueva cita</a>
+</p>
+
+<h2>Próximas citas</h2>
+<div id="content">
+
+    <div class="marco">
+      <table class="tabla-moderna">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in proximas %}
+          <tr>
+            <td>{{ c.fecha }}</td>
+            <td>{{ c.hora }}</td>
+            <td>{{ c.paciente }} ({{ c.paciente.id }})</td>
+            <td>{{ c.medico }}</td>
+            <td>{{ c.get_estado_display }}</td>
+            <td><a class="btn" href="{% url 'cita:detalle_cita' c.id %}">Ver</a></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">No hay próximas citas.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Detalle de Auditoría</h2>
+
+<div id="content">
+    <div class="marco">
+        <p><strong>Tabla:</strong> {{ object.tabla }}</p>
+        <p><strong>Operación:</strong> {{ object.operacion }}</p>
+        <p><strong>ID del registro:</strong> {{ object.registro_id }}</p>
+        <p><strong>Fecha:</strong> {{ object.fecha }}</p>
+        <hr>
+        {% if registro_original %}
+            <h2>Datos del registro original</h2>
+
+            <ul>
+                {% for nombre, valor in campos.items %}
+                    <strong>{{ nombre|capfirst }}:</strong> {{ valor }}
+                {% endfor %}
+            </ul>
+
+        {% else %}
+            <p>No se pudo recuperar el registro original.</p>
+        {% endif %}
+            <hr>
+        <a class="btn" href="{% url 'auditoria:auditoria_list' %}">Volver</a>
+    </div>
+</div>
+
+{% endblock %}

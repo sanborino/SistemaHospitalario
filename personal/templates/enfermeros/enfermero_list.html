@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Listado de Enfermeros</h2>
+
+<a href="{% url 'personal:enfermero_create' %}" class="btn">Registrar Enfermero</a>
+<div id="content">
+    <div class="marco">
+<table class="tabla-moderna">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Turno</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for enfermero in enfermeros %}
+        <tr>
+            <td>{{ enfermero.nombre }} {{ enfermero.apellido }}</td>
+            <td>{{ enfermero.turno }}</td>
+            <td>
+                <a href="{% url 'personal:enfermero_edit' enfermero.pk %}" class="btn">Editar</a>
+                <a href="{% url 'personal:enfermero_delete' enfermero.pk %}" class="btn">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No hay enfermeros registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+</div>
+{% endblock %}

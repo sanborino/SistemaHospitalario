@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{% if view.object %}Editar Enfermero{% else %}Registrar Enfermero{% endif %}</h2>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+            <form method="post">
+                {% csrf_token %}
+                 <div class="campo">
+                {{ form.as_p }}
+                 </div>
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <a href="{% url 'personal:enfermero_list' %}" class="btn">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</dvi>
+{% endblock %}

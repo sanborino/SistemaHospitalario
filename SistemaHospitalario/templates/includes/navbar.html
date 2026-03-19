@@ -3,82 +3,92 @@
 							<nav>
 							<ul class="menu">
 								{% if roles_usuario and roles_usuario.0 == "MÉDICO" %}
-								<li><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a href={% url "paciente:crear_paciente" %}>Crear pacientes</a></li>
-								<li><a href={% url "paciente:lista_pacientes" %}>Ver pacientes</a></li>
-								<li><a href="#">Historial Clínico</a></li>
-								<li><a href="#">Citas</a></li>	
-								<li><a href="#">Urgencias</a></li>
-								<li><a href="#">Hospitalización</a></li>
-								<li><a href="#">Personal</a></li>
-								<li><a href={% url "logout" %}>Salir</a></li>
+								<li><a href="{% url 'hospital:hospital' %}"
+									class="{% if request.resolver_match.url_name == 'hospital' %}active{% endif %}">Inicio</a></li>
+								<li><a href="{% url 'paciente:lista_paciente' %}" 
+									class="{% if request.resolver_match.url_name in 'lista_paciente crear_paciente detalle_paciente eliminar_paciente editar_paciente' %}active{% endif %}">Pacientes</a></li>
+								<li><a href="{% url 'historial:lista_historial' %}"
+									class="{% if request.resolver_match.url_name in 'lista_historial crear_historial detalle_historial eliminar_historial editar_historial' %}active{% endif %}">Historial Clínico</a></li>
+								<li><a href="{% url 'cita:lista_cita' %}" 
+									class="{% if request.resolver_match.url_name in 'lista_cita crear_cita calendario_cita editar_cita detalle_cita eliminar_cita' %}active{% endif %}">Citas</a></li>
+									<li><a class="{% if request.resolver_match.url_name in 'medico_list enfermero_list medico_create medico_edit medico_delete enfermero_create enfermero_edit enfermero_delete' %}active{% endif %}">Personal</a>
+										<ul>
+											<li><a href="{% url "personal:medico_list" %}">Medicos</a></li>
+											<li><a href="{% url "personal:enfermero_list" %}">Enfermeros</a></li>
+										</ul>
+									</li>
+								<li><a href="{% url "acceso:logout" %}">Salir</a></li>
 								{% endif %}
 
-								{% if 'ENFERMERO' in roles_usuario %}
-								<li><a role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a  href={% url "paciente:crear_paciente" %}>Pacientes</a></li>
-								<li><a  href={% url "paciente:lista_pacientes" %}>Ver pacientes</a></li>
-								<li><a  href="#">Historial Clínico</a></li>
-								<li><a  href="#">Citas</a></li>	
-								<li><a  href="#">Urgencias</a></li>
-								<li><a  href="#">Hospitalización</a></li>
-								<li><a  href="#">Personal</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% if roles_usuario and roles_usuario.0 == "ENFERMERO" %}
+								<li><a href="{% url 'hospital:hospital' %}">Inicio</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}
 								
-								{% if 'FARMACIA' in roles_usuario %}
-								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a  href="#">Farmacia</a></li>
-								<li><a  href="#">Personal</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% if roles_usuario and roles_usuario.0 == "FARMACIA" %}
+								<li><a href="{% url 'hospital:hospital' %}">Inicio</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}
 								
-								{% if 'LABORATORIO' in roles_usuario %}
-								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a  href="#">Laboratorio</a></li>
-								<li><a  href="#">Personal</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% if roles_usuario and roles_usuario.0 == "LABORATORIO" %}
+								<li><a href="{% url 'hospital:hospital' %}">Inicio</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}
 								
-								{% if 'ADMINISTRACION' in roles_usuario %}
-								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a  href="#">Facturación</a></li>
-								<li><a  href="#">Personal</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% if roles_usuario and roles_usuario.0 == "ADMINISTRACION" %}
+								<li><a href="{% url 'hospital:hospital' %}">Inicio</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}
 								
-								{% if 'DIRECCION' in roles_usuario %}
-								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a  href="#">Horarios</a></li>	
-								<li><a  href="#">Turnos</a></li>
-								<li><a  href="#">Infraestructura</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% if roles_usuario and roles_usuario.0 == "DIRECCION" %}
+								<li><a href="{% url 'hospital:hospital' %}">Inicio</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}
 								
-								{% if 'MANTENIMIENTO' in roles_usuario %}
-								<li><a  role="presentation" class="active"><a href={% url "hospital:hospital" %}>Inicio</a></li>
-								<li><a  href="#">Infraestructura</a></li>	
-								<li><a  href="#">Personal</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								{% if roles_usuario and roles_usuario.0 == "MANTENIMIENTO" %}
+								<li><a href="{% url 'hospital:hospital' %}">Inicio</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}
 								
 								{% if roles_usuario and roles_usuario.0 == "SISTEMAS" %}
-								<li><a  href={% url "hospital:hospital" %}>Inicio</a></li>	
-								<li><a  href="#">Auditoria</a></li>
-								<li><a  href="#">Citas</a></li>	
-								<li><a  href="#">Facturacion</a></li>
-								<li><a  href="#">Farmacia</a></li>	
-								<li><a  href="#">Historial</a></li>
-								<li><a  href="#">Hospital</a></li>	
-								<li><a  href="#">Infraestructura</a></li>
-								<li><a  href="#">Inventario</a></li>	
-								<li><a  href="#">Laboratorio</a></li>
-								<li><a  href={% url "paciente:crear_paciente" %}>Crear pacientes</a></li>
-								<li><a  href={% url "paciente:lista_pacientes" %}>Ver pacientes</a></li>	
-								<li><a  href="#">Personal</a></li>
-								<li><a  href="#">Turnos</a></li>	
-								<li><a  href="#">Urgencias</a></li>
-								<li><a  href={% url "logout" %}>Salir</a></li>
+								<li><a href="{% url 'hospital:hospital' %}"
+									class="{% if request.resolver_match.url_name == 'hospital' %}active{% endif %}">Inicio</a></li>
+								<li><a href="{% url 'paciente:lista_paciente' %}" 
+									class="{% if request.resolver_match.url_name in 'lista_paciente crear_paciente detalle_paciente eliminar_paciente editar_paciente' %}active{% endif %}">Pacientes</a></li>
+								<li><a href="{% url 'historial:lista_historial' %}"
+									class="{% if request.resolver_match.url_name in 'lista_historial crear_historial detalle_historial eliminar_historial editar_historial' %}active{% endif %}">Historial Clínico</a></li>
+								<li><a href="{% url 'cita:lista_cita' %}" 
+									class="{% if request.resolver_match.url_name in 'lista_cita crear_cita calendario_cita editar_cita detalle_cita eliminar_cita' %}active{% endif %}">Citas</a></li>
+									<li><a class="{% if request.resolver_match.url_name in 'medico_list enfermero_list medico_create medico_edit medico_delete enfermero_create enfermero_edit enfermero_delete' %}active{% endif %}">Personal</a>
+										<ul>
+											<li><a href="{% url "personal:medico_list" %}">Medicos</a></li>
+											<li><a href="{% url "personal:enfermero_list" %}">Enfermeros</a></li>
+										</ul>
+									</li>
+										<li><a class="{% if request.resolver_match.url_name in 'turno_list turno_create turno_update turno_delete turnopersonal_list turnopersonal_crerate turno´personal_update turnopersonal_delete asistencia_list asistencia_create asistencia_update asistencia_delete' %}active{% endif %}">Turnos</a>
+									<ul>
+										<li><a href="{% url 'turno:turno_list' %}">Turno</a></li>
+										<li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
+										<li><a href="{% url "turno:turnopersonal_list" %}">Turno y personal</a></li>
+									</ul>
+									</li>	
+								<li><a href="{% url "auditoria:auditoria_list" %}" 
+									class="{% if request.resolver_match.url_name in 'auditoria_list auditoria_detail' %}active{% endif %}">Auditoria</a></li>
+								<li><a href="#">Hospital</a></li>	
+								<li><a href="#">Infraestructura</a></li>
+								<li><a href="#">Inventario</a></li>	
+								<li><a href="#">Laboratorio</a></li>
+								<li><a href="#">Personal</a></li>
+								<li><a href="#">Turnos</a></li>	
+								<li><a href="#">Urgencias</a></li>
+								
+								<li><a href="{% url 'acceso:logout' %}">Salir</a></li>
 								{% endif %}				
 							</ul>
 						</nav>

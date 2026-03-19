@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+    <h2>Historial Clínico</h2>
+    <a class="btn" href="{% url 'historial:crear_historial' %}">Nuevo registro</a>
+<div class="formulario">
+  {% if not request.GET.q and not request.GET.hospital %}
+  <div class="alert alert-succes">
+    Usa los filtros y presiona "Filtrar" para ver historial.
+  </div>
+  {% endif %}
+  <form class="" method="get">
+    <div class="campo">
+      <input class="" type="number" name="paciente" placeholder="Filtrar por No de expediente" value="{{ request.GET.paciente }}">
+    </div>
+    <div class="campo">
+      <input class="" type="number" name="hospital" placeholder="Filtrar por clave de hospital" value="{{ request.GET.hospital }}">
+    </div>
+    <div>
+      <button class="btn" type="submit">Filtrar</button>
+      <a class="btn" href="{% url 'historial:lista_historial' %}">Limpiar</a>
+    </div>
+  </form>
+</div>
+  <div id="content">
+    <div class="marco">
+      <table class="tabla-moderna">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>No. de expediente</th>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Clave</th>
+            <th>Hospital</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in historiales %}
+          <tr>
+            <td>{{ h.fecha }}</td>
+            <td>{{ h.paciente.pk }}</td>
+            <td>{{ h.paciente }}</td>
+            <td>{{ h.medico|default:"—" }}</td>
+            <td>{{ h.hospital.id }}</td>
+            <td>{{ h.hospital }}</td>
+            <td>
+              <a class="btn" href="{% url 'historial:detalle_historial' h.pk %}">Ver</a>
+              <a class="btn" href="{% url 'historial:editar_historial' h.pk %}">Editar</a>
+              <a class="btn" href="{% url 'historial:eliminar_historial' h.pk %}">Eliminar</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" >No hay registros todavía.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if is_paginated %}
+  <nav>
+    <ul>
+      {% if page_obj.has_previous %}
+        <li><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+      {% endif %}
+      <li><span>{{ page_obj.number }}</span></li>
+      {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

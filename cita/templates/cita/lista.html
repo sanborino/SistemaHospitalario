@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Lista de Citas</h2>
+<div class="content">
+<p>
+  <a class="btn" href="{% url 'cita:crear_cita' %}">Nueva cita</a>
+  <a class="btn" href="{% url 'cita:calendario_cita' %}">Calendario</a>
+</p>
+
+<div class="formulario">
+{% if not request.GET.q and not request.GET.hospital %}
+  <div class="alert alert-succes">
+    Usa los filtros y presiona "Filtrar" para ver citas.
+  </div>
+{% endif %}
+  <div class="marco">
+<form method="get">
+  <div class="campo">
+    <input type="number" name="paciente" placeholder="ID paciente" value="{{ request.GET.paciente }}">
+  </div>
+  <div class="campo">
+    <input type="number" name="medico" placeholder="ID médico" value="{{ request.GET.medico }}">
+  </div>
+  <div class="campo">
+    <input type="number" name="hospital" placeholder="ID hospital" value="{{ request.GET.hospital }}">
+  </div>
+  <div class="campo">
+    <input type="date" name="fecha" value="{{ request.GET.fecha }}">
+  </div>
+  
+<div class="campo">
+  <select name="estado">
+    <option value="">-- Estado --</option>
+    <option value="programada" {% if request.GET.estado == "programada" %}selected{% endif %}>Programada</option>
+    <option value="atendida" {% if request.GET.estado == "atendida" %}selected{% endif %}>Atendida</option>
+    <option value="cancelada" {% if request.GET.estado == "cancelada" %}selected{% endif %}>Cancelada</option>
+  </select>
+</div>
+  <button class="btn" type="submit">Filtrar</button>
+  <a class="btn" href="{% url 'cita:lista_cita' %}">Limpiar</a>
+</form>
+</div>
+</div>
+<div id="content">
+    <div class="marco">
+<table class="tabla-moderna">
+  <thead>
+    <tr>
+      <th>No. de expediente</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Paciente (ID)</th>
+      <th>Médico</th>
+      <th>Hospital</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in citas %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td>{{ c.fecha }}</td>
+      <td>{{ c.hora }}</td>
+      <td>{{ c.paciente }} ({{ c.paciente.id }})</td>
+      <td>{{ c.medico }}</td>
+      <td>{{ c.hospital }}</td>
+      <td>{{ c.get_estado_display }}</td>
+      <td>
+        <a class="btn" href="{% url 'cita:detalle_cita' c.id %}">Ver</a>
+        <a class="btn" href="{% url 'cita:editar_cita' c.id %}">Editar</a>
+        <a class="btn" href="{% url 'cita:eliminar_cita' c.id %}">Eliminar</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="8">No hay citas registradas.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+
+{% if is_paginated %}
+  <p>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }}
+    {% if page_obj.has_next %}
+      <a class="btn"href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </p>
+
+{% endif %}
+
+{% endblock %}

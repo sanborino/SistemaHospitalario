@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.instance.pk %}
+  <h2>Editar Cita</h2>
+{% else %}
+  <h2>Nueva Cita</h2>
+{% endif %}
+<div id="content">
+    <div class="marco">
+      <div class="formulario">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+            <label>Hospital</label><br>
+        <div class="campo">
+            {{ form.hospital }}<br>
+            {{ form.hospital.errors }}
+        </div>
+            <label>Paciente</label><br>
+        <div class="campo">
+            {{ form.paciente }}<br>
+            {{ form.paciente.errors }}
+        </div>
+            <label>Médico</label><br>
+         <div class="campo">
+            {{ form.medico }}<br>
+            {{ form.medico.errors }}
+        </div>
+            <label>Fecha</label><br>
+        <div class="campo">
+            {{ form.fecha }}<br>
+            {{ form.fecha.errors }}
+        </div>
+            <label>Hora</label><br>
+        <div class="campo">
+            {{ form.hora }}<br>
+            {{ form.hora.errors }}
+        </div>
+            <label>Motivo</label><br>
+        <div class="campo">
+            {{ form.motivo }}<br>
+            {{ form.motivo.errors }}
+        </div>
+            <label>Estado</label><br>
+        <div class="campo">
+            {{ form.estado }}<br>
+            {{ form.estado.errors }}
+        </div>
+
+    <button class="btn" type="submit">Guardar</button>
+    <a class="btn" href="{% url 'cita:lista_cita' %}">Cancelar</a>
+</form>
+</div>
+</div>
+
+{% endblock %}

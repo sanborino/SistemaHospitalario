@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+<title>
+{% block title %}
+    Inicio
+{% endblock %}
+
+{% block navbar %}
+{# vacío: no se muestra el nav #}
+{% endblock %}
+
+</title>
+{% block content %}
+<h1 class="title">Sistema Hospitalario</h1>
+<div class="content">
+    <div class="formulario">
+        
+        <h2>Accede para continuar</h2>
+            <div>
+                <a href="{% url 'acceso:login' %}" class="btn">Iniciar Sesión</a>
+            </div>
+            <div>
+                <a href="{% url 'acceso:registro' %}" class="btn">Registrarse</a>
+            </div>
+    </div>
+</div>
+{% endblock %}

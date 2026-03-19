@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Eliminar Asistencia</h2>
+
+<p>¿Seguro que deseas eliminar "{{ object }}"?</p>
+<hr>
+<div id="content">
+    <div class="marco">
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn" type="submit">Eliminar</button>
+            <a class="btn" href="{% url 'turno:asistencia_list' %}">Cancelar</a>
+        </form>
+            <hr>
+    </div>
+    <hr>
+</div>
+{% endblock %}

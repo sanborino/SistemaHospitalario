@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>¿Eliminar registro?</h2>
+<div id="content">
+  <p>
+      Estás por eliminar el historial de <strong>{{ object.paciente }}</strong> del día <strong>{{ object.fecha }}</strong>.
+    </p>
+    <hr>
+  <div class="marco">
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn" type="submit">Sí, eliminar</button>
+        <a class="btn" href="{% url 'historial:detalle_historial' object.pk %}">Cancelar</a>
+      </form>
+      <hr>
+  </div>
+</div>
+{% endblock %}

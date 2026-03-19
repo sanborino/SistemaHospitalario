@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h2>Detalle de Historial</h2>
+         
+<div id="content">
+    <div class="marco">
+       <hr>
+        <p><strong>Fecha:</strong> {{ historial.fecha }}</p>
+        <p><strong>Paciente:</strong> {{ historial.paciente }}</p>
+        <p><strong>Médico:</strong> {{ historial.medico|default:"—" }}</p>
+        <p><strong>Hospital:</strong> {{ historial.hospital }}</p>
+
+        <h5>Diagnóstico</h5>
+        <p style="white-space: pre-wrap;">{{ historial.diagnostico }}</p>
+
+        <h5>Tratamiento</h5>
+        <p style="white-space: pre-wrap;">{{ historial.tratamiento }}</p>
+
+        {% if historial.notas %}
+          <h5>Notas</h5>
+          <p>{{ historial.notas }}</p>
+        {% endif %}
+        <hr>
+        <div>
+      <a class="btn" href="{% url 'historial:editar_historial' historial.pk %}">Editar</a>
+      <a class="btn" href="{% url 'historial:eliminar_historial' historial.pk %}">Eliminar</a>
+      <a class="btn" href="{% url 'historial:lista_historial' %}">Volver</a>
+</div>
+<hr>
+    </div>
+</div>
+
+
+{% endblock %}

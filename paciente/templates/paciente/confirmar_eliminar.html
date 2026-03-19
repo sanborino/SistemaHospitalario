@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Eliminar Paciente</h2>
+<div id="content">
+  <hr>
+      <p>¿Seguro que deseas eliminar a <strong>{{ object }}</strong> (No. de expediente {{ object.id }})?</p>
+  <div class="marco">
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn" type="submit">Sí, eliminar</button>
+        <a class="btn" href="{% url 'paciente:detalle_paciente' object.id %}">Cancelar</a>
+      </form>
+          <hr>
+    </div>
+
+  </div>
+
+{% endblock %}

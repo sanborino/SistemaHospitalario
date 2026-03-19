@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Formulario de Asistencia</h2>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+            <form method="post">
+                {% csrf_token %}
+                <div class="campo">
+                {{ form.as_p }}
+                </div>
+                <button class="btn" type="submit">Guardar</button>
+                <a class="btn" href="{% url 'turno:asistencia_list' %}">Volver</a>
+            </form>
+
+            
+            {% endblock %}
+        </div>
+    </div>
+</div>

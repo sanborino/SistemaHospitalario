@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}
     Sistema Hospitalario
 {% endblock %}
@@ -7,5 +9,44 @@
 {% block content %}
 <div id="content">
     <h1 class="title">Bienvenid@: {{ user.username }}</h1>
+
+{% load static %}
+
+<div id="bannerHospital" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+
+        <div class="carousel-item active">
+            <img src="{% static 'img/1.jpg' %}" class="banner-img" alt="Hospital 1">
+            <div class="carousel-caption">
+                <h2 class="banner-title">Atención Médica de Calidad</h2>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="{% static 'img/2.jpg' %}" class="banner-img" alt="Hospital 2">
+            <div class="carousel-caption">
+                <h2 class="banner-title">Profesionales Capacitados</h2>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="{% static 'img/3.jpg' %}" class="banner-img" alt="Hospital 3">
+            <div class="carousel-caption">
+                <h2 class="banner-title">Instalaciones Modernas</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerHospital" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerHospital" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
 </div>
+
+</div>
+
 {% endblock %}

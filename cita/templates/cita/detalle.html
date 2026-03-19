@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de Cita</h2>
+
+<p><strong>Número:</strong> {{ cita.id }}</p>
+<p><strong>Hospital:</strong> {{ cita.hospital }}</p>
+<p><strong>Paciente:</strong> {{ cita.paciente }} (ID: {{ cita.paciente.id }})</p>
+<p><strong>Médico:</strong> {{ cita.medico }}</p>
+<p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+<p><strong>Hora:</strong> {{ cita.hora }}</p>
+<p><strong>Motivo:</strong> {{ cita.motivo }}</p>
+<p><strong>Estado:</strong> {{ cita.get_estado_display }}</p>
+<hr>
+<p>
+  <a class="btn" href="{% url 'cita:editar_cita' cita.id %}">Editar</a>
+  <a class="btn" href="{% url 'cita:eliminar_cita' cita.id %}">Eliminar</a>
+  <a class="btn" href="{% url 'cita:lista_cita' %}">Volver</a>
+</p>
+<hr>
+{% endblock %}

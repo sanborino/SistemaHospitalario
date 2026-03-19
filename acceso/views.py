@@ -9,7 +9,7 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('hospital:hospital')
     
-    return render(request, 'index.html', {
+    return render(request, 'acceso/index.html', {
         'title': 'Bienvenido Sistema Hospitalario'
     })
     
@@ -32,7 +32,7 @@ def registro(request):
                 
                 return redirect('hospital:hospital')
         
-        return render(request, 'registro.html',{
+        return render(request, 'acceso/registro.html',{
             'title': 'Registro',
             'register_form': register_form
         })
@@ -59,11 +59,11 @@ def login_usuario(request):
             else:
                 messages.warning(request, 'No te has identificado correctamente :(')
         
-        return render(request, 'login.html' ,{
+        return render(request, 'acceso/login.html' ,{
             'title': 'Identificate'
         })
     
 def logout_usuario(request):
     logout(request)
-    return redirect('index')
+    return redirect('acceso:index')
 

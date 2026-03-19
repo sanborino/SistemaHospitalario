@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Asistencias</h2>
+
+<a class="btn" href="{% url 'turno:asistencia_create' %}">Registrar entrada/salida</a>
+<div id="content">
+    <div class="marco">
+        <div class="campo">
+            <ul>
+                {% for a in object_list %}
+                        <div class="formulario">
+                        {{ a.usuario }} - {{ a.fecha }}  
+                        Entrada: {{ a.hora_entrada }}  
+                        Salida: {{ a.hora_salida|default:"---" }}
+                        </div>
+                        <a class="btn" href="{% url 'turno:asistencia_update' a.id %}">Editar</a>
+                        <a class="btn" href="{% url 'turno:asistencia_delete' a.id %}">Eliminar</a>
+                {% endfor %}
+            </ul>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+    

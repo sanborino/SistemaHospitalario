@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Eliminar Turno</h2>
+<hr>
+<p>¿Seguro que deseas eliminar "{{ object }}"?</p>
+<div id="content">
+    <div class="marco">
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn" type="submit">Eliminar</button>
+        </form>
+        <hr>
+    </div>
+</div>
+<a class="btn" href="{% url 'turno:turno_list' %}">Cancelar</a>
+<hr>
+{% endblock %}

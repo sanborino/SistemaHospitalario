@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             RETURNS TRIGGER AS $$
             BEGIN
             INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id);
+            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
             
             RETURN NEW;
             END;

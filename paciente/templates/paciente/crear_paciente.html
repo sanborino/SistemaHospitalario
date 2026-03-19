@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.instance.pk %}
+  <h2>Editar Paciente</h2>
+{% else %}
+  <h2>Registrar Paciente</h2>
+{% endif %}
+<div class="content">
+  <div class="formulario">
+    <div class="marco">
+      <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div class="campo">
+          <label>Hospital</label><br>
+          {{ form.hospital }}<br>
+          {{ form.hospital.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Nombres</label><br>
+          {{ form.nombre }}<br>
+          {{ form.nombre.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Apellidos</label><br>
+          {{ form.apellido }}<br>
+          {{ form.apellido.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Fecha de nacimiento</label><br>
+          {{ form.fecha_nacimiento }}<br>
+          {{ form.fecha_nacimiento.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Sexo</label><br>
+          {{ form.sexo }}<br>
+          {{ form.sexo.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Dirección</label><br>
+          {{ form.direccion }}<br>
+          {{ form.direccion.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Teléfono</label><br>
+          {{ form.telefono }}<br>
+          {{ form.telefono.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Contacto de emergencia</label><br>
+          {{ form.contacto_emergencia }}<br>
+          {{ form.contacto_emergencia.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Tipo de sangre</label><br>
+          {{ form.tipo_sangre }}<br>
+          {{ form.tipo_sangre.errors }}
+      </div>
+
+      <div class="campo">
+          <label>Alergias</label><br>
+          {{ form.alergias }}<br>
+          {{ form.alergias.errors }}
+      </div>
+
+        <button class="btn" type="submit">Guardar</button>
+        <a class="btn" href="{% url 'paciente:lista_paciente' %}">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

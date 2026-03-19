@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id);
+            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
 
             RETURN NEW;
             END;

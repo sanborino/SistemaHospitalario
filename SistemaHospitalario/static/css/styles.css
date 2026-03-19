@@ -7,7 +7,36 @@
 }
 
 body {
-  background: linear-gradient(to right, #ebebeb, #e7ecef);
+  background: linear-gradient(to right, #ffffff, #e7ecef);
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+main {
+  flex: 1; /* ← empuja el footer hacia abajo */
+}
+
+footer {
+  padding: 10px;
+  width: 100%;
+  background-color: #d3d4d4;
+  border: 1px solid #d3d4d4;
+  color: #000000;
+  text-align: center;
+  margin: 0 auto;
+  box-shadow: 0px 0px 20px grey;
+  z-index: 10;
 }
 
 .title{
@@ -28,8 +57,34 @@ h2{
   font-family: Arial, Helvetica, sans-serif;
 }
 
-a{
-  padding: 5px;
+/* Reset mínimo para links */
+a {
+    padding: 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Botón unificado */
+.btn,
+a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 32px;              /* MISMA ALTURA */
+    padding: 0 40px;           /* MISMO ANCHO */
+    font-size: 12px;
+    font-weight: bold;
+
+    background: #ececec;
+    box-shadow: 0px 0px 5px #444 inset;
+    color: rgb(6, 6, 118);
+
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    margin: 10px 0;
+    cursor: pointer;
 }
 
 /*Estilos cabecera*/
@@ -59,7 +114,7 @@ a{
 
 nav{
     max-width: max-content;
-    height: 50px;
+    height: 40px;
     background-color: #ececec;
     border: 1px solid #d3d4d4;
     margin: 0 auto;
@@ -142,11 +197,19 @@ nav > ul > li:hover > ul > li:hover a{
 	color: white;
 }
 
+nav ul li a.active {
+    background: #2ba977;
+    color: white;
+    box-shadow: 0px 0px 5px #444 inset;
+    border-radius: 5px;
+}
+
+
 /*Estilos contenido central*/
 
 #content{
     width: 1212px;
-    min-height: 530px;
+    min-height: 570px;
     margin: 0 auto;
     margin-bottom: 30px;
     margin-top: 40px;
@@ -169,18 +232,8 @@ nav > ul > li:hover > ul > li:hover a{
 
 .content{
     line-height: 25px;
-}
-
-footer{
-    width: 100%;
-    background-color: #d3d4d4;
-    border: 1px solid #d3d4d4;
-    color: #000000;
+    flex: 1;
     text-align: center;
-    margin: 0 auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    box-shadow: 0px 0px 20px grey;
 }
 
 .tabla-moderna {
@@ -218,7 +271,7 @@ footer{
 
 
 .formulario {
-  max-width: 400px;
+  max-width:max-content;
   margin: 20px auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -254,20 +307,36 @@ footer{
   border-color: grey;
 }
 
+
 .btn {
-    display: inline-block;
-    padding: 8px 40px;
-    background: #ececec;
-    box-shadow: 0px 0px 5px #444 inset;
-    color: rgb(6, 6, 118);
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 40px;
     font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .btn:hover {
     background-color: grey;
+}
+
+.banner-img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    filter: brightness(70%);
+}
+
+.carousel-caption {
+    bottom: 150px;
+}
+
+.banner-title {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
 }

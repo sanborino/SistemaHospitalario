@@ -32,7 +32,7 @@ class TurnoPersonal(models.Model):
 class Asistencia(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
-    hora_entrada = models.TimeField()
+    hora_entrada = models.TimeField(blank=True, null=True)
     hora_salida = models.TimeField(blank=True, null=True)
 
     def __str__(self):
