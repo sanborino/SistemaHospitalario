@@ -1,60 +1,62 @@
 /*Estilos generales*/
 
-*{
+* {
     margin: 0px;
     padding: 0px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: linear-gradient(to right, hsl(0, 0%, 100%), #cbd0d3);
-  display: flex;
-  flex-direction: column;
+    background: linear-gradient(to right, hsl(0, 0%, 100%), #cbd0d3);
+    display: flex;
+    flex-direction: column;
 }
 
 .page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
+html,
+body {
+    height: 100%;
+    margin: 0;
 }
 
 main {
-  flex: 1; /* ← empuja el footer hacia abajo */
+    flex: 1;
+    /* ← empuja el footer hacia abajo */
 }
 
 footer {
-  padding: 10px;
-  width: 100%;
-  background-color: #d3d4d4;
-  border: 1px solid #d3d4d4;
-  color: #000000;
-  text-align: center;
-  margin: 0 auto;
-  box-shadow: 0px 0px 20px grey;
-  z-index: 10;
+    padding: 10px;
+    width: 100%;
+    background-color: #d3d4d4;
+    border: 1px solid #d3d4d4;
+    color: #000000;
+    text-align: center;
+    margin: 0 auto;
+    box-shadow: 0px 0px 20px grey;
+    z-index: 10;
 }
 
-.title{
-  text-align: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+.title {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-h1{
-  color: #08297d;
-  font-family: Arial, Helvetica, sans-serif;
+h1 {
+    color: #08297d;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-h2{
-  color: #08297d;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+h2 {
+    color: #08297d;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Reset mínimo para links */
@@ -71,8 +73,10 @@ a.btn {
     align-items: center;
     justify-content: center;
 
-    height: 32px;              /* MISMA ALTURA */
-    padding: 0 40px;           /* MISMO ANCHO */
+    height: 32px;
+    /* MISMA ALTURA */
+    padding: 0 40px;
+    /* MISMO ANCHO */
     font-size: 12px;
     font-weight: bold;
 
@@ -92,7 +96,8 @@ a.btn {
 .marco {
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 2 / 1;      /* 1200 / 600 */
+    aspect-ratio: 2 / 1;
+    /* 1200 / 600 */
     box-sizing: border-box;
 }
 
@@ -105,14 +110,16 @@ a.btn {
 }
 
 .menu li {
-    border-right: 1px solid #ccc; /* ← la rayita */
+    border-right: 1px solid #ccc;
+    /* ← la rayita */
 }
 
 .menu li:last-child {
-    border-right: none; /* ← quita la última rayita */
+    border-right: none;
+    /* ← quita la última rayita */
 }
 
-nav{
+nav {
     max-width: max-content;
     height: 40px;
     background-color: #ececec;
@@ -123,18 +130,18 @@ nav{
     border-radius: 8px;
 }
 
-nav ul{
+nav ul {
     list-style: none;
     text-decoration: none;
     border-radius: 5px;
 }
 
-nav > ul > li{
+nav>ul>li {
     line-height: 40px;
     float: left;
 }
 
-nav > ul > li > a{
+nav>ul>li>a {
     text-decoration: none;
     display: block;
     padding-left: 10px;
@@ -143,58 +150,58 @@ nav > ul > li > a{
     border-radius: 5px;
 }
 
-nav > ul > li > a:hover{
+nav>ul>li>a:hover {
     text-decoration: none;
     background: #808181;
     box-shadow: 0px 0px 5px #444 inset;
     font: white;
     transition: all 300ms;
-	border-radius: 5px;
+    border-radius: 5px;
 }
 
-nav > ul > li > ul{
-	text-decoration: none;
-	display: none;
-	position: absolute;
-	color: white;
-	text-align: left;
-	width: 160px;
-	box-shadow: 0px 2px  2px gray;
+nav>ul>li>ul {
+    text-decoration: none;
+    display: none;
+    position: absolute;
+    color: white;
+    text-align: left;
+    width: 160px;
+    box-shadow: 0px 2px 2px gray;
 }
 
-nav > ul > li:hover > ul{
-	text-decoration: none;
-	display: block;
-	color: white;
-	margin: 0px;
-	list-style: none;	
+nav>ul>li:hover>ul {
+    text-decoration: none;
+    display: block;
+    color: white;
+    margin: 0px;
+    list-style: none;
 }
 
-nav > ul > li:hover > ul > li{
-	text-decoration: none;
-	background: #f2f1f0;
-	border-bottom: 1px solid #d6d6d6;
-	padding: 8px;
-	line-height: 25px;
-	font-size: 13px;
-	transition: all 300ms;
+nav>ul>li:hover>ul>li {
+    text-decoration: none;
+    background: #f2f1f0;
+    border-bottom: 1px solid #d6d6d6;
+    padding: 8px;
+    line-height: 25px;
+    font-size: 13px;
+    transition: all 300ms;
 }
 
-nav > ul > li:hover > ul > li a{
-	text-decoration: none;
-	color: #666;
-	transition: all 300ms;
+nav>ul>li:hover>ul>li a {
+    text-decoration: none;
+    color: #666;
+    transition: all 300ms;
 }
 
-nav > ul > li:hover > ul > li:hover{
-	text-decoration: none;
-	background-color: #2ba977;
+nav>ul>li:hover>ul>li:hover {
+    text-decoration: none;
+    background-color: #2ba977;
 }
 
-nav > ul > li:hover > ul > li:hover a{
-	display: block;
-	text-decoration: none;
-	color: white;
+nav>ul>li:hover>ul>li:hover a {
+    display: block;
+    text-decoration: none;
+    color: white;
 }
 
 nav ul li a.active {
@@ -207,7 +214,7 @@ nav ul li a.active {
 
 /*Estilos contenido central*/
 
-#content{
+#content {
     max-width: 100%;
     min-height: 570px;
     margin: 0 auto;
@@ -218,19 +225,19 @@ nav ul li a.active {
 
 .message,
 .alert-succes,
-.alert{
-	padding: 20px;
-	background: #1f7e58;
-	color: white;
-	text-align: center;
-	margin-bottom: 10px;
+.alert {
+    padding: 20px;
+    background: #1f7e58;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
-.alert-warning{
-	background: #972824;
+.alert-warning {
+    background: #972824;
 }
 
-.content{
+.content {
     line-height: 25px;
     flex: 1;
     text-align: center;
@@ -241,7 +248,8 @@ nav ul li a.active {
     width: 100%;
     display: flex;
     justify-content: center;
-    overflow-x: auto; /* Para que no se rompa en celular */
+    overflow-x: auto;
+    /* Para que no se rompa en celular */
     margin-top: 20px;
 }
 
@@ -251,7 +259,8 @@ nav ul li a.active {
     border-collapse: separate;
     border-spacing: 0;
     font-family: "Segoe UI", sans-serif;
-    margin: auto; /* Centra la tabla */
+    margin: auto;
+    /* Centra la tabla */
 }
 
 /* Encabezados */
@@ -284,40 +293,40 @@ nav ul li a.active {
 }
 
 .formulario {
-  max-width:max-content;
-  margin: 20px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: max-content;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .campo {
-  margin-bottom: 13px;
+    margin-bottom: 13px;
 }
 
 .campo label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 15px;
-  color: #374151;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 15px;
+    color: #374151;
 }
 
 .campo input,
 .campo textarea,
 .campo select {
-  width: 380px;
-  padding: 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 13px;
+    width: 380px;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
 }
 
 .campo input:focus,
 .campo textarea:focus {
-  outline: none;
-  border-color: grey;
+    outline: none;
+    border-color: grey;
 }
 
 
@@ -351,5 +360,49 @@ nav ul li a.active {
 .banner-title {
     font-size: 3rem;
     font-weight: bold;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #0d6efd;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+
+.toggle {
+    display: none;
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* --- MODO MÓVIL --- */
+@media (max-width: 768px) {
+    .toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background: #0d6efd;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
 }
