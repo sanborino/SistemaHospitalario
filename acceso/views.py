@@ -16,7 +16,7 @@ from .models import Usuario, Rol, Permiso, UsuarioRol, RolPermiso, UsuarioHospit
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:
-        return redirect("hospital:hospitales")
+        return redirect("acceso:hospitales")
 
     return render(
         request, "acceso/index.html", {"title": "Bienvenido Sistema Hospitalario"}
@@ -26,7 +26,7 @@ def index(request):
 def registro(request):
 
     if request.user.is_authenticated:
-        return redirect("hospital:hospitales")
+        return redirect("acceso:hospitales")
 
     else:
 
@@ -39,7 +39,7 @@ def registro(request):
                 register_form.save()
                 messages.success(request, "Te has registrado correctamente!!")
 
-                return redirect("hospital:hospitales")
+                return redirect("acceso:hospitales")
 
         return render(
             request,
@@ -51,7 +51,7 @@ def registro(request):
 def login_usuario(request):
 
     if request.user.is_authenticated:
-        return redirect("hospital:hospitales")
+        return redirect("acceso:hospitales")
     else:
 
         if request.method == "POST":
@@ -66,7 +66,7 @@ def login_usuario(request):
                 roles_normalizados = [r.rol.nombre.strip().upper() for r in roles]
                 request.session["roles_usuario"] = roles_normalizados
 
-                return redirect("hospital:hospitales")
+                return redirect("acceso:hospitales")
             else:
                 messages.warning(request, "No te has identificado correctamente :(")
 
@@ -325,3 +325,14 @@ def usuariohospital_delete(request, pk):
         return redirect("usuariohospital_list")
     return render(request, "acceso/delete.html", {"registro": registro})
 
+
+# Mantener vista antigua si es usada en otros lugares:
+@login_required(login_url="login")
+def hospital(request):
+    roles_usuario = list(
+        UsuarioRol.objects.filter(usuario=request.user).values_list(
+            "rol__nombre", flat=True
+        )
+    )
+
+    return render(request, "acceso\hospital.html", {"roles_usuario": roles_usuario})

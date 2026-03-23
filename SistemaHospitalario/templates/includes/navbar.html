@@ -5,7 +5,7 @@
 			<!-- Barra de navegación menu Medico-->
 			{% if roles_usuario and roles_usuario.0 == "MÉDICO" %}
              <li>
-                <a href="{% url 'hospital:hospitales' %}"
+                <a href="{% url 'acceso:hospitales' %}"
                 class="{% if url_name == 'hospitales' %}active{% endif %}">
                     Inicio
                 </a>
@@ -78,7 +78,7 @@
 			<!-- Barra de navegación menu Enfermero-->
 			{% if roles_usuario and roles_usuario.0 == "ENFERMERO" %}
              <li>
-                <a href="{% url 'hospital:hospitales' %}"
+                <a href="{% url 'acceso:hospitales' %}"
                 class="{% if url_name == 'hospitales' %}active{% endif %}">
                     Inicio
                 </a>
@@ -172,7 +172,7 @@
 			{% if roles_usuario and roles_usuario.0 == "SISTEMAS" %}
 
             <li>
-                <a href="{% url 'hospital:hospitales' %}"
+                <a href="{% url 'acceso:hospitales' %}"
                 class="{% if url_name == 'hospitales' %}active{% endif %}">
                     Inicio
                 </a>

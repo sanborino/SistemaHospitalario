@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
+from .views import hospital
 
 app_name = "acceso"
 
@@ -11,6 +12,7 @@ urlpatterns = [
     path("registro/", views.registro, name="registro"),
     path("login/", views.login_usuario, name="login"),
     path("logout/", views.logout_usuario, name="logout"),
+    path("Bienvenida/", hospital, name="hospitales"),
     path(
         "password_reset/",
         auth_views.PasswordResetView.as_view(

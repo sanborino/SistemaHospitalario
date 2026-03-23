@@ -5,13 +5,11 @@ from .views import (
     HospitalCreateView,
     HospitalUpdateView,
     HospitalDeleteView,
-    hospital,
 )
 
 app_name = "hospital"
 
 urlpatterns = [
-    path("Bienvenida/", hospital, name="hospitales"),
     path("lista/", HospitalListView.as_view(), name="lista_hospital"),
     path("nuevo/", HospitalCreateView.as_view(), name="crear_hospital"),
     path("<int:pk>/", HospitalDetailView.as_view(), name="detalle_hospital"),

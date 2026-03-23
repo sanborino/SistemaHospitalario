@@ -1,5 +1,11 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -45,16 +51,3 @@ class HospitalDeleteView(LoginRequiredMixin, DeleteView):
     model = Hospital
     template_name = "hospital/confirmar_eliminar.html"
     success_url = reverse_lazy("hospital:lista_hospital")
-
-
-# Mantener vista antigua si es usada en otros lugares:
-@login_required(login_url="login")
-def hospital(request):
-    roles_usuario = list(
-        UsuarioRol.objects.filter(usuario=request.user)
-        .values_list('rol__nombre', flat=True)
-    )
-
-    return render(request, 'hospital\hospital.html', {
-        'roles_usuario': roles_usuario
-    })
