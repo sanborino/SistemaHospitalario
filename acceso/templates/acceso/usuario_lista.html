@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Lista de Usuarios</h2>
+<div id="content">
+    <div class="marco">
+        <a href="{% url 'acceso:usuario_crear' %}" class="btn">Crear Usuario</a>
+        <div class="formulario">
+            <table class="tabla-moderna">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.estado }}</td>
+                        <td>
+                            <a href="{% url 'acceso:usuario_detalle' usuario.pk %}" class="btn">Ver</a>
+                            <a href="{% url 'acceso:usuario_editar' usuario.pk %}" class="btn">Editar</a>
+                            <a href="{% url 'acceso:usuario_eliminar' usuario.pk %}" class="btn">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No hay usuarios registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

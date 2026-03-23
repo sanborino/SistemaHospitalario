@@ -48,3 +48,11 @@ class Dispensacion(models.Model):
     class Meta:
         verbose_name = "Dispensación"
         verbose_name_plural = "Dispensaciones"
+        
+class DispensacionDetalle(models.Model):
+    dispensacion = models.ForeignKey(Dispensacion, on_delete=models.CASCADE, related_name="detalles")
+    medicamento = models.ForeignKey(Medicamento, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.medicamento.nombre} x {self.cantidad}"

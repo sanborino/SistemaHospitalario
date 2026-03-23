@@ -12,47 +12,99 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_rol_ai
             AFTER INSERT ON acceso_rol
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
-            
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('rol', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_rol_au
+            AFTER UPDATE ON acceso_rol
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('rol', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_rol_ad
+            AFTER DELETE ON acceso_rol
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('rol', 'DELETE', OLD.id);
+
             CREATE TRIGGER trg_permiso_ai
             AFTER INSERT ON acceso_permiso
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('permiso', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_permiso_au
+            AFTER UPDATE ON acceso_permiso
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('permiso', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_permiso_ad
+            AFTER DELETE ON acceso_permiso
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('permiso', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_usuario_ai
             AFTER INSERT ON acceso_usuario
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('usuario', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_usuario_au
+            AFTER UPDATE ON acceso_usuario
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('usuario', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_usuario_ad
+            AFTER DELETE ON acceso_usuario
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('usuario', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_usuario_rol_ai
             AFTER INSERT ON acceso_usuariorol
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('usuario_rol', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_usuario_rol_ad
+            AFTER DELETE ON acceso_usuariorol
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('usuario_rol', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_rol_permiso_ai
             AFTER INSERT ON acceso_rolpermiso
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('rol_permiso', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_rol_permiso_ad
+            AFTER DELETE ON acceso_rolpermiso
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('rol_permiso', 'DELETE', OLD.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_rol_ai;
+            DROP TRIGGER IF EXISTS trg_rol_au;
+            DROP TRIGGER IF EXISTS trg_rol_ad;
             DROP TRIGGER IF EXISTS trg_permiso_ai;
+            DROP TRIGGER IF EXISTS trg_permiso_au;
+            DROP TRIGGER IF EXISTS trg_permiso_ad;
             DROP TRIGGER IF EXISTS trg_usuario_ai;
+            DROP TRIGGER IF EXISTS trg_usuario_au;
+            DROP TRIGGER IF EXISTS trg_usuario_ad;
             DROP TRIGGER IF EXISTS trg_usuario_rol_ai;
+            DROP TRIGGER IF EXISTS trg_usuario_rol_au;
+            DROP TRIGGER IF EXISTS trg_usuario_rol_ad;
             DROP TRIGGER IF EXISTS trg_rol_permiso_ai;
+            DROP TRIGGER IF EXISTS trg_rol_permiso_ad;
             """
         )
 

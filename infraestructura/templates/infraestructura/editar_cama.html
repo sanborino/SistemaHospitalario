@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Editar cama</h2>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+<form method="POST">
+    {% csrf_token %}
+    <div class="campo">
+    <label>Habitación:</label>
+    <select name="habitacion" class="form-control">
+        {% for h in habitaciones %}
+            <option value="{{ h.id }}" {% if h.id == cama.habitacion.id %}selected{% endif %}>
+                Habitación {{ h.numero }} - {{ h.area.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="campo">
+    <label class="mt-3">Número de cama:</label>
+    <input type="text" name="numero" class="form-control" value="{{ cama.numero }}" required>
+    </div>
+    <div class="campo">
+    <label class="mt-3">Tipo:</label>
+    <select name="tipo" class="form-control">
+        {% for key, value in cama.TIPOS %}
+            <option value="{{ key }}" {% if cama.tipo == key %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <div class="campo">
+    <label class="mt-3">Estado:</label>
+    <select name="estado" class="form-control">
+        {% for key, value in cama.ESTADOS %}
+            <option value="{{ key }}" {% if cama.estado == key %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <button class="btn">Guardar cambios</button>
+</form>
+        </div>
+    </div>  
+</div>
+{% endblock %}

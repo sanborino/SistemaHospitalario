@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de habitación</h2>
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>Hospital:</strong> {{ habitacion.hospital }}</p>
+    <p><strong>Área:</strong> {{ habitacion.area }}</p>
+    <p><strong>Número:</strong> {{ habitacion.numero }}</p>
+    <p><strong>Estado:</strong> {{ habitacion.get_estado_display }}</p>
+  </ul>
+<hr>
+  <p>
+    <a class="btn" href="{% url 'infraestructura:editar_habitacion' habitacion.id %}">Editar</a>
+    <a class="btn" href="{% url 'infraestructura:eliminar_habitacion' habitacion.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'infraestructura:lista_habitacion' %}">Volver</a>
+  </p>
+  <hr>
+</div>
+
+{% endblock %}

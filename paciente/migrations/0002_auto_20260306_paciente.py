@@ -12,23 +12,28 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_paciente_ai
             AFTER INSERT ON paciente_paciente
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('paciente', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_paciente_au
+            AFTER UPDATE ON paciente_paciente
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('paciente', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_paciente_ad
+            AFTER DELETE ON paciente_paciente
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('paciente', 'DELETE', OLD.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_paciente_ai;
+            DROP TRIGGER IF EXISTS trg_paciente_au;
+            DROP TRIGGER IF EXISTS trg_paciente_ad;
             """
         )
     ]

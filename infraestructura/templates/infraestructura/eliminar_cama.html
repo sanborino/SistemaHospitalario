@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Eliminar cama</h2>
+
+<p>¿Estás seguro de que deseas eliminar la cama <strong>{{ cama.numero }}</strong>?</p>
+<hr>
+<form method="POST">
+    {% csrf_token %}
+    <button class="btn">Eliminar</button>
+    <a href="{% url 'infraestructura:infra_lista_camas' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+<hr>
+{% endblock %}

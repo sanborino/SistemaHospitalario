@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Detalle de Dispensación</h2>
+
+<div id="content">
+    <div class="marco">
+
+        <p><strong>ID:</strong> {{ dispensacion.id }}</p>
+        <p><strong>Receta:</strong> {{ dispensacion.receta }}</p>
+        <p><strong>Paciente:</strong> {{ dispensacion.receta.paciente }}</p>
+        <p><strong>Fecha:</strong> {{ dispensacion.fecha }}</p>
+        <p><strong>Entregado por:</strong> {{ dispensacion.entregado_por }}</p>
+
+        {% if dispensacion.observaciones %}
+        <p><strong>Observaciones:</strong> {{ dispensacion.observaciones }}</p>
+        {% endif %}
+
+        <h2>Medicamentos Entregados</h2>
+
+        <div class="tabla-contenedor">
+            <div class="tabla-moderna">
+            <table >
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for det in dispensacion.detalles.all %}
+                    <tr>
+                        <td>{{ det.medicamento.nombre }}</td>
+                        <td>{{ det.cantidad }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+        <a href="{% url 'farmacia:dispensacion_list' %}" class="btn">Volver a la lista</a>
+
+    </div>
+</div>
+
+{% endblock %}

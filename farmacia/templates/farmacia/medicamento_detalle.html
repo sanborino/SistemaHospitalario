@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+    <h2 class="mb-4">Detalle del Medicamento</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">{{ medicamento.nombre }}</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Categoría:</strong><br>
+                    {{ medicamento.categoria }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Presentación:</strong><br>
+                    {{ medicamento.presentacion }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Concentración:</strong><br>
+                    {{ medicamento.concentracion|default:"—" }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Laboratorio:</strong><br>
+                    {{ medicamento.laboratorio|default:"—" }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Stock actual:</strong><br>
+                    {% if medicamento.stock <= 5 %}
+                        <span class="badge bg-danger">{{ medicamento.stock }}</span>
+                    {% elif medicamento.stock <= 15 %}
+                        <span class="badge bg-warning text-dark">{{ medicamento.stock }}</span>
+                    {% else %}
+                        <span class="badge bg-success">{{ medicamento.stock }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Estado:</strong><br>
+                    {% if medicamento.activo %}
+                        <span class="badge bg-success">Activo</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <strong>Descripción:</strong><br>
+                <p class="text-muted">{{ medicamento.descripcion|default:"Sin descripción." }}</p>
+            </div>
+
+        </div>
+
+        <div class="card-footer text-end">
+            <a href="{% url 'farmacia:medicamento_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'farmacia:medicamento_edit' medicamento.id %}" class="btn">Editar</a>
+            <a href="{% url 'farmacia:medicamento_eliminar' medicamento.id %}" class="btn">Eliminar</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

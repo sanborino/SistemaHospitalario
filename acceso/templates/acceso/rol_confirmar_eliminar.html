@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de rol</h2>
+<div id="content">
+    <div class="marco">
+        <p>¿Estás seguro de eliminar el rol <strong>{{ rol.nombre }}</strong>?</p>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn" type="submit">Sí, eliminar</button>
+            <a href="{% url 'acceso:rol_lista' %}" class="btn">No, volver</a>
+        </form>
+        <hr>
+    </div>
+</div>
+{% endblock %}

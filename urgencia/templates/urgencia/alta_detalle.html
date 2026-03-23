@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de alta #{{ alta.id }}</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>ID:</strong> {{ alta.id }}</p>
+    <p><strong>Urgencia:</strong> {{ alta.urgencia }}</p>
+    <p><strong>Fecha:</strong> {{ alta.fecha }}</p>
+    <p><strong>Diagnóstico final:</strong> {{ alta.diagnostico_final }}</p>
+    <p><strong>Recomendaciones:</strong> {{ alta.recomendaciones }}</p>
+  </ul>
+  <hr> 
+  <p>
+    <a class="btn" href="{% url 'urgencia:editar_alta' alta.id %}">Editar</a>
+    <a class="btn" href="{% url 'urgencia:eliminar_alta' alta.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'urgencia:lista_alta' %}">Volver</a>
+  </p>
+    <hr>
+</div>
+
+{% endblock %}

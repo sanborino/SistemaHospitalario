@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de insumo</h2>
+
+<div class="marco">
+  <p>¿Estás seguro de eliminar el insumo <strong>{{ insumo.nombre }}</strong>?</p>
+<hr>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn" type="submit">Sí, eliminar</button>
+    <a class="btn" href="{% url 'inventario:detalle_insumo' insumo.id %}">No, volver</a>
+  </form>
+  <hr>
+</div>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de área</h2>
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>Hospital:</strong> {{ area.hospital }}</p>
+    <p><strong>Nombre:</strong> {{ area.nombre }}</p>
+    <p><strong>Tipo:</strong> {{ area.get_tipo_display }}</p>
+  </ul>
+<hr>
+  <p>
+    <a class="btn" href="{% url 'infraestructura:editar_area' area.id %}">Editar</a>
+    <a class="btn" href="{% url 'infraestructura:eliminar_area' area.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'infraestructura:lista_area' %}">Volver</a>
+  </p>
+  <hr>
+</div>
+
+{% endblock %}

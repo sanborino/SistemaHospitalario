@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Formulario Usuario-Hospital</h2>
+<div id="content">
+    <div class="marco">
+<div class="formulario">
+<form method="post">
+    <div class="campo">
+    {% csrf_token %}
+    {{ form.as_p }}
+    </div>
+    <button class="btn" type="submit">Guardar</button>
+    <a class="btn" href="{% url 'acceso:usuariohospital_list' %}">Cancelar</a>
+</form>
+</div>
+{% endblock %}

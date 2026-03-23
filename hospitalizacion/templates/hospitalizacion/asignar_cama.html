@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Asignar cama a {{ paciente }}</h2>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="campo">
+                <label for="cama_id">Selecciona una cama disponible:</label>
+                <select name="cama_id" class="form-control">
+                    {% for cama in camas %}
+            <option value="{{ cama.id }}">
+                Cama {{ cama.numero }} - Habitación {{ cama.habitacion.numero }}
+                ({{ cama.habitacion.area.nombre }}) - {{ cama.get_tipo_display }}
+            </option>
+            </div>
+        {% empty %}
+            <div class="campo">
+            <option disabled>No hay camas disponibles.</option>
+            </div>
+        {% endfor %}
+    </select>
+
+    <button class="btn" {% if not camas %}disabled{% endif %}>Asignar</button>
+</form>
+        </div>
+    </div>  
+</div>
+{% endblock %}

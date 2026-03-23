@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de insumo</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>Hospital:</strong> {{ insumo.hospital }}</p>
+    <p><strong>Nombre:</strong> {{ insumo.nombre }}</p>
+    <p><strong>Descripción:</strong> {{ insumo.descripcion|linebreaksbr }}</p>
+    <p><strong>Stock:</strong> {{ insumo.stock }}</p>
+    <p><strong>Unidad:</strong> {{ insumo.unidad }}</p>
+  </ul>
+<hr>
+  <p>
+    <a class="btn" href="{% url 'inventario:editar_insumo' insumo.id %}">Editar</a>
+    <a class="btn" href="{% url 'inventario:eliminar_insumo' insumo.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'inventario:lista_insumo' %}">Volver</a>
+  </p>
+  <hr>
+</div>
+
+{% endblock %}

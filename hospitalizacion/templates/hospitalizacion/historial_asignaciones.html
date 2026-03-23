@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Historial de asignaciones de camas</h2>
+<div id="content">
+    <div class="marco">
+<table class="tabla-moderna">
+    <thead>
+        <tr>
+            <th>Paciente</th>
+            <th>Cama</th>
+            <th>Habitación</th>
+            <th>Área</th>
+            <th>Ingreso</th>
+            <th>Salida</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in asignaciones %}
+            <tr>
+                <td>{{ a.paciente }}</td>
+                <td>{{ a.cama.numero }}</td>
+                <td>{{ a.cama.habitacion.numero }}</td>
+                <td>{{ a.cama.habitacion.area.nombre }}</td>
+                <td>{{ a.fecha_ingreso }}</td>
+                <td>{{ a.fecha_salida|default:"—" }}</td>
+                <td>
+                    {% if not a.fecha_salida %}
+                        <span class="badge bg-danger">Activa</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Cerrada</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="7">No hay asignaciones registradas.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+    </div>  
+{% endblock %}

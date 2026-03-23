@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de alta</h2>
+
+<div class="marco">
+  <p>¿Estás seguro de eliminar la alta #{{ alta.id }}?</p>
+  <hr>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn" type="submit">Sí, eliminar</button>
+    <a class="btn" href="{% url 'urgencia:detalle_alta' alta.id %}">No, volver</a>
+  </form>
+    <hr>
+</div>
+
+{% endblock %}

@@ -69,6 +69,10 @@ class TurnoPersonalDeleteView(DeleteView):
 class AsistenciaListView(ListView):
     model = Asistencia
     template_name = "turnos/asistencia_list.html"
+    
+    def get_queryset(self):
+        hoy = timezone.localdate()
+        return Asistencia.objects.filter(fecha=hoy).order_by('-hora_entrada')
 
 
 class AsistenciaCreateView(CreateView):

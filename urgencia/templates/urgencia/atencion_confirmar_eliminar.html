@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de atención</h2>
+
+<div class="marco">
+  <p>¿Estás seguro de eliminar la atención #{{ atencion.id }}?</p>
+  <hr>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn" type="submit">Sí, eliminar</button>
+    <a class="btn" href="{% url 'urgencia:detalle_atencion' atencion.id %}">No, volver</a>
+  </form>
+    <hr>
+</div>
+
+{% endblock %}

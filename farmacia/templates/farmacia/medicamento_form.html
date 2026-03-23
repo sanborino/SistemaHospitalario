@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <h2>Medicamento</h2>
+<div id="content">
+    <div class="marco">
+
+        <div class="formulario">
+        <form method="post" >
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="campo">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+            {% endfor %}
+
+            <button class="btn">Guardar</button>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

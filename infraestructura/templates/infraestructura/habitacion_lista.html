@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Habitaciones</h2>
+<p><a class="btn" href="{% url 'infraestructura:crear_habitacion' %}">Nueva habitación</a></p>
+
+<div class="marco">
+  <div class="tabla-contenedor">
+    <table class="tabla-moderna">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hospital</th>
+          <th>Área</th>
+          <th>Número</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for habitacion in habitaciones %}
+          <tr>
+            <td>{{ habitacion.id }}</td>
+            <td>{{ habitacion.hospital }}</td>
+            <td>{{ habitacion.area }}</td>
+            <td>{{ habitacion.numero }}</td>
+            <td>{{ habitacion.get_estado_display }}</td>
+            <td>
+              <a class="btn" href="{% url 'infraestructura:detalle_habitacion' habitacion.id %}">Ver</a>
+              <a class="btn" href="{% url 'infraestructura:editar_habitacion' habitacion.id %}">Editar</a>
+              <a class="btn" href="{% url 'infraestructura:eliminar_habitacion' habitacion.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No hay habitaciones registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

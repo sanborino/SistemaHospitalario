@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de urgencia #{{ urgencia.id }}</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>ID:</strong> {{ urgencia.id }}</p>
+    <p><strong>Paciente:</strong> {{ urgencia.paciente }}</p>
+    <p><strong>Hospital:</strong> {{ urgencia.hospital }}</p>
+    <p><strong>Fecha ingreso:</strong> {{ urgencia.fecha_ingreso }}</p>
+    <p><strong>Nivel triaje:</strong> {{ urgencia.get_nivel_triaje_display }}</p>
+    <p><strong>Motivo:</strong> {{ urgencia.motivo }}</p>
+    <p><strong>Estado:</strong> {{ urgencia.get_estado_display }}</p>
+  </ul>
+  <hr>
+  <p>
+    <a class="btn" href="{% url 'urgencia:editar_urgencia' urgencia.id %}">Editar</a>
+    <a class="btn" href="{% url 'urgencia:eliminar_urgencia' urgencia.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'urgencia:lista_urgencia' %}">Volver</a>
+  </p>
+    <hr>
+</div>
+
+{% endblock %}

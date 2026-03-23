@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Inventario</h2>
+<p>
+  <a class="btn" href="{% url 'inventario:lista_insumo' %}">Insumos</a>
+  <a class="btn" href="{% url 'inventario:lista_movimiento' %}">Movimientos</a>
+</p>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.instance.pk %}
+  <h2>Editar habitación</h2>
+{% else %}
+  <h2>Registrar habitación</h2>
+{% endif %}
+
+<div class="marco formulario">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="campo">
+      {{ form.hospital.label_tag }}
+      {{ form.hospital }}
+      {{ form.hospital.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.area.label_tag }}
+      {{ form.area }}
+      {{ form.area.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.numero.label_tag }}
+      {{ form.numero }}
+      {{ form.numero.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.estado.label_tag }}
+      {{ form.estado }}
+      {{ form.estado.errors }}
+    </div>
+
+    <p>
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn" href="{% url 'infraestructura:lista_habitacion' %}">Cancelar</a>
+    </p>
+  </form>
+</div>
+
+{% endblock %}

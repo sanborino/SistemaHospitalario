@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Trasladar paciente de cama</h2>
+
+<p>
+    Paciente: <strong>{{ paciente }}</strong><br>
+    Cama actual: <strong>{{ asignacion.cama }}</strong><br>
+    Ingreso: {{ asignacion.fecha_ingreso }}
+</p>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="campo">
+    <label for="nueva_cama_id">Selecciona nueva cama:</label>
+    <select name="nueva_cama_id" class="form-control">
+        {% for cama in camas_disponibles %}
+            <option value="{{ cama.id }}">
+                Cama {{ cama.numero }} - Habitación {{ cama.habitacion.numero }}
+                ({{ cama.habitacion.area.nombre }}) - {{ cama.get_tipo_display }}
+            </option>
+        {% empty %}
+            <option disabled>No hay camas disponibles.</option>
+        {% endfor %}
+    </select>
+    </div>
+    <button class="btn" {% if not camas_disponibles %}disabled{% endif %}>
+        Confirmar traslado
+    </button>
+    <a href="{% url 'paciente:detalle_paciente' paciente.id %}" class="btn">Cancelar</a>
+</form>
+</div>
+    </div>
+</div>
+{% endblock %}

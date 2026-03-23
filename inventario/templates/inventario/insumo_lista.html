@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Insumos</h2>
+<p><a class="btn" href="{% url 'inventario:crear_insumo' %}">Nuevo insumo</a></p>
+
+<div class="marco">
+  <div class="tabla-contenedor">
+    <table class="tabla-moderna">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hospital</th>
+          <th>Nombre</th>
+          <th>Stock</th>
+          <th>Unidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for insumo in insumos %}
+          <tr>
+            <td>{{ insumo.id }}</td>
+            <td>{{ insumo.hospital }}</td>
+            <td>{{ insumo.nombre }}</td>
+            <td>{{ insumo.stock }}</td>
+            <td>{{ insumo.unidad }}</td>
+            <td>
+              <a class="btn" href="{% url 'inventario:detalle_insumo' insumo.id %}">Ver</a>
+              <a class="btn" href="{% url 'inventario:editar_insumo' insumo.id %}">Editar</a>
+              <a class="btn" href="{% url 'inventario:eliminar_insumo' insumo.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No hay insumos registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

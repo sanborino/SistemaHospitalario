@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.instance.pk %}
+  <h2>Editar atención</h2>
+{% else %}
+  <h2>Nueva atención</h2>
+{% endif %}
+
+<div class="marco formulario">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="campo">
+      {{ form.urgencia.label_tag }}<br>
+      {{ form.urgencia }}
+      {{ form.urgencia.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.medico.label_tag }}<br>
+      {{ form.medico }}
+      {{ form.medico.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.notas.label_tag }}<br>
+      {{ form.notas }}
+      {{ form.notas.errors }}
+    </div>
+
+    <p>
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn" href="{% url 'urgencia:lista_atencion' %}">Cancelar</a>
+    </p>
+  </form>
+</div>
+
+{% endblock %}

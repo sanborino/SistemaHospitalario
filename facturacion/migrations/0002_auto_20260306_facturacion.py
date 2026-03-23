@@ -12,34 +12,48 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_factura_ai
             AFTER INSERT ON facturacion_factura
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('factura', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_factura_au
+            AFTER UPDATE ON facturacion_factura
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('factura', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_factura_ad
+            AFTER DELETE ON facturacion_factura
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('factura', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_factura_detalle_ai
             AFTER INSERT ON facturacion_facturadetalle
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
-            
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('factura_detalle', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_factura_detalle_ad
+            AFTER DELETE ON facturacion_facturadetalle
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('factura_detalle', 'DELETE', OLD.id);
+
             CREATE TRIGGER trg_pago_ai
             AFTER INSERT ON facturacion_pago
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('pago', 'INSERT', NEW.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_factura_ai;
+            DROP TRIGGER IF EXISTS trg_factura_au;
+            DROP TRIGGER IF EXISTS trg_factura_ad;
             DROP TRIGGER IF EXISTS trg_factura_detalle_ai;
+            DROP TRIGGER IF EXISTS trg_factura_detalle_ad;
             DROP TRIGGER IF EXISTS trg_pago_ai;
             """
         )

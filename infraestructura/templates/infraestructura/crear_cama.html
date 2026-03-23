@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Crear cama</h2>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Habitación:</label>
+    <select name="habitacion" class="form-control">
+        {% for h in habitaciones %}
+            <option value="{{ h.id }}">
+                Habitación {{ h.numero }} - {{ h.area.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label class="mt-3">Número de cama:</label>
+    <input type="text" name="numero" class="form-control" required>
+    <div class="campo">
+    <label class="mt-3">Tipo:</label>
+    <select name="tipo" class="form-control">
+        <option value="GENERAL">General</option>
+        <option value="UCI">UCI</option>
+        <option value="PEDIATRICA">Pediátrica</option>
+        <option value="AISLAMIENTO">Aislamiento</option>
+        <option value="OBSTETRICIA">Obstetricia</option>
+    </select>
+    </div>
+    <button class="btn">Guardar</button>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Dispensar Receta</h2>
+
+<p><strong>Paciente:</strong> {{ receta.paciente }}</p>
+<p><strong>Médico:</strong> {{ receta.medico }}</p>
+<p><strong>Fecha:</strong> {{ receta.fecha }}</p>
+  <div class="formulario">
+<form method="post">
+    <div class="campo">
+    {% csrf_token %}
+    {{ form.as_p }}
+    </div>
+    <h2>Medicamentos a entregar</h2>
+      <div class="tabla-contenedor">
+      <table class="tabla-moderna">
+        <thead>
+            <tr>
+                <th>Medicamento</th>
+                <th>Recetado</th>
+                <th>Disponible</th>
+                <th>Entregar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in detalles %}
+            <tr>
+                <td>{{ d.medicamento.nombre }}</td>
+                <td>{{ d.cantidad }}</td>
+                <td>{{ d.medicamento.stock }}</td>
+                <td>
+                    <input type="number"
+                           name="entregar_{{ d.id }}"
+                           min="0"
+                           max="{{ d.medicamento.stock }}"
+                           class="form-control">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <button type="submit" class="btn">Guardar Dispensación</button>
+</form>
+</div>
+{% endblock %}

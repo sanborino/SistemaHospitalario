@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Asignar Permiso a {{ rol.nombre }}</h2>
+<div id="content">
+    <div class="marco">
+        <div class="formulario">
+            <form method="post">
+                <div class="campo">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn" type="submit">Asignar</button>
+                <a href="{% url 'acceso:rol_detalle' rol.pk %}" class="btn">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle del Paciente</h2>
+<div id="content">
+        <hr>
+  <div class="content">
+  <p><strong>No. de expediente:</strong> {{ paciente.id }}</p>
+  <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+  <p><strong>Apellido:</strong> {{ paciente.apellido }}</p>
+  <p><strong>Hospital:</strong> {{ paciente.hospital }}</p>
+  <p><strong>Fecha de nacimiento:</strong> {{ paciente.fecha_nacimiento }}</p>
+  <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
+  <p><strong>Dirección:</strong> {{ paciente.direccion }}</p>
+  <p><strong>Teléfono:</strong> {{ paciente.telefono }}</p>
+  <p><strong>Contacto emergencia:</strong> {{ paciente.contacto_emergencia }}</p>
+  <p><strong>Tipo de sangre:</strong> {{ paciente.tipo_sangre }}</p>
+  <p><strong>Alergias:</strong> {{ paciente.alergias|default:"—" }}</p>
+          <hr>
+    <a class="btn" href="{% url 'paciente:editar_paciente' paciente.id %}">Editar</a> 
+    <a class="btn" href="{% url 'paciente:eliminar_paciente' paciente.id %}">Eliminar</a>
+    <a href="{% url 'facturacion:generar_factura_paciente' paciente.id %}" 
+   class="btn btn-primary mt-2">
+    Generar factura
+</a>
+    <a class="btn" href="{% url 'paciente:lista_paciente' %}">Volver</a>
+  </div>
+  <hr>
+<h2>Hospitalización</h2>
+
+{% if asignacion_activa %}
+    <div class="alert alert-info">
+        <strong>Cama actual:</strong> {{ asignacion_activa.cama.numero }}
+        (Hab {{ asignacion_activa.cama.habitacion.numero }} - {{ asignacion_activa.cama.habitacion.area.nombre }})<br>
+        <strong>Ingreso:</strong> {{ asignacion_activa.fecha_ingreso }}
+    </div>
+
+    <a href="{% url 'hospitalizacion:liberar_cama' asignacion_activa.id %}" class="btn">
+        Liberar cama
+    </a>
+    <a href="{% url 'hospitalizacion:trasladar_cama' asignacion_activa.id %}" class="btn">
+        Trasladar cama
+    </a>
+{% else %}
+    <div class="alert alert-secondary">
+        Este paciente no tiene una cama asignada actualmente.
+    </div>
+    <a href="{% url 'hospitalizacion:asignar_cama' paciente.id %}" class="btn">
+        Asignar cama
+    </a>
+{% endif %}
+
+<a href="{% url 'hospitalizacion:historial_asignaciones' %}" class="btn">
+    Ver historial de asignaciones
+</a>
+{% endblock %}

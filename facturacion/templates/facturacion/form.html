@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="content">
+    <div class="marco">
+
+<h2>Formulario de Factura</h2>
+<div class="formulario">
+<form method="post" >
+    {% csrf_token %}
+    <div class="campo">
+    {{ form.as_p }}
+    </div>
+
+    <button type="submit" class="btn">Guardar</button>
+</form>
+</div>
+</div>
+{% endblock %}

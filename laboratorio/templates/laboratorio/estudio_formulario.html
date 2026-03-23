@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.instance.pk %}
+  <h2>Editar estudio</h2>
+{% else %}
+  <h2>Registrar estudio</h2>
+{% endif %}
+
+<div class="marco formulario">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="campo">
+      {{ form.hospital.label_tag }}
+      {{ form.hospital }}
+      {{ form.hospital.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.nombre.label_tag }}
+      {{ form.nombre }}
+      {{ form.nombre.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.descripcion.label_tag }}
+      {{ form.descripcion }}
+      {{ form.descripcion.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.precio.label_tag }}
+      {{ form.precio }}
+      {{ form.precio.errors }}
+    </div>
+
+    <p>
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn" href="{% url 'laboratorio:lista_estudio' %}">Cancelar</a>
+    </p>
+  </form>
+</div>
+
+{% endblock %}

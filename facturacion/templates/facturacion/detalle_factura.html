@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Factura #{{ factura.id }}</h2>
+<div id="content">
+<div class="marco">
+
+
+<p><strong>Paciente:</strong> {{ factura.paciente }}</p>
+<p><strong>Hospital:</strong> {{ factura.hospital }}</p>
+<p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+<p><strong>Total Facturado:</strong> {{ factura.total }}</p>
+<p><strong>Estado:</strong> {{ factura.estado }}</p>
+
+<hr>
+
+<h2>Detalles</h2>
+
+<a href="{% url 'facturacion:detalle_crear' %}" class="btn">Agregar detalle</a>
+  <div class="tabla-contenedor">
+      <table class="tabla-moderna">
+    <tr>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Precio unitario</th>
+        <th>Subtotal</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for d in detalles %}
+    <tr>
+        <td>{{ d.descripcion }}</td>
+        <td>{{ d.cantidad }}</td>
+        <td>{{ d.precio_unitario }}</td>
+        <td>{{ d.subtotal|floatformat:2 }}</td>
+        <td>
+            <a class="btn" href="{% url 'facturacion:detalle_editar' d.id %}">Editar</a>
+            <a class="btn" href="{% url 'facturacion:detalle_eliminar' d.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">No hay detalles registrados.</td></tr>
+    {% endfor %}
+</table>
+</div>
+<p><strong>Total detalles calculado:</strong> {{ subtotal_detalles }}</p>
+
+<hr>
+
+<h2>Pagos</h2>
+
+<a href="{% url 'facturacion:pago_crear' %}" class="btn">Registrar pago</a>
+
+  <div class="tabla-contenedor">
+      <table class="tabla-moderna">
+    <tr>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>Método</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for p in pagos %}
+    <tr>
+        <td>{{ p.fecha }}</td>
+        <td>{{ p.monto }}</td>
+        <td>{{ p.metodo }}</td>
+        <td>
+            <a class="btn" href="{% url 'facturacion:pago_editar' p.id %}">Editar</a>
+            <a class="btn" href="{% url 'facturacion:pago_eliminar' p.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No hay pagos registrados.</td></tr>
+    {% endfor %}
+</table>
+</div>
+<p><strong>Total pagado:</strong> {{ total_pagado }}</p>
+<p><strong>Saldo pendiente:</strong> {{ saldo }}</p>
+
+<hr>
+
+<a href="{% url 'facturacion:factura_lista' %}" class="btn">Volver</a>
+
+</div>
+</div>
+{% endblock %}

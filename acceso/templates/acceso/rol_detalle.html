@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de Rol: {{ rol.nombre }}</h2>
+<div id="content">
+    <div class="marco">
+        <h3>Permisos asignados</h3>
+        {% if permisos %}
+            <ul>
+                {% for rp in permisos %}
+                <p>{{ rp.permiso.nombre }} <a href="{% url 'acceso:quitar_permiso_rol' rol.pk rp.permiso.pk %}" class="btn">Quitar</a></p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tiene permisos asignados.</p>
+        {% endif %}
+        <a href="{% url 'acceso:asignar_permiso_rol' rol.pk %}" class="btn">Asignar Permiso</a>
+
+        <h3>Usuarios con este rol</h3>
+        {% if usuarios %}
+            <ul>
+                {% for ur in usuarios %}
+                <p>{{ ur.usuario.username }}</p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay usuarios con este rol.</p>
+        {% endif %}
+
+        <p>
+            <a href="{% url 'acceso:rol_editar' rol.pk %}" class="btn">Editar</a>
+            <a href="{% url 'acceso:rol_lista' %}" class="btn">Volver</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

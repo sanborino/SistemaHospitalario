@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Liberar cama</h2>
+
+<p>
+    Paciente: <strong>{{ asignacion.paciente }}</strong><br>
+    Cama: <strong>{{ asignacion.cama }}</strong><br>
+    Ingreso: {{ asignacion.fecha_ingreso }}
+</p>
+<hr>
+<form method="POST">
+    {% csrf_token %}
+    <p>¿Confirmas liberar esta cama?</p>
+    <button class="btn">Liberar cama</button>
+    <a href="{% url 'paciente:detalle_paciente' asignacion.paciente.id %}" class="btn">Cancelar</a>
+</form>
+<hr>
+{% endblock %}

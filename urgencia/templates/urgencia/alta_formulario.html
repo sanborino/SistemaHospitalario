@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.instance.pk %}
+  <h2>Editar alta</h2>
+{% else %}
+  <h2>Nueva alta</h2>
+{% endif %}
+
+<div class="marco formulario">
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="campo">
+      {{ form.urgencia.label_tag }}<br>
+      {{ form.urgencia }}
+      {{ form.urgencia.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.diagnostico_final.label_tag }}<br>
+      {{ form.diagnostico_final }}
+      {{ form.diagnostico_final.errors }}
+    </div>
+
+    <div class="campo">
+      {{ form.recomendaciones.label_tag }}<br>
+      {{ form.recomendaciones }}
+      {{ form.recomendaciones.errors }}
+    </div>
+
+    <p>
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn" href="{% url 'urgencia:lista_alta' %}">Cancelar</a>
+    </p>
+  </form>
+</div>
+
+{% endblock %}

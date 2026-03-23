@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de solicitud #{{ solicitud.id }}</h2>
+
+<div class="marco">
+  <h3>Información General</h3>
+  <ul class="lista-datos">
+    <p><strong>ID:</strong> {{ solicitud.id }}</p>
+    <p><strong>Paciente:</strong> {{ solicitud.paciente }}</p>
+    <p><strong>Médico:</strong> {{ solicitud.medico }}</p>
+    <p><strong>Fecha:</strong> {{ solicitud.fecha }}</p>
+    <p><strong>Estado:</strong> {{ solicitud.estado }}</p>
+  </ul>
+
+  <h3>Estudios solicitados</h3>
+  {% if solicitud.solicituddetalle_set.all %}
+    <div class="tabla-contenedor">
+      <table class="tabla-moderna">
+        <thead>
+          <tr>
+            <th>Estudio</th>
+            <th>Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detalle in solicitud.solicituddetalle_set.all %}
+            <tr>
+              <td>{{ detalle.estudio.nombre }}</td>
+              <td>${{ detalle.estudio.precio }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p><em>No hay estudios registrados.</em></p>
+  {% endif %}
+
+  <h3>Factura relacionada</h3>
+  {% with solicitud.factura_set.first as factura %}
+    {% if factura %}
+      <ul class="lista-datos">
+        <li><strong>ID Factura:</strong> {{ factura.id }}</li>
+        <li><strong>Total:</strong> ${{ factura.total }}</li>
+        <li><strong>Estado:</strong> {{ factura.estado }}</li>
+        <li><a class="btn" href="{% url 'facturacion:factura_detalle' factura.id %}">Ver factura</a></li>
+      </ul>
+    {% else %}
+      <p><em>No hay factura asociada a esta solicitud aún.</em></p>
+    {% endif %}
+  {% endwith %}
+
+  <p>
+    <a class="btn" href="{% url 'laboratorio:editar_solicitud' solicitud.id %}">Editar</a>
+    <a class="btn" href="{% url 'laboratorio:eliminar_solicitud' solicitud.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'laboratorio:lista_solicitud' %}">Volver</a>
+  </p>
+</div>
+
+{% endblock %}

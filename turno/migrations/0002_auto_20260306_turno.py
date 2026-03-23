@@ -12,35 +12,70 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_turno_ai
             AFTER INSERT ON turno_turno
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('turno', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_turno_au
+            AFTER UPDATE ON turno_turno
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('turno', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_turno_ad
+            AFTER DELETE ON turno_turno
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('turno', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_turno_personal_ai
             AFTER INSERT ON turno_turnopersonal
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('turno_personal', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_turno_personal_au
+            AFTER UPDATE ON turno_turnopersonal
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('turno_personal', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_turno_personal_ad
+            AFTER DELETE ON turno_turnopersonal
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('turno_personal', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_asistencia_ai
             AFTER INSERT ON turno_asistencia
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('asistencia', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_asistencia_au
+            AFTER UPDATE ON turno_asistencia
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('asistencia', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_asistencia_ad
+            AFTER DELETE ON turno_asistencia
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('asistencia', 'DELETE', OLD.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_turno_ai;
+            DROP TRIGGER IF EXISTS trg_turno_au;
+            DROP TRIGGER IF EXISTS trg_turno_ad;
             DROP TRIGGER IF EXISTS trg_turno_personal_ai;
+            DROP TRIGGER IF EXISTS trg_turno_personal_au;
+            DROP TRIGGER IF EXISTS trg_turno_personal_ad;
             DROP TRIGGER IF EXISTS trg_asistencia_ai;
+            DROP TRIGGER IF EXISTS trg_asistencia_au;
+            DROP TRIGGER IF EXISTS trg_asistencia_ad;
             """
         )
     ]

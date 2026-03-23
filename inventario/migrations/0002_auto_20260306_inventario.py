@@ -12,28 +12,34 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_insumo_ai
             AFTER INSERT ON inventario_insumo
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('insumo', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_insumo_au
+            AFTER UPDATE ON inventario_insumo
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('insumo', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_insumo_ad
+            AFTER DELETE ON inventario_insumo
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('insumo', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_movimiento_ai
             AFTER INSERT ON inventario_movimientoinventario
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('movimiento_inventario', 'INSERT', NEW.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_insumo_ai;
+            DROP TRIGGER IF EXISTS trg_insumo_au;
+            DROP TRIGGER IF EXISTS trg_insumo_ad;
             DROP TRIGGER IF EXISTS trg_movimiento_ai;
             """
         )

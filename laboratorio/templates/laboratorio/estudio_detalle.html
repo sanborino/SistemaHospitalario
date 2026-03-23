@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de estudio</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>Hospital:</strong> {{ estudio.hospital }}</p>
+    <p><strong>Nombre:</strong> {{ estudio.nombre }}</p>
+    <p><strong>Descripción:</strong> {{ estudio.descripcion|linebreaksbr }}</p>
+    <p><strong>Precio:</strong> ${{ estudio.precio }}</p>
+  </ul>
+
+  <p>
+    <a class="btn" href="{% url 'laboratorio:editar_estudio' estudio.id %}">Editar</a>
+    <a class="btn" href="{% url 'laboratorio:eliminar_estudio' estudio.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'laboratorio:lista_estudio' %}">Volver</a>
+  </p>
+</div>
+
+{% endblock %}

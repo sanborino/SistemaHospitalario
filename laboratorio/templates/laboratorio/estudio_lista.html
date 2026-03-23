@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Estudios de laboratorio</h2>
+<p><a class="btn" href="{% url 'laboratorio:crear_estudio' %}">Nuevo estudio</a></p>
+
+<div class="marco">
+  <div class="tabla-contenedor">
+    <table class="tabla-moderna">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hospital</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for estudio in estudios %}
+          <tr>
+            <td>{{ estudio.id }}</td>
+            <td>{{ estudio.hospital }}</td>
+            <td>{{ estudio.nombre }}</td>
+            <td>${{ estudio.precio }}</td>
+            <td>
+              <a class="btn" href="{% url 'laboratorio:detalle_estudio' estudio.id %}">Ver</a>
+              <a class="btn" href="{% url 'laboratorio:editar_estudio' estudio.id %}">Editar</a>
+              <a class="btn" href="{% url 'laboratorio:eliminar_estudio' estudio.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No hay estudios registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

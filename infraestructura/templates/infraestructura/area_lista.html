@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Áreas</h2>
+<p><a class="btn" href="{% url 'infraestructura:crear_area' %}">Nueva área</a></p>
+
+<div class="marco">
+  <div class="tabla-contenedor">
+    <table class="tabla-moderna">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hospital</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for area in areas %}
+          <tr>
+            <td>{{ area.id }}</td>
+            <td>{{ area.hospital }}</td>
+            <td>{{ area.nombre }}</td>
+            <td>{{ area.get_tipo_display }}</td>
+            <td>
+              <a class="btn" href="{% url 'infraestructura:detalle_area' area.id %}">Ver</a>
+              <a class="btn" href="{% url 'infraestructura:editar_area' area.id %}">Editar</a>
+              <a class="btn" href="{% url 'infraestructura:eliminar_area' area.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No hay áreas registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

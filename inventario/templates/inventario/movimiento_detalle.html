@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de movimiento</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>Insumo:</strong> {{ movimiento.insumo }}</p>
+    <p><strong>Tipo:</strong> {{ movimiento.get_tipo_display }}</p>
+    <p><strong>Cantidad:</strong> {{ movimiento.cantidad }}</p>
+    <p><strong>Fecha:</strong> {{ movimiento.fecha }}</p>
+    <p><strong>Realizado por:</strong> {{ movimiento.realizado_por }}</p>
+  </ul>
+<hr>
+  <p>
+    <a class="btn" href="{% url 'inventario:editar_movimiento' movimiento.id %}">Editar</a>
+    <a class="btn" href="{% url 'inventario:eliminar_movimiento' movimiento.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'inventario:lista_movimiento' %}">Volver</a>
+  </p>
+    <hr>
+</div>
+
+{% endblock %}

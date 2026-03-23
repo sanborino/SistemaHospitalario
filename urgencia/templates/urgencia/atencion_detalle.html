@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de atención #{{ atencion.id }}</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>ID:</strong> {{ atencion.id }}</p>
+    <p><strong>Urgencia:</strong> {{ atencion.urgencia }}</p>
+    <p><strong>Médico:</strong> {{ atencion.medico }}</p>
+    <p><strong>Fecha:</strong> {{ atencion.fecha }}</p>
+    <p><strong>Notas:</strong> {{ atencion.notas }}</p>
+  </ul>
+<hr>
+  <p>
+    <a class="btn" href="{% url 'urgencia:editar_atencion' atencion.id %}">Editar</a>
+    <a class="btn" href="{% url 'urgencia:eliminar_atencion' atencion.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'urgencia:lista_atencion' %}">Volver</a>
+  </p>
+    <hr>
+</div>
+
+{% endblock %}

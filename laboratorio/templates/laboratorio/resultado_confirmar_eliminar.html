@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de resultado</h2>
+<div id="content">
+<div class="marco">
+  <p>¿Estás seguro de eliminar el resultado <strong>#{{ resultado.id }}</strong> de la solicitud <strong>#{{ resultado.solicitud.id }}</strong>?</p>
+<hr>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn" type="submit">Sí, eliminar</button>
+    {% if resultado.id %}
+    <a class="btn" href="{% url 'laboratorio:detalle_resultado' resultado.id %}">No, volver</a>
+    {% else %}
+    <a class="btn" href="{% url 'laboratorio:lista_resultado' %}">No, volver</a>
+    {% endif %}
+  </form>
+  <hr>
+</div>
+</div>
+
+{% endblock %}

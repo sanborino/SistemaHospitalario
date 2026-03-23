@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Receta {{ receta.id }}</h2>
+<div id="content">
+    <div class="marco">
+        <p><strong>Paciente:</strong> {{ receta.paciente }}</p>
+        <p><strong>Médico:</strong> {{ receta.medico }}</p>
+        <p><strong>Fecha:</strong> {{ receta.fecha }}</p>
+
+        <h2>Indicaciones</h2>
+        <p>{{ receta.indicaciones }}</p>
+
+        <hr>
+
+        <h2>Medicamentos</h2>
+        {% if roles_usuario and roles_usuario.0 == "MÉDICO" %}
+        <a href="{% url 'farmacia:receta_detalle_add' receta.id %}" class="btn">
+            Agregar medicamento
+        </a>
+        {% endif %}
+        <div class="tabla-contenedor">
+            <table class="tabla-moderna">
+                <thead>
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in receta.recetadetalle_set.all %}
+                    <tr>
+                        <td>{{ d.medicamento }}</td>
+                        <td>{{ d.cantidad }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">No hay medicamentos agregados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if not receta.dispensacion_set.exists %}
+        <!-- BOTÓN PARA SURTIR LA RECETA -->
+        <a href="{% url 'farmacia:dispensar_receta' receta.id %}" class="btn">
+            Surtir receta
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
 
     {% load static %}
@@ -17,9 +17,10 @@
 
 <body>
 
-{% block navbar %}
-  {% include "includes/navbar.html" %}
-{% endblock %}
+
+{% if roles_usuario and roles_usuario.0 in "SISTEMAS,MÉDICO,ENFERMERO,MANTENIMIENTO,DIRECCION,LABORATORIO,ADMINISTRACION,FARMACIA" %}
+    {% include "includes/navbar.html" %}
+{% endif %}
 
 <div class="page">
     <main class="content">

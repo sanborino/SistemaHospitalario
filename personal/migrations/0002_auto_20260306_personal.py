@@ -12,33 +12,49 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_medico_ai
             AFTER INSERT ON personal_medico
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
-            
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('medico', 'INSERT', NEW.id);
+
             CREATE TRIGGER trg_medico_au
             AFTER UPDATE ON personal_medico
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
-            
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('medico', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_medico_ad
+            AFTER DELETE ON personal_medico
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('medico', 'DELETE', OLD.id);
+
             CREATE TRIGGER trg_enfermero_ai
             AFTER INSERT ON personal_enfermero
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('enfermero', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_enfermero_au
+            AFTER UPDATE ON personal_enfermero
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('enfermero', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_enfermero_ad
+            AFTER DELETE ON personal_enfermero
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('enfermero', 'DELETE', OLD.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_medico_ai;
+            DROP TRIGGER IF EXISTS trg_medico_au;
+            DROP TRIGGER IF EXISTS trg_medico_ad;
             DROP TRIGGER IF EXISTS trg_enfermero_ai;
+            DROP TRIGGER IF EXISTS trg_enfermero_au;
+            DROP TRIGGER IF EXISTS trg_enfermero_ad;
             """
         )
     ]

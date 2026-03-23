@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de Usuario: {{ usuario.username }}</h2>
+<div id="content">
+    <div class="marco">
+        <ul class="lista-datos">
+            <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>Estado:</strong> {{ usuario.estado }}</p>
+        </ul>
+
+        <h3>Roles asignados</h3>
+        {% if roles %}
+            <ul>
+                {% for ur in roles %}
+                <p>{{ ur.rol.nombre }} <a href="{% url 'acceso:quitar_rol_usuario' usuario.pk ur.rol.pk %}" class="btn">Quitar</a></p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tiene roles asignados.</p>
+        {% endif %}
+        <a href="{% url 'acceso:asignar_rol_usuario' usuario.pk %}" class="btn">Asignar Rol</a>
+
+        <h3>Hospitales asignados</h3>
+        {% if hospitales %}
+            <ul>
+                {% for uh in hospitales %}
+                <p>{{ uh.hospital.nombre }}</p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tiene hospitales asignados.</p>
+        {% endif %}
+
+        <p>
+            <a href="{% url 'acceso:usuario_editar' usuario.pk %}" class="btn">Editar</a>
+            <a href="{% url 'acceso:usuario_lista' %}" class="btn">Volver</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

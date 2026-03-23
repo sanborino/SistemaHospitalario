@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Resultados de laboratorio</h2>
+<p><a class="btn" href="{% url 'laboratorio:crear_resultado' %}">Nuevo resultado</a></p>
+<div id="content">
+<div class="marco">
+<div class="formulario">
+<form method="GET">
+            
+            <label>Paciente</label>
+            <input type="text" name="paciente" class="form-control"
+                   value="{{ paciente_busqueda }}">
+            <label>Estado</label>
+            <select name="estado" class="form-control">
+                {% for value, label in estados %}
+                    <option value="{{ value }}" {% if estado_seleccionado == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label>Fecha</label>
+            <input type="date" name="fecha" class="form-control"
+                   value="{{ fecha_busqueda }}">
+
+    <button class="btn">Filtrar</button>
+</form>
+</div>
+
+  <div class="tabla-contenedor">  
+    <table class="tabla-moderna">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Solicitud</th>
+          <th>Paciente</th>
+          <th>Fecha</th>
+          <th>Firmado por</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resultado in resultados %}
+          <tr>
+            <td>{{ resultado.id }}</td>
+            <td>{{ resultado.solicitud.id }}</td>
+            <td>{{ resultado.solicitud.paciente }}</td>
+            <td>{{ resultado.fecha }}</td>
+            <td>{{ resultado.firmado_por }}</td>
+            <td>{{ resultado.solicitud.estado }}</td>
+            <td>
+              {% if resultado.id %}
+              <a class="btn" href="{% url 'laboratorio:detalle_resultado' resultado.id %}">Ver</a>
+              {% endif %}
+              <a class="btn" href="{% url 'laboratorio:editar_resultado' resultado.id %}">Editar</a>
+              <a class="btn" href="{% url 'laboratorio:eliminar_resultado' resultado.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No hay resultados registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

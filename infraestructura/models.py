@@ -3,8 +3,9 @@ from hospital.models import Hospital
 
 # Create your models here.
 
+
 class Area(models.Model):
-    
+
     TIPOS = [
         ("ATENCIÓN CRÍTICA", "Atención crítica"),
         ("HOSPITALIZACIÓN", "Hospitalización"),
@@ -22,7 +23,7 @@ class Area(models.Model):
         ("QUIRÓFANOS", "Quirófanos"),
         ("COSULTA EXTERNA", "Consulta externa"),
     ]
-    
+
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100, choices=NOMBRES, default="URGENCIAS")
     tipo = models.CharField(max_length=100, choices=TIPOS, default="ATENCIÓN CRÍTICA")
@@ -30,8 +31,9 @@ class Area(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Habitacion(models.Model):
-    
+
     ESTADOS = [
         ("ACTIVA", "Activa"),
         ("INACTIVA", "Inactiva"),
@@ -42,7 +44,7 @@ class Habitacion(models.Model):
         ("FUERA DE SERVICIO", "Fuera de servicio"),
         ("RESERVADA", "Reservada"),
     ]
-    
+
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     numero = models.CharField(max_length=20)
@@ -50,8 +52,35 @@ class Habitacion(models.Model):
 
     def __str__(self):
         return f"Habitación {self.numero} - {self.area.nombre}"
-    
+
     class Meta:
         verbose_name = "Habitación"
         verbose_name_plural = "Habitaciones"
-    
+
+
+class Cama(models.Model):
+
+    ESTADOS = [
+        ("DISPONIBLE", "Disponible"),
+        ("OCUPADA", "Ocupada"),
+        ("EN_MANTENIMIENTO", "En mantenimiento"),
+        ("FUERA_DE_SERVICIO", "Fuera de servicio"),
+        ("RESERVADA", "Reservada"),
+        ("EN_LIMPIEZA", "En limpieza"),
+    ]
+
+    TIPOS = [
+        ("GENERAL", "General"),
+        ("UCI", "UCI"),
+        ("PEDIATRICA", "Pediátrica"),
+        ("AISLAMIENTO", "Aislamiento"),
+        ("OBSTETRICIA", "Obstetricia"),
+    ]
+
+    habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)
+    numero = models.CharField(max_length=20)
+    tipo = models.CharField(max_length=50, choices=TIPOS, default="GENERAL")
+    estado = models.CharField(max_length=50, choices=ESTADOS, default="DISPONIBLE")
+
+    def __str__(self):
+        return f"Cama {self.numero} - {self.habitacion}"

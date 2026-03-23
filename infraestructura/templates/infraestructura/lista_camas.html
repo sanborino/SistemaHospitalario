@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Camas</h2>
+
+<a href="{% url 'infraestructura:infra_crear_cama' %}" class="btn">Crear cama</a>
+<div id="content">
+    <div class="marco">
+<table class="tabla-moderna">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Habitación</th>
+            <th>Área</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cama in camas %}
+            <tr>
+                <td>{{ cama.numero }}</td>
+                <td>{{ cama.habitacion.numero }}</td>
+                <td>{{ cama.habitacion.area.nombre }}</td>
+                <td>{{ cama.get_tipo_display }}</td>
+                <td>{{ cama.get_estado_display }}</td>
+                <td>
+                    <a href="{% url 'infraestructura:infra_editar_cama' cama.id %}" class="btn">Editar</a>
+                    <a href="{% url 'infraestructura:infra_eliminar_cama' cama.id %}" class="btn">Eliminar</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">No hay camas registradas.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </div>
+</div>
+{% endblock %}

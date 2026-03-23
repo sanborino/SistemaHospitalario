@@ -5,6 +5,7 @@ from hospital.models import Hospital
 
 # Create your models here.
 
+
 class Estudio(models.Model):
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=150)
@@ -16,10 +17,22 @@ class Estudio(models.Model):
 
 
 class SolicitudLaboratorio(models.Model):
+    ESTADO_PENDIENTE = "pendiente"
+    ESTADO_FINALIZADO = "finalizado"
+
+    ESTADO_CHOICES = [
+        (ESTADO_PENDIENTE, "Pendiente"),
+        (ESTADO_FINALIZADO, "Finalizado"),
+    ]
+
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
-    estado = models.CharField(max_length=20, default="pendiente")
+    estado = models.CharField(
+        max_length=20,
+        choices=ESTADO_CHOICES,
+        default=ESTADO_PENDIENTE,
+    )
 
     def __str__(self):
         return f"Solicitud {self.id} - {self.paciente}"

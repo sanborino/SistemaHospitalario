@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de resultado</h2>
+
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>ID:</strong> {{ resultado.id }}</p>
+    <p><strong>Solicitud:</strong> #{{ resultado.solicitud.id }}</p>
+    <p><strong>Paciente:</strong> {{ resultado.solicitud.paciente }}</p>
+    <p><strong>Fecha:</strong> {{ resultado.fecha }}</p>
+    <p><strong>Firmado por:</strong> {{ resultado.firmado_por }}</p>
+    <p><strong>Resultados:</strong></p>
+  </ul>
+  <div style="margin: 1rem 0; padding: 1rem; border: 1px solid #ccc; border-radius: 4px;">
+    {{ resultado.resultados|linebreaksbr }}
+  </div>
+
+  <p>
+    <a class="btn" href="{% url 'laboratorio:editar_resultado' resultado.id %}">Editar</a>
+    <a class="btn" href="{% url 'laboratorio:eliminar_resultado' resultado.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'laboratorio:lista_resultado' %}">Volver</a>
+  </p>
+</div>
+
+{% endblock %}

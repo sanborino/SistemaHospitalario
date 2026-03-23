@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de Hospital</h2>
+<div id="content">
+<div class="marco">
+  <ul class="lista-datos">
+    <p><strong>Nombre:</strong> {{ hospital.nombre }}</p>
+    <p><strong>Dirección:</strong> {{ hospital.direccion|linebreaksbr }}</p>
+    <p><strong>Teléfono:</strong> {{ hospital.telefono }}</p>
+    <p><strong>Correo:</strong> {{ hospital.correo }}</p>
+    <p><strong>Código:</strong> {{ hospital.codigo }}</p>
+  </ul>
+  <hr>
+  <p>
+    <a class="btn" href="{% url 'hospital:editar_hospital' hospital.id %}">Editar</a>
+    <a class="btn" href="{% url 'hospital:eliminar_hospital' hospital.id %}">Eliminar</a>
+    <a class="btn" href="{% url 'hospital:lista_hospital' %}">Volver</a>
+  </p>
+  <hr>
+</div>
+</div>
+
+{% endblock %}

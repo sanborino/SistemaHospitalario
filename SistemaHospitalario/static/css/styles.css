@@ -7,7 +7,7 @@
 }
 
 body {
-  background: linear-gradient(to right, #ffffff, #e7ecef);
+  background: linear-gradient(to right, hsl(0, 0%, 100%), #cbd0d3);
   display: flex;
   flex-direction: column;
 }
@@ -91,7 +91,7 @@ a.btn {
 
 .marco {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     aspect-ratio: 2 / 1;      /* 1200 / 600 */
     box-sizing: border-box;
 }
@@ -208,7 +208,7 @@ nav ul li a.active {
 /*Estilos contenido central*/
 
 #content{
-    width: 1212px;
+    max-width: 100%;
     min-height: 570px;
     margin: 0 auto;
     margin-bottom: 30px;
@@ -236,39 +236,52 @@ nav ul li a.active {
     text-align: center;
 }
 
+/* Contenedor responsivo y centrado */
+.tabla-contenedor {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto; /* Para que no se rompa en celular */
+    margin-top: 20px;
+}
+
+/* Tu tabla moderna */
 .tabla-moderna {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-family: "Segoe UI", sans-serif;
+    max-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: "Segoe UI", sans-serif;
+    margin: auto; /* Centra la tabla */
 }
 
+/* Encabezados */
 .tabla-moderna th {
-  background: #848484;
-  color: #ffffff;
-  padding: 10px;
-  border: 1px solid #ddd;
+    background: #848484;
+    color: #ffffff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
 }
 
+/* Celdas */
 .tabla-moderna td {
-  padding: 10px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  border: 1px solid #ddd;
+    padding: 10px;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    border: 1px solid #ddd;
+    text-align: center;
 }
 
+/* Bordes redondeados */
 .tabla-moderna th:first-child {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-  border: 1px solid #ddd;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
 .tabla-moderna th:last-child {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border: 1px solid #ddd;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
-
 
 .formulario {
   max-width:max-content;

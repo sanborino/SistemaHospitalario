@@ -12,33 +12,41 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_urgencia_ai
             AFTER INSERT ON urgencia_urgencia
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('urgencia', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_urgencia_au
+            AFTER UPDATE ON urgencia_urgencia
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('urgencia', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_urgencia_ad
+            AFTER DELETE ON urgencia_urgencia
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('urgencia', 'DELETE', OLD.id);
+
 
             CREATE TRIGGER trg_atencion_ai
             AFTER INSERT ON urgencia_atencionurgencia
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('atencion_urgencia', 'INSERT', NEW.id);
 
             CREATE TRIGGER trg_alta_ai
             AFTER INSERT ON urgencia_altaurgencia
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('alta_urgencia', 'INSERT', NEW.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_urgencia_ai;
+            DROP TRIGGER IF EXISTS trg_urgencia_au;
+            DROP TRIGGER IF EXISTS trg_urgencia_ad;
             DROP TRIGGER IF EXISTS trg_atencion_ai;
             DROP TRIGGER IF EXISTS trg_alta_ai;
             """

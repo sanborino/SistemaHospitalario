@@ -4,6 +4,7 @@ from hospital.models import Hospital
 
 # Create your models here.
 
+
 class Factura(models.Model):
 
     ESTADOS = [
@@ -15,9 +16,16 @@ class Factura(models.Model):
 
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    solicitud = models.ForeignKey(
+        "laboratorio.SolicitudLaboratorio",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     fecha = models.DateField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=20, choices=ESTADOS, default="PENDIENTE")
+    origen_estudio = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Factura #{self.id} - {self.paciente}"
@@ -28,6 +36,10 @@ class FacturaDetalle(models.Model):
     descripcion = models.CharField(max_length=200)
     cantidad = models.IntegerField()
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+    @property
+    def subtotal(self):
+        return self.cantidad * self.precio_unitario
 
     def __str__(self):
         return f"Detalle {self.id} - Factura {self.factura.id}"
@@ -41,3 +53,53 @@ class Pago(models.Model):
 
     def __str__(self):
         return f"Pago {self.id} - Factura {self.factura.id}"
+
+
+class Cargo(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    factura = models.ForeignKey(
+        Factura,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="cargos",
+    )
+
+    descripcion = models.CharField(max_length=255)
+    cantidad = models.PositiveIntegerField(default=1)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+    fecha = models.DateTimeField(auto_now_add=True)
+    facturado = models.BooleanField(default=False)
+
+    # vínculos opcionales al origen del cargo
+    cama = models.ForeignKey(
+        "infraestructura.Cama",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    dispensacion = models.ForeignKey(
+        "farmacia.Dispensacion",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    urgencia = models.ForeignKey(
+        "urgencia.Urgencia",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    laboratorio = models.ForeignKey(
+        "laboratorio.SolicitudLaboratorio",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
+    def subtotal(self):
+        return self.cantidad * self.precio_unitario
+
+    def __str__(self):
+        return f"{self.descripcion} - {self.paciente}"

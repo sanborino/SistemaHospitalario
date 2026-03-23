@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Facturas</h2>
+<div id="content">
+    <div class="marco">
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-succes">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<a href="{% url 'facturacion:factura_crear' %}" class="btn">Nueva factura</a>
+<a href="{% url 'facturacion:detalle_crear' %}" class="btn">Nuevo detalle</a>
+<a href="{% url 'facturacion:pago_crear' %}" class="btn">Nuevo pago</a>
+<p>
+<form method="get" style="margin: 12px 0; display: inline-block;">
+    <div class="campo">
+  <label for="estado">Mostrar:</label>
+  <select name="estado" id="estado" onchange="this.form.submit()">
+    <option value="todos" {% if estado_seleccionado == 'todos' %}selected{% endif %}>Todas</option>
+    {% for cod, label in estados %}
+      <option value="{{ cod }}" {% if estado_seleccionado == cod %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  </div>
+  <div class="campo">
+  <label for="origen">Origen:</label>
+  <select name="origen" id="origen" onchange="this.form.submit()">
+    {% for cod, label in origenes %}
+      <option value="{{ cod }}" {% if origen_seleccionado == cod %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  </div>
+</form>
+</p>
+      <div class="tabla-contenedor">
+      <table class="tabla-moderna">
+            <tr>
+                <th>ID</th>
+                <th>Paciente</th>
+                <th>Hospital</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+
+            {% for f in facturas %}
+            <tr>
+                <td>{{ f.id }}</td>
+                <td>{{ f.paciente }}</td>
+                <td>{{ f.hospital }}</td>
+                <td>{{ f.total }}</td>
+                <td>{{ f.estado }}</td>
+                <td>
+                    <a class="btn" href="{% url 'facturacion:factura_detalle' f.id %}">Ver detalle</a>
+                    <a class="btn" href="{% url 'facturacion:factura_editar' f.id %}">Editar</a>
+                    <a class="btn" href="{% url 'facturacion:factura_eliminar' f.id %}">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

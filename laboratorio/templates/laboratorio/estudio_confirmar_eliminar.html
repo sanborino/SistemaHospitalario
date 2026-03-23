@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de estudio</h2>
+
+<div class="marco">
+  <p>¿Estás seguro de eliminar el estudio <strong>{{ estudio.nombre }}</strong>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn" type="submit">Sí, eliminar</button>
+    <a class="btn" href="{% url 'laboratorio:detalle_estudio' estudio.id %}">No, volver</a>
+  </form>
+</div>
+
+{% endblock %}

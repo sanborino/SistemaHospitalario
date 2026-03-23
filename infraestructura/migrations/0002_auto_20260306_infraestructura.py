@@ -12,30 +12,49 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
-            
-            CREATE OR REPLACE FUNCTION auditoria_generica()
-            RETURNS TRIGGER AS $$
-            BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
-
-            RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-            
             CREATE TRIGGER trg_area_ai
             AFTER INSERT ON infraestructura_area
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('area', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_area_au
+            AFTER UPDATE ON infraestructura_area
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('area', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_area_ad
+            AFTER DELETE ON infraestructura_area
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('area', 'DELETE', OLD.id);
 
             CREATE TRIGGER trg_habitacion_ai
             AFTER INSERT ON infraestructura_habitacion
             FOR EACH ROW
-            EXECUTE FUNCTION auditoria_generica();
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('habitacion', 'INSERT', NEW.id);
+
+            CREATE TRIGGER trg_habitacion_au
+            AFTER UPDATE ON infraestructura_habitacion
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('habitacion', 'UPDATE', NEW.id);
+
+            CREATE TRIGGER trg_habitacion_ad
+            AFTER DELETE ON infraestructura_habitacion
+            FOR EACH ROW
+            INSERT INTO auditoria(tabla, operacion, registro_id)
+            VALUES ('habitacion', 'DELETE', OLD.id);
             """,
             reverse_sql="""
             DROP TRIGGER IF EXISTS trg_area_ai;
+            DROP TRIGGER IF EXISTS trg_area_au;
+            DROP TRIGGER IF EXISTS trg_area_ad;
             DROP TRIGGER IF EXISTS trg_habitacion_ai;
+            DROP TRIGGER IF EXISTS trg_habitacion_au;
+            DROP TRIGGER IF EXISTS trg_habitacion_ad;
             """
         )
     ]

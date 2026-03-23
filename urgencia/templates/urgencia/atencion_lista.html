@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Atenciones de urgencia</h2>
+<p><a class="btn" href="{% url 'urgencia:crear_atencion' %}">Nueva atención</a></p>
+
+<div class="marco">
+  <div class="tabla-contenedor">
+    <table class="tabla-moderna">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Urgencia</th>
+          <th>Médico</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in atenciones %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.urgencia }}</td>
+            <td>{{ a.medico }}</td>
+            <td>{{ a.fecha }}</td>
+            <td>
+              <a class="btn" href="{% url 'urgencia:detalle_atencion' a.id %}">Ver</a>
+              <a class="btn" href="{% url 'urgencia:editar_atencion' a.id %}">Editar</a>
+              <a class="btn" href="{% url 'urgencia:eliminar_atencion' a.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No hay atenciones registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+  <p>
+    {% if page_obj.has_previous %}
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </p>
+{% endif %}
+
+{% endblock %}

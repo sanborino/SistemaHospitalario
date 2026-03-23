@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Recetas pendientes por surtir</h2>
+
+<div id="content">
+    <div class="marco">
+
+      <div class="tabla-contenedor">
+        <div class="tabla-moderna">
+      <table >
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Paciente</th>
+                    <th>Médico</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in recetas %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.paciente }}</td>
+                    <td>{{ r.medico }}</td>
+                    <td>{{ r.fecha }}</td>
+                    <td>
+                        <a href="{% url 'farmacia:dispensar_receta' r.id %}" class="btn">
+                            Surtir
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay recetas pendientes.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

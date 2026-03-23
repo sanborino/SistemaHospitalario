@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Confirmar eliminación de área</h2>
+
+<div class="marco">
+  <p>¿Estás seguro de eliminar el área <strong>{{ area.nombre }}</strong> de <strong>{{ area.hospital }}</strong>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn" type="submit">Sí, eliminar</button>
+    <a class="btn" href="{% url 'infraestructura:detalle_area' area.id %}">No, volver</a>
+  </form>
+</div>
+
+{% endblock %}
