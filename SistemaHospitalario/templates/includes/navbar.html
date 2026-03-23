@@ -5,13 +5,11 @@
         <a class="navbar-brand" href="{% url 'acceso:hospitales' %}">Hospital</a>
 
         <!-- BOTÓN HAMBURGUESA -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <button class="toggle" type="button" id="navToggle">☰</button>
 
         <!-- MENÚ -->
         <div class="collapse navbar-collapse" id="menuNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="nav-links" id="navLinks">
 
                 {% if roles_usuario %}
 
