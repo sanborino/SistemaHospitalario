@@ -1,351 +1,412 @@
-<div>
-	<nav>
-		<ul class="menu">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
 
-			<!-- Barra de navegación menu Medico-->
-			{% if roles_usuario and roles_usuario.0 == "MÉDICO" %}
-             <li>
-                <a href="{% url 'acceso:hospitales' %}"
-                class="{% if url_name == 'hospitales' %}active{% endif %}">
-                    Inicio
-                </a>
-            </li>
+        <!-- LOGO -->
+        <a class="navbar-brand" href="{% url 'acceso:hospitales' %}">Hospital</a>
 
-            <li>
-                {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Paciente
-                </a>
+        <!-- BOTÓN HAMBURGUESA -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- MENÚ -->
+        <div class="collapse navbar-collapse" id="menuNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                {% if roles_usuario %}
+
+                {# ============================================================
+                   ROL: MÉDICO
+                   ============================================================ #}
+                {% if roles_usuario.0 == "MÉDICO" %}
+
+                <!-- Inicio -->
+                <li class="nav-item">
+                    <a class="nav-link {% if url_name == 'hospitales' %}active{% endif %}"
+                       href="{% url 'acceso:hospitales' %}">
+                        Inicio
+                    </a>
+                </li>
+
+                <!-- Paciente -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Paciente
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_create' %}">Receta</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_list' %}">Recetas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_solicitud' %}">Solicitudes</a></li>
+                    </ul>
+                </li>
+
+                <!-- Historial -->
+                <li class="nav-item">
+                    {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'historial:lista_historial' %}">
+                        Historial Clínico
+                    </a>
+                    {% endwith %}
+                </li>
+
+                <!-- Citas -->
+                <li class="nav-item">
+                    {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'cita:lista_cita' %}">
+                        Citas
+                    </a>
+                    {% endwith %}
+                </li>
+
+                <!-- Laboratorio -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_estudio,crear_estudio,detalle_estudio,editar_estudio,eliminar_estudio,lista_resultado,crear_resultado,detalle_resultado,editar_resultado,eliminar_resultado"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Laboratorio
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
+                    </ul>
+                </li>
+
+                <!-- Urgencias -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Urgencias
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
+                    </ul>
+                </li>
+
+                <!-- Asistencia -->
+                {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                <li class="nav-item">
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'turno:asistencia_list' %}">
+                        Asistencia
+                    </a>
+                </li>
                 {% endwith %}
-                <ul>
-                    <li><a href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
-                    <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
-                    <li><a href="{% url 'farmacia:receta_list' %}">Recetas</a></li>
-                    <li><a href="{% url 'laboratorio:lista_solicitud' %}">Solicitudes</a></li>
-                </ul>
-            </li>
 
-            <li>
-                {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
-                <a href="{% url 'historial:lista_historial' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Historial Clínico
-                </a>
+                <!-- Salir -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'acceso:logout' %}">Salir</a>
+                </li>
+
+                {% endif %}
+
+                {# ============================================================
+                   ROL: ENFERMERO
+                   ============================================================ #}
+                {% if roles_usuario.0 == "ENFERMERO" %}
+
+                <!-- Inicio -->
+                <li class="nav-item">
+                    <a class="nav-link {% if url_name == 'hospitales' %}active{% endif %}"
+                       href="{% url 'acceso:hospitales' %}">
+                        Inicio
+                    </a>
+                </li>
+
+                <!-- Paciente -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Paciente
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_create' %}">Receta</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_list' %}">Recetas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_solicitud' %}">Solicitudes</a></li>
+                    </ul>
+                </li>
+
+                <!-- Historial -->
+                <li class="nav-item">
+                    {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'historial:lista_historial' %}">
+                        Historial Clínico
+                    </a>
+                    {% endwith %}
+                </li>
+
+                <!-- Citas -->
+                <li class="nav-item">
+                    {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'cita:lista_cita' %}">
+                        Citas
+                    </a>
+                    {% endwith %}
+                </li>
+
+                <!-- Infraestructura -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_area,crear_area,detalle_area,editar_area,eliminar_area,lista_habitacion,crear_habitacion,detalle_habitacion,editar_habitacion,eliminar_habitacion"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Infraestructura
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
+                    </ul>
+                </li>
+
+                <!-- Urgencias -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Urgencias
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
+                    </ul>
+                </li>
+
+                <!-- Asistencia -->
+                {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                <li class="nav-item">
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'turno:asistencia_list' %}">
+                        Asistencia
+                    </a>
+                </li>
                 {% endwith %}
-            </li>
 
-            <li>
-                {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
-                <a href="{% url 'cita:lista_cita' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Citas
-                </a>
-                {% endwith %}
-            </li>
+                <!-- Salir -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'acceso:logout' %}">Salir</a>
+                </li>
 
-            <li>
-                {% with urls="lista_estudio,crear_estudio,detalle_estudio,editar_estudio,eliminar_estudio,lista_resultado,crear_resultado,detalle_resultado,editar_resultado,eliminar_resultado"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Laboratorio
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
-                    <li><a href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
-                </ul>
-            </li>
+                {% endif %}
 
-            <li>
-                {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Urgencias
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
-                    <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
-                    <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
-                </ul>
-            </li>
+                {# ============================================================
+                   ROL: SISTEMAS
+                   ============================================================ #}
+                {% if roles_usuario.0 == "SISTEMAS" %}
 
-            {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
-            <li><a class="{% if url_name in urls %}active{% endif %}" href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
-            {% endwith %}
+                <!-- Inicio -->
+                <li class="nav-item">
+                    <a class="nav-link {% if url_name == 'hospitales' %}active{% endif %}"
+                       href="{% url 'acceso:hospitales' %}">
+                        Inicio
+                    </a>
+                </li>
 
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
-			{% endif %}
+                <!-- Paciente -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Paciente
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_create' %}">Receta</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_list' %}">Recetas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_solicitud' %}">Solicitudes</a></li>
+                    </ul>
+                </li>
 
-			<!-- Barra de navegación menu Enfermero-->
-			{% if roles_usuario and roles_usuario.0 == "ENFERMERO" %}
-             <li>
-                <a href="{% url 'acceso:hospitales' %}"
-                class="{% if url_name == 'hospitales' %}active{% endif %}">
-                    Inicio
-                </a>
-            </li>
+                <!-- Historial -->
+                <li class="nav-item">
+                    {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'historial:lista_historial' %}">
+                        Historial Clínico
+                    </a>
+                    {% endwith %}
+                </li>
 
-            <li>
-                {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Paciente
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
-                    <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
-                    <li><a href="{% url 'farmacia:receta_list' %}">Recetas</a></li>
-                    <li><a href="{% url 'laboratorio:lista_solicitud' %}">Solicitudes</a></li>
-                </ul>
-            </li>
+                <!-- Citas -->
+                <li class="nav-item">
+                    {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'cita:lista_cita' %}">
+                        Citas
+                    </a>
+                    {% endwith %}
+                </li>
 
-            <li>
-                {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
-                <a href="{% url 'historial:lista_historial' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Historial Clínico
-                </a>
-                {% endwith %}
-            </li>
+                <!-- Personal -->
+                <li class="nav-item dropdown">
+                    {% with urls="medico_list,enfermero_list,medico_create,medico_edit,medico_delete,enfermero_create,enfermero_edit,enfermero_delete"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Personal
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'personal:medico_list' %}">Médicos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'personal:enfermero_list' %}">Enfermeros</a></li>
+                    </ul>
+                </li>
 
-            <li>
-                {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
-                <a href="{% url 'cita:lista_cita' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Citas
-                </a>
-                {% endwith %}
-            </li>
+                <!-- Turnos -->
+                <li class="nav-item dropdown">
+                    {% with urls="turno_list,turno_create,turno_update,turno_delete,turnopersonal_list,turnopersonal_crerate,turno_personal_update,turnopersonal_delete,asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Turnos
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'turno:turno_list' %}">Turno</a></li>
+                        <li><a class="dropdown-item" href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
+                        <li><a class="dropdown-item" href="{% url 'turno:turnopersonal_list' %}">Turno y personal</a></li>
+                    </ul>
+                </li>
 
-            <li>
-                {% with urls="lista_area,crear_area,detalle_area,editar_area,eliminar_area,lista_habitacion,crear_habitacion,detalle_habitacion,editar_habitacion,eliminar_habitacion"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Infraestructura
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
-                    <li><a href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
-                </ul>
-            </li>
+                <!-- Auditoría -->
+                <li class="nav-item">
+                    {% with urls="auditoria_list,auditoria_detail"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'auditoria:auditoria_list' %}">
+                        Auditoría
+                    </a>
+                    {% endwith %}
+                </li>
 
-            <li>
-                {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Urgencias
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
-                    <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
-                    <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
-                </ul>
-            </li>
+                <!-- Factura -->
+                <li class="nav-item">
+                    {% with urls="factura_lista,factura_crear,factura_editar,factura_eliminar,factura_detalle,detalle_crear,detalle_editar,detalle_eliminar,pago_crear,pago_editar,pago_eliminar"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'facturacion:factura_lista' %}">
+                        Factura
+                    </a>
+                    {% endwith %}
+                </li>
 
-            {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
-            <li><a class="{% if url_name in urls %}active{% endif %}" href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
-            {% endwith %}
+                <!-- Farmacia -->
+                <li class="nav-item dropdown">
+                    {% with urls="medicamento_list,medicamento_create,medicamento_edit,dispensacion_list,dispensacion_create,dispensacion_detail,dispensar_receta,receta_list,receta_detalle,receta_detalle_add"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Farmacia
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'farmacia:medicamento_list' %}">Medicamentos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'farmacia:receta_list' %}">Dispensar</a></li>
+                    </ul>
+                </li>
 
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
-			{% endif %}
+                <!-- Hospitales -->
+                <li class="nav-item">
+                    {% with urls="lista_hospital,crear_hospital,detalle_hospital,editar_hospital,eliminar_hospital"|cut:"," %}
+                    <a class="nav-link {% if url_name in urls %}active{% endif %}"
+                       href="{% url 'hospital:lista_hospital' %}">
+                        Hospitales
+                    </a>
+                    {% endwith %}
+                </li>
 
-			<!-- Barra de navegación menu Farmacia-->
-			{% if roles_usuario and roles_usuario.0 == "FARMACIA" %}
-			{% endif %}
+                                <!-- Infraestructura -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_area,crear_area,detalle_area,editar_area,eliminar_area,lista_habitacion,crear_habitacion,detalle_habitacion,editar_habitacion,eliminar_habitacion"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Infraestructura
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'infraestructura:infra_lista_camas' %}">Camas</a></li>
+                    </ul>
+                </li>
 
-			<!-- Barra de navegación menu Laboratorio-->
-			{% if roles_usuario and roles_usuario.0 == "LABORATORIO" %}
-			{% endif %}
+                <!-- Inventario -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_insumo,crear_insumo,detalle_insumo,editar_insumo,eliminar_insumo,lista_movimiento,crear_movimiento,detalle_movimiento,editar_movimiento,eliminar_movimiento"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Inventario
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'inventario:lista_insumo' %}">Insumos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'inventario:lista_movimiento' %}">Movimientos</a></li>
+                    </ul>
+                </li>
 
-			<!-- Barra de navegación menu Administración-->
-			{% if roles_usuario and roles_usuario.0 == "ADMINISTRACION" %}
-			{% endif %}
+                <!-- Laboratorio -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_estudio,crear_estudio,detalle_estudio,editar_estudio,eliminar_estudio,lista_resultado,crear_resultado,detalle_resultado,editar_resultado,eliminar_resultado"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Laboratorio
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
+                        <li><a class="dropdown-item" href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
+                    </ul>
+                </li>
 
-			<!-- Barra de navegación menu Dirección-->
-			{% if roles_usuario and roles_usuario.0 == "DIRECCION" %}
-			{% endif %}
+                <!-- Urgencias -->
+                <li class="nav-item dropdown">
+                    {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Urgencias
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
+                    </ul>
+                </li>
 
-			<!-- Barra de navegación menu Mantenimiento-->
-			{% if roles_usuario and roles_usuario.0 == "MANTENIMIENTO" %}
-			{% endif %}
+                <!-- Asignaciones -->
+                <li class="nav-item dropdown">
+                    {% with urls="usuario_lista,usuario_crear,usuario_editar,usuario_eliminar,usuario_detalle,rol_lista,rol_crear,rol_editar,rol_eliminar,rol_detalle,permiso_lista,permiso_crear,permiso_editar,permiso_eliminar,permiso_detalle,usuariohospital_list,usuariohospital_create,usuariohospital_update,usuariohospital_delete"|cut:"," %}
+                    <a class="nav-link dropdown-toggle {% if url_name in urls %}active{% endif %}"
+                       href="#" data-bs-toggle="dropdown">
+                        Asignaciones
+                    </a>
+                    {% endwith %}
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'acceso:usuario_lista' %}">Usuarios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'acceso:rol_lista' %}">Roles</a></li>
+                        <li><a class="dropdown-item" href="{% url 'acceso:permiso_lista' %}">Permisos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'acceso:usuariohospital_list' %}">Asignar hospitales</a></li>
+                    </ul>
+                </li>
 
-			<!-- Barra de navegación menu Sistemas-->
-			{% if roles_usuario and roles_usuario.0 == "SISTEMAS" %}
+                <!-- Salir -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'acceso:logout' %}">Salir</a>
+                </li>
 
-            <li>
-                <a href="{% url 'acceso:hospitales' %}"
-                class="{% if url_name == 'hospitales' %}active{% endif %}">
-                    Inicio
-                </a>
-            </li>
-
-            <li>
-                {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Paciente
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
-                    <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
-                    <li><a href="{% url 'farmacia:receta_list' %}">Recetas</a></li>
-                    <li><a href="{% url 'laboratorio:lista_solicitud' %}">Solicitudes</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
-                <a href="{% url 'historial:lista_historial' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Historial Clínico
-                </a>
-                {% endwith %}
-            </li>
-
-            <li>
-                {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
-                <a href="{% url 'cita:lista_cita' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Citas
-                </a>
-                {% endwith %}
-            </li>
-
-            <li>
-                {% with urls="medico_list,enfermero_list,medico_create,medico_edit,medico_delete,enfermero_create,enfermero_edit,enfermero_delete"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Personal
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'personal:medico_list' %}">Médicos</a></li>
-                    <li><a href="{% url 'personal:enfermero_list' %}">Enfermeros</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="turno_list,turno_create,turno_update,turno_delete,turnopersonal_list,turnopersonal_crerate,turno_personal_update,turnopersonal_delete,asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Turnos
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'turno:turno_list' %}">Turno</a></li>
-                    <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
-                    <li><a href="{% url 'turno:turnopersonal_list' %}">Turno y personal</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="auditoria_list,auditoria_detail"|cut:"," %}
-                <a href="{% url 'auditoria:auditoria_list' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Auditoría
-                </a>
-                {% endwith %}
-            </li>
-
-            <li>
-                {% with urls="factura_lista,factura_crear,factura_editar,factura_eliminar,factura_detalle,detalle_crear,detalle_editar,detalle_eliminar,pago_crear,pago_editar,pago_eliminar"|cut:"," %}
-                <a href="{% url 'facturacion:factura_lista' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Factura
-                </a>
-                {% endwith %}
-            </li>
-
-            <li>
-                {% with urls="medicamento_list,medicamento_create,medicamento_edit,dispensacion_list,dispensacion_create,dispensacion_detail,dispensar_receta,receta_list,receta_detalle,receta_detalle_add"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Farmacia
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'farmacia:medicamento_list' %}">Medicamentos</a></li>
-                    <li><a href="{% url 'farmacia:receta_list' %}">Dispensar</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_hospital ,crear_hospital ,detalle_hospital ,editar_hospital ,eliminar_hospital "|cut:"," %}
-                <a href="{% url 'hospital:lista_hospital' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Hospitales
-                </a>
-                {% endwith %}
-            </li>
-
-            <li>
-                {% with urls="lista_area,crear_area,detalle_area,editar_area,eliminar_area,lista_habitacion,crear_habitacion,detalle_habitacion,editar_habitacion,eliminar_habitacion"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Infraestructura
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
-                    <li><a href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
-                    <li><a href="{% url 'infraestructura:infra_lista_camas' %}">Camas</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_insumo,crear_insumo,detalle_insumo,editar_insumo,eliminar_insumo,lista_movimiento,crear_movimiento,detalle_movimiento,editar_movimiento,eliminar_movimiento"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Inventario
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'inventario:lista_insumo' %}">Insumos</a></li>
-                    <li><a href="{% url 'inventario:lista_movimiento' %}">Movimientos</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_estudio,crear_estudio,detalle_estudio,editar_estudio,eliminar_estudio,lista_resultado,crear_resultado,detalle_resultado,editar_resultado,eliminar_resultado"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Laboratorio
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
-                    <li><a href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Urgencias
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
-                    <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
-                    <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="usuario_lista,usuario_crear,usuario_editar,usuario_eliminar,usuario_detalle,rol_lista,rol_crear,rol_editar,rol_eliminar,rol_detalle,permiso_lista,permiso_crear,permiso_editar,permiso_eliminar,permiso_detalle,usuariohospital_list,usuariohospital_create,usuariohospital_update,usuariohospital_delete"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Asignaciones
-                </a>
-                {% endwith %}
-                <ul>
-                    <li><a href="{% url 'acceso:usuario_lista' %}">Usuarios</a></li>
-                    <li><a href="{% url 'acceso:rol_lista' %}">Roles</a></li>
-                    <li><a href="{% url 'acceso:permiso_lista' %}">Permisos</a></li>
-                    <li><a href="{% url 'acceso:usuariohospital_list' %}">Asignar hospitales</a></li>
-                </ul>
-            </li>
-
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
-
-            {% endif %}
-			
-		</ul>
-	</nav>
-</div>
-
+                {% endif %}  {# cierre SISTEMAS #}
 
 {% if messages %}
 <div class="messages">
