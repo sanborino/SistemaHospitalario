@@ -335,4 +335,4 @@ def hospital(request):
         )
     )
 
-    return render(request, "acceso\hospital.html", {"roles_usuario": roles_usuario})
+    return render(request, "acceso/hospital.html", {"roles_usuario": roles_usuario})
