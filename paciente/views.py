@@ -48,7 +48,9 @@ class PacienteCreateView(LoginRequiredMixin, CreateView):
     template_name = "paciente/crear_paciente.html"
 
     def get_success_url(self):
-        return reverse_lazy("paciente:detalle_paciente", kwargs={"pk": self.object.pk})
+        return reverse_lazy(
+            "paciente:detalle_paciente", kwargs={"paciente_id": self.object.pk}
+        )
 
 
 class PacienteUpdateView(UpdateView):
@@ -57,7 +59,9 @@ class PacienteUpdateView(UpdateView):
     template_name = "paciente/crear_paciente.html"
 
     def get_success_url(self):
-        return reverse_lazy("paciente:detalle_paciente", kwargs={"pk": self.object.pk})
+        return reverse_lazy(
+            "paciente:detalle_paciente", kwargs={"paciente_id": self.object.pk}
+        )
 
 
 class PacienteDeleteView(DeleteView):
