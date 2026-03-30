@@ -1,15 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if form.instance.pk %}
+
+<main class="container">
+<div class="box">
+    <div class="row">
+        <div class="col">
+          {% if form.instance.pk %}
   <h2>Editar Paciente</h2>
 {% else %}
   <h2>Registrar Paciente</h2>
 {% endif %}
-<div class="content">
-  <div class="formulario">
-    <div class="marco">
       <form method="post">
+        <section>
         {% csrf_token %}
 
         {{ form.non_field_errors }}
@@ -73,12 +76,15 @@
           {{ form.alergias }}<br>
           {{ form.alergias.errors }}
       </div>
-
+      <div style="display: flex; gap: 10px;">
         <button class="btn" type="submit">Guardar</button>
         <a class="btn" href="{% url 'paciente:lista_paciente' %}">Cancelar</a>
+        </div>
+        </section>
       </form>
     </div>
   </div>
 </div>
+</main>
 
 {% endblock %}

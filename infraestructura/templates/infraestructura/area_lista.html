@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Áreas</h2>
 <p><a class="btn" href="{% url 'infraestructura:crear_area' %}">Nueva área</a></p>
-
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -24,9 +26,11 @@
             <td>{{ area.nombre }}</td>
             <td>{{ area.get_tipo_display }}</td>
             <td>
+               <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'infraestructura:detalle_area' area.id %}">Ver</a>
               <a class="btn" href="{% url 'infraestructura:editar_area' area.id %}">Editar</a>
               <a class="btn" href="{% url 'infraestructura:eliminar_area' area.id %}">Eliminar</a>
+               </div>
             </td>
           </tr>
         {% empty %}
@@ -36,6 +40,8 @@
     </table>
   </div>
 </div>
+</div>
+</main>
 
 {% if is_paginated %}
   <div>

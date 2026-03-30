@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Resultados de laboratorio</h2>
 <p><a class="btn" href="{% url 'laboratorio:crear_resultado' %}">Nuevo resultado</a></p>
-<div id="content">
-<div class="marco">
-<div class="formulario">
+    <div class="row">
+        <div class="col">
 <form method="GET">
-            
+            <section>
             <label>Paciente</label>
             <input type="text" name="paciente" class="form-control"
                    value="{{ paciente_busqueda }}">
@@ -25,11 +27,10 @@
                    value="{{ fecha_busqueda }}">
 
     <button class="btn">Filtrar</button>
+          </section>
 </form>
-</div>
-
-  <div class="tabla-contenedor">  
-    <table class="tabla-moderna">
+ 
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -52,19 +53,23 @@
             <td>{{ resultado.solicitud.estado }}</td>
             <td>
               {% if resultado.id %}
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'laboratorio:detalle_resultado' resultado.id %}">Ver</a>
               {% endif %}
               <a class="btn" href="{% url 'laboratorio:editar_resultado' resultado.id %}">Editar</a>
               <a class="btn" href="{% url 'laboratorio:eliminar_resultado' resultado.id %}">Eliminar</a>
+              </div>
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="6">No hay resultados registrados.</td></tr>
+          <tr><td colspan="7">No hay resultados registrados.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+</div>
+</main>
 {% if is_paginated %}
   <div>
     {% if page_obj.has_previous %}

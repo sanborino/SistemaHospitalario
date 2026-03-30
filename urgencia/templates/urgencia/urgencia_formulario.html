@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if form.instance.pk %}
+
+<main class="container">
+<div class="box">
+   {% if form.instance.pk %}
   <h2>Editar urgencia</h2>
 {% else %}
   <h2>Nueva urgencia</h2>
 {% endif %}
-
-<div class="marco formulario">
+    <div class="row">
+        <div class="col">
   <form method="post" novalidate>
+    <section>
     {% csrf_token %}
 
     {% if form.non_field_errors %}
@@ -46,10 +50,16 @@
     </div>
 
     <p>
+      <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Guardar</button>
       <a class="btn" href="{% url 'urgencia:lista_urgencia' %}">Cancelar</a>
+      </div>
     </p>
+  </section>
   </form>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

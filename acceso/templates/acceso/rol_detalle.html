@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle de Rol: {{ rol.nombre }}</h2>
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+    <h2>Detalle de Rol: {{ rol.nombre }}</h2>
+    <div class="row">
+        <div class="col">
         <h3>Permisos asignados</h3>
         {% if permisos %}
             <ul>
@@ -28,9 +30,13 @@
         {% endif %}
 
         <p>
+            <div style="display: flex; gap: 10px;">
             <a href="{% url 'acceso:rol_editar' rol.pk %}" class="btn">Editar</a>
             <a href="{% url 'acceso:rol_lista' %}" class="btn">Volver</a>
+            </div>
         </p>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

@@ -1,60 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
+<main class="container">
+<div class="box">
+<h2>Detalle de Historial clinico</h2>
+    <div class="row">
+        <div class="col">
     <h2>
       {% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Historial Clínico
     </h2>
     <a class="btn" href="{% url 'historial:lista_historial' %}">Volver</a>
-  <div class="formulario">
+
     <form method="post" novalidate>
+      <section>
       {% csrf_token %}
 
       {% if form.non_field_errors %}
         <div class="alert alert-danger">{{ form.non_field_errors }}</div>
       {% endif %}
 
-      <div>
-        <div class="campo">
           <label class="form-label">Hospital</label>
           {{ form.hospital }}
           <div class="text-danger small">{{ form.hospital.errors }}</div>
-        </div>
 
-        <div class="campo">
           <label class="form-label">Paciente</label>
           {{ form.paciente }}
           <div>{{ form.paciente.errors }}</div>
-        </div>
 
-        <div class="campo">
           <label>Médico</label>
           {{ form.medico }}
           <div>{{ form.medico.errors }}</div>
-        </div>
 
-        <div class="campo">
           <label class="form-label">Diagnóstico</label>
           {{ form.diagnostico }}
           <dic>{{ form.diagnostico.errors }}</div>
-        </div>
 
-        <div class="campo">
           <label class="form-label">Tratamiento</label>
           {{ form.tratamiento }}
           <div class="text-danger small">{{ form.tratamiento.errors }}</div>
-        </div>
 
-        <div class="campo">
           <label class="form-label">Notas (opcional)</label>
           {{ form.notas }}
           <div class="text-danger small">{{ form.notas.errors }}</div>
-        </div>
-
-      <div>
+          <div style="display: flex; gap: 10px;">
         <button class="btn" type="submit">Guardar</button>
         <a class="btn" href="{% url 'historial:lista_historial' %}">Cancelar</a>
       </div>
+    </section>
     </form>
   </div>
 </div>
+</div>
+</main>
 {% endblock %}

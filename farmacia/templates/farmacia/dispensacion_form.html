@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Dispensar Receta</h2>
 
+<main class="container">
+<div class="box">
+<h2>Dispensar Receta</h2>
+    <div class="row">
+        <div class="col">
 <p><strong>Paciente:</strong> {{ receta.paciente }}</p>
 <p><strong>Médico:</strong> {{ receta.medico }}</p>
 <p><strong>Fecha:</strong> {{ receta.fecha }}</p>
   <div class="formulario">
 <form method="post">
+    <section>
     <div class="campo">
     {% csrf_token %}
     {{ form.as_p }}
@@ -42,6 +47,11 @@
     </table>
 </div>
     <button type="submit" class="btn">Guardar Dispensación</button>
+    </section>
 </form>
 </div>
+        </div>
+    </div>  
+</div>
+</main>
 {% endblock %}

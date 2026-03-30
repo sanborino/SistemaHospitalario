@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
+<main class="container">
+<div class="box">
 <h2>Urgencias</h2>
 <p><a class="btn" href="{% url 'urgencia:crear_urgencia' %}">Nueva urgencia</a></p>
-
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -28,9 +31,11 @@
             <td>{{ u.get_estado_display }}</td>
             <td>{{ u.fecha_ingreso }}</td>
             <td>
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'urgencia:detalle_urgencia' u.id %}">Ver</a>
               <a class="btn" href="{% url 'urgencia:editar_urgencia' u.id %}">Editar</a>
               <a class="btn" href="{% url 'urgencia:eliminar_urgencia' u.id %}">Eliminar</a>
+              </div>
             </td>
           </tr>
         {% empty %}
@@ -40,6 +45,9 @@
     </table>
   </div>
 </div>
+</div>
+</main>
+
 
 {% if is_paginated %}
   <p>

@@ -1,18 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Eliminar Turno</h2>
-<hr>
+
+<main class="container">
+<div class="box">
+    <hr>
 <p>¿Seguro que deseas eliminar "{{ object }}"?</p>
-<div id="content">
-    <div class="marco">
+<h2>Eliminar Turno</h2>
+    <div class="row">
+        <div class="col">
         <form method="post">
+            <section>
             {% csrf_token %}
+            <div style="display: flex; gap: 10px;">
             <button class="btn" type="submit">Eliminar</button>
+            <a class="btn" href="{% url 'turno:turno_list' %}">Cancelar</a>
+            </div>
+            </section>
         </form>
         <hr>
     </div>
 </div>
-<a class="btn" href="{% url 'turno:turno_list' %}">Cancelar</a>
-<hr>
+</div>
+</main>
+
 {% endblock %}

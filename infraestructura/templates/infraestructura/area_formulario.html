@@ -1,43 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
+<main class="container">
+<div class="box">
 {% if form.instance.pk %}
   <h2>Editar área</h2>
 {% else %}
   <h2>Registrar área</h2>
 {% endif %}
-
-<div class="marco formulario">
+    <div class="row">
+        <div class="col">
   <form method="post" novalidate>
+    <section>
     {% csrf_token %}
 
     {% if form.non_field_errors %}
       <div class="alert alert-error">{{ form.non_field_errors }}</div>
     {% endif %}
 
-    <div class="campo">
+
       {{ form.hospital.label_tag }}
       {{ form.hospital }}
       {{ form.hospital.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.nombre.label_tag }}
       {{ form.nombre }}
       {{ form.nombre.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.tipo.label_tag }}
       {{ form.tipo }}
       {{ form.tipo.errors }}
-    </div>
 
     <p>
+      <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Guardar</button>
       <a class="btn" href="{% url 'infraestructura:lista_area' %}">Cancelar</a>
+      </div>
     </p>
+  </section>
   </form>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

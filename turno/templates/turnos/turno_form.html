@@ -1,20 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<main class="container">
+<div class="box">
 <h2>Formulario de Turno</h2>
-<div id="content">
-    <div class="marco">
-        <div class="formulario">
+    <div class="row">
+        <div class="col">
             <form method="post">
+                <section>
                 {% csrf_token %}
-                <div class="campo">
+               
                 {{ form.as_p }}
-                </div>
+                    <div style="display: flex; gap: 10px;">
                 <button class="btn" type="submit">Guardar</button>
+                <a class="btn" href="{% url 'turno:turno_list' %}">Volver</a>
+                    </div>
+                </section>
             </form>
         </div>
     </div>
 </div>
+</main>
 
-<a class="btn" href="{% url 'turno:turno_list' %}">Volver</a>
 {% endblock %}

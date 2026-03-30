@@ -2,9 +2,11 @@
 
 {% block content %}
 
-<h2>Facturas</h2>
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+   <h2>Facturas</h2>
+    <div class="row">
+        <div class="col">
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-succes">
@@ -12,12 +14,14 @@
         </div>
     {% endfor %}
 {% endif %}
+<div style="display: flex; gap: 10px;">
 <a href="{% url 'facturacion:factura_crear' %}" class="btn">Nueva factura</a>
 <a href="{% url 'facturacion:detalle_crear' %}" class="btn">Nuevo detalle</a>
 <a href="{% url 'facturacion:pago_crear' %}" class="btn">Nuevo pago</a>
+</div>
 <p>
 <form method="get" style="margin: 12px 0; display: inline-block;">
-    <div class="campo">
+
   <label for="estado">Mostrar:</label>
   <select name="estado" id="estado" onchange="this.form.submit()">
     <option value="todos" {% if estado_seleccionado == 'todos' %}selected{% endif %}>Todas</option>
@@ -25,19 +29,18 @@
       <option value="{{ cod }}" {% if estado_seleccionado == cod %}selected{% endif %}>{{ label }}</option>
     {% endfor %}
   </select>
-  </div>
-  <div class="campo">
+
   <label for="origen">Origen:</label>
   <select name="origen" id="origen" onchange="this.form.submit()">
     {% for cod, label in origenes %}
       <option value="{{ cod }}" {% if origen_seleccionado == cod %}selected{% endif %}>{{ label }}</option>
     {% endfor %}
   </select>
-  </div>
+
 </form>
 </p>
-      <div class="tabla-contenedor">
-      <table class="tabla-moderna">
+ 
+      <table>
             <tr>
                 <th>ID</th>
                 <th>Paciente</th>
@@ -55,13 +58,17 @@
                 <td>{{ f.total }}</td>
                 <td>{{ f.estado }}</td>
                 <td>
+                    <div style="display: flex; gap: 10px;">
                     <a class="btn" href="{% url 'facturacion:factura_detalle' f.id %}">Ver detalle</a>
                     <a class="btn" href="{% url 'facturacion:factura_editar' f.id %}">Editar</a>
                     <a class="btn" href="{% url 'facturacion:factura_eliminar' f.id %}">Eliminar</a>
+                    </div>
                 </td>
             </tr>
             {% endfor %}
         </table>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

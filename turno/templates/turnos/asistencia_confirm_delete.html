@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Eliminar Asistencia</h2>
 
-<p>¿Seguro que deseas eliminar "{{ object }}"?</p>
+
+
+<main class="container">
+<div class="box">
+<h2>Eliminar Asistencia</h2>
+    <div class="row">
+        <p>¿Seguro que deseas eliminar "{{ object }}"?</p>
 <hr>
-<div id="content">
-    <div class="marco">
+        <div class="col">
         <form method="post">
             {% csrf_token %}
             <button class="btn" type="submit">Eliminar</button>
@@ -16,4 +20,6 @@
     </div>
     <hr>
 </div>
+</div>
+</main>
 {% endblock %}

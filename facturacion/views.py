@@ -177,8 +177,9 @@ def pago_editar(request, pk):
 
 def pago_eliminar(request, pk):
     pago = get_object_or_404(Pago, pk=pk)
+    factura_id = pago.factura.id  # 🔑 obtener la factura asociada
     pago.delete()
-    return redirect("facturacion:factura_lista")
+    return redirect("facturacion:factura_detalle", pk=factura_id)
 
 
 def generar_factura_paciente(request, paciente_id):

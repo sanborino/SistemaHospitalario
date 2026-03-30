@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Historial de asignaciones de camas</h2>
-<div id="content">
-    <div class="marco">
-<table class="tabla-moderna">
+
+<main class="container">
+<div class="box">
+  <h2>Historial de asignaciones de camas</h2>
+    <div class="row">
+        <div class="col">
+<table>
     <thead>
         <tr>
             <th>Paciente</th>
@@ -38,5 +41,7 @@
     </tbody>
 </table>
 </div>
-    </div>  
+</div>  
+</div>
+</main>
 {% endblock %}

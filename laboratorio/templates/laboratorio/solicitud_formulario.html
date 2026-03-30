@@ -1,34 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if form.instance.pk %}
+
+
+<main class="container">
+<div class="box">
+   {% if form.instance.pk %}
   <h2>Editar solicitud</h2>
 {% else %}
   <h2>Nueva solicitud de laboratorio</h2>
   <p><em>Se generará una factura automáticamente con los estudios seleccionados (pendiente de pago).</em></p>
 {% endif %}
-
-<div class="marco formulario">
+    <div class="row">
+        <div class="col">
   <form method="post" novalidate>
+    <section>
     {% csrf_token %}
 
     {% if form.non_field_errors %}
       <div class="alert alert-error">{{ form.non_field_errors }}</div>
     {% endif %}
 
-    <div class="campo">
       {{ form.paciente.label_tag }}
       {{ form.paciente }}
       {{ form.paciente.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.medico.label_tag }}
       {{ form.medico }}
       {{ form.medico.errors }}
-    </div>
 
-    <div class="campo">
       <fieldset>
         <legend><strong>Estudios a realizar</strong></legend>
         {{ form.estudios.errors }}
@@ -47,13 +47,19 @@
           {% endif %}
         </div>
       </fieldset>
-    </div>
 
     <p>
+      <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Guardar y generar factura</button>
       <a class="btn" href="{% url 'laboratorio:lista_solicitud' %}">Cancelar</a>
+      </div>
+
     </p>
+    <section>
   </form>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

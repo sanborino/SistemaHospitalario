@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Movimientos de inventario</h2>
 <p><a class="btn" href="{% url 'inventario:crear_movimiento' %}">Nuevo movimiento</a></p>
-
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -28,9 +30,11 @@
             <td>{{ movimiento.fecha }}</td>
             <td>{{ movimiento.realizado_por }}</td>
             <td>
+               <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'inventario:detalle_movimiento' movimiento.id %}">Ver</a>
               <a class="btn" href="{% url 'inventario:editar_movimiento' movimiento.id %}">Editar</a>
               <a class="btn" href="{% url 'inventario:eliminar_movimiento' movimiento.id %}">Eliminar</a>
+               </div>
             </td>
           </tr>
         {% empty %}
@@ -40,6 +44,8 @@
     </table>
   </div>
 </div>
+</div>
+</main>
 
 {% if is_paginated %}
   <div>

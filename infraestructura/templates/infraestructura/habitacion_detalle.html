@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Detalle de habitación</h2>
-<div class="marco">
+    <div class="row">
+        <div class="col">
   <ul class="lista-datos">
     <p><strong>Hospital:</strong> {{ habitacion.hospital }}</p>
     <p><strong>Área:</strong> {{ habitacion.area }}</p>
@@ -11,11 +15,16 @@
   </ul>
 <hr>
   <p>
+    <div style="display: flex; gap: 10px;">
     <a class="btn" href="{% url 'infraestructura:editar_habitacion' habitacion.id %}">Editar</a>
     <a class="btn" href="{% url 'infraestructura:eliminar_habitacion' habitacion.id %}">Eliminar</a>
     <a class="btn" href="{% url 'infraestructura:lista_habitacion' %}">Volver</a>
+    </div>
   </p>
   <hr>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

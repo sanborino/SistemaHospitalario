@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle de atención #{{ atencion.id }}</h2>
 
-<div class="marco">
+<main class="container">
+<div class="box">
+  <h2>Detalle de atención #{{ atencion.id }}</h2>
+    <div class="row">
+        <div class="col">
   <ul class="lista-datos">
     <p><strong>ID:</strong> {{ atencion.id }}</p>
     <p><strong>Urgencia:</strong> {{ atencion.urgencia }}</p>
@@ -13,11 +16,17 @@
   </ul>
 <hr>
   <p>
+    <div style="display: flex; gap: 10px;">
     <a class="btn" href="{% url 'urgencia:editar_atencion' atencion.id %}">Editar</a>
     <a class="btn" href="{% url 'urgencia:eliminar_atencion' atencion.id %}">Eliminar</a>
     <a class="btn" href="{% url 'urgencia:lista_atencion' %}">Volver</a>
+    </div>
   </p>
     <hr>
 </div>
+</div>
+</div>
+</main>
+
 
 {% endblock %}

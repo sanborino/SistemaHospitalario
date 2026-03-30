@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+
+<main class="container">
+<div class="box">
 <h2>Camas</h2>
 
 <a href="{% url 'infraestructura:infra_crear_cama' %}" class="btn">Crear cama</a>
-<div id="content">
-    <div class="marco">
-<table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+<table>
     <thead>
         <tr>
             <th>Número</th>
@@ -25,8 +28,10 @@
                 <td>{{ cama.get_tipo_display }}</td>
                 <td>{{ cama.get_estado_display }}</td>
                 <td>
+                    <div style="display: flex; gap: 10px;">
                     <a href="{% url 'infraestructura:infra_editar_cama' cama.id %}" class="btn">Editar</a>
                     <a href="{% url 'infraestructura:infra_eliminar_cama' cama.id %}" class="btn">Eliminar</a>
+                    </div>
                 </td>
             </tr>
         {% empty %}
@@ -36,4 +41,6 @@
 </table>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

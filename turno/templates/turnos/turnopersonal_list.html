@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<main class="container">
+<div class="box">
 <h2>Turno de Personal</h2>
-<div id="content">
-    <div class="marco">
+    <div class="row">
+        <div class="col">
         <a class="btn" href="{% url 'turno:turnopersonal_create' %}">Nuevo turno personal</a>
-        <div class="formulario">
+
         <ul>
             {% for tp in object_list %}
                 
-                    <div class="campo">
                     {{ tp.turno }} - {{ tp.fecha }}
-                    </div>
+                    <div style="display: flex; gap: 10px;">
                     <a class="btn" href="{% url 'turno:turnopersonal_update' tp.id %}">Editar</a>
                     <a class="btn" href="{% url 'turno:turnopersonal_delete' tp.id %}">Eliminar</a>
-                
+                    </div>
             {% endfor %}
         </ul>
     </div>
     </div>
 </div>
+</main>
 {% endblock %}

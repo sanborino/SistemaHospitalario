@@ -1,19 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{% if view.object %}Editar Médico{% else %}Registrar Médico{% endif %}</h2>
-<div id="content">
-    <div class="marco">
-        <div class="formulario">
+
+<main class="container">
+<div class="box">
+    <h2>{% if view.object %}Editar Médico{% else %}Registrar Médico{% endif %}</h2>
+    <div class="row">
+        <div class="col">
 <form method="post">
+    <section>
     {% csrf_token %}
-    <div class="campo">
+
     {{ form.as_p }}
-    </div>
+    <div style="display: flex; gap: 10px;">
     <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{% url 'personal:medico_list' %}" class="btn btn-secondary">Cancelar</a>
+    <a href="{% url 'personal:medico_list' %}" class="btn">Cancelar</a>
+    </div>
+</section>
 </form>
         </div>
     </div>
 </div>
+</main>
 {% endblock %}

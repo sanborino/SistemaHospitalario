@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<main class="container">
+<div class="box">
 <h2>Eliminar Enfermero</h2>
-<div id="content">
-    <div class="marco">
+    <div class="row">
+        <div class="col">
         <p>¿Estás seguro de que deseas eliminar a <strong>{{ object }}</strong>?</p>
 <hr>
         <form method="post">
@@ -14,4 +17,6 @@
         <hr>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Insumos</h2>
 <p><a class="btn" href="{% url 'inventario:crear_insumo' %}">Nuevo insumo</a></p>
-
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -26,9 +28,11 @@
             <td>{{ insumo.stock }}</td>
             <td>{{ insumo.unidad }}</td>
             <td>
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'inventario:detalle_insumo' insumo.id %}">Ver</a>
               <a class="btn" href="{% url 'inventario:editar_insumo' insumo.id %}">Editar</a>
               <a class="btn" href="{% url 'inventario:eliminar_insumo' insumo.id %}">Eliminar</a>
+              </div>
             </td>
           </tr>
         {% empty %}
@@ -38,6 +42,8 @@
     </table>
   </div>
 </div>
+</div>
+</main>
 
 {% if is_paginated %}
   <div>

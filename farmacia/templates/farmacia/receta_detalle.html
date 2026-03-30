@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Receta {{ receta.id }}</h2>
-<div id="content">
-    <div class="marco">
+
+<main class="container">
+<div class="box">
+  <h2>Receta {{ receta.id }}</h2>
+    <div class="row">
+        <div class="col">
         <p><strong>Paciente:</strong> {{ receta.paciente }}</p>
         <p><strong>Médico:</strong> {{ receta.medico }}</p>
         <p><strong>Fecha:</strong> {{ receta.fecha }}</p>
@@ -19,8 +22,7 @@
             Agregar medicamento
         </a>
         {% endif %}
-        <div class="tabla-contenedor">
-            <table class="tabla-moderna">
+            <table>
                 <thead>
                     <tr>
                         <th>Medicamento</th>
@@ -47,6 +49,7 @@
             Surtir receta
         </a>
         {% endif %}
-    </div>
 </div>
+</div>
+</main>
 {% endblock %}

@@ -1,31 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content">
-    <h2>Historial Clínico</h2>
+<main class="container">
+<div class="box">
+<h2>Historial clinico</h2>
+    <div class="row">
+        <div class="col">
     <a class="btn" href="{% url 'historial:crear_historial' %}">Nuevo registro</a>
-<div class="formulario">
+
   {% if not request.GET.q and not request.GET.hospital %}
   <div class="alert alert-succes">
     Usa los filtros y presiona "Filtrar" para ver historial.
   </div>
   {% endif %}
   <form class="" method="get">
-    <div class="campo">
+
       <input class="" type="number" name="paciente" placeholder="Filtrar por No de expediente" value="{{ request.GET.paciente }}">
-    </div>
-    <div class="campo">
+
       <input class="" type="number" name="hospital" placeholder="Filtrar por clave de hospital" value="{{ request.GET.hospital }}">
-    </div>
-    <div>
+      <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Filtrar</button>
       <a class="btn" href="{% url 'historial:lista_historial' %}">Limpiar</a>
     </div>
   </form>
-</div>
-  <div id="content">
-    <div class="marco">
-      <div class="tabla-contenedor">
-      <table class="tabla-moderna">
+      <table>
         <thead>
           <tr>
             <th>Fecha</th>
@@ -47,9 +44,11 @@
             <td>{{ h.hospital.id }}</td>
             <td>{{ h.hospital }}</td>
             <td>
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'historial:detalle_historial' h.pk %}">Ver</a>
               <a class="btn" href="{% url 'historial:editar_historial' h.pk %}">Editar</a>
               <a class="btn" href="{% url 'historial:eliminar_historial' h.pk %}">Eliminar</a>
+              </div>
             </td>
           </tr>
           {% empty %}
@@ -62,7 +61,7 @@
     </div>
     </div>
   </div>
-
+</main>
   {% if is_paginated %}
   <nav>
     <ul>
@@ -77,4 +76,7 @@
   </nav>
   {% endif %}
 </div>
+</div>
+</div>
+</main>
 {% endblock %}

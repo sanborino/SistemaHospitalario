@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Eliminar cama</h2>
 
+<main class="container">
+<div class="box">
+<h2>Eliminar cama</h2>
+    <div class="row">
+        <div class="col">
 <p>¿Estás seguro de que deseas eliminar la cama <strong>{{ cama.numero }}</strong>?</p>
 <hr>
 <form method="POST">
     {% csrf_token %}
+      <div style="display: flex; gap: 10px;">
     <button class="btn">Eliminar</button>
-    <a href="{% url 'infraestructura:infra_lista_camas' %}" class="btn btn-secondary">Cancelar</a>
+    <a href="{% url 'infraestructura:infra_lista_camas' %}" class="btn">Cancelar</a>
+      </div>
 </form>
 <hr>
+</div>
+</div>
+</div>
+</main>
 {% endblock %}

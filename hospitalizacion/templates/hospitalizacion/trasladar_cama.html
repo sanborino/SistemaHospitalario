@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
+<main class="container">
+<div class="box">
 <h2>Trasladar paciente de cama</h2>
 
 <p>
@@ -7,11 +10,10 @@
     Cama actual: <strong>{{ asignacion.cama }}</strong><br>
     Ingreso: {{ asignacion.fecha_ingreso }}
 </p>
-<div id="content">
-    <div class="marco">
-        <div class="formulario">
-
+    <div class="row">
+        <div class="col">
 <form method="POST">
+    <section>
     {% csrf_token %}
     <div class="campo">
     <label for="nueva_cama_id">Selecciona nueva cama:</label>
@@ -26,10 +28,13 @@
         {% endfor %}
     </select>
     </div>
+    <div style="display: flex; gap: 10px;">
     <button class="btn" {% if not camas_disponibles %}disabled{% endif %}>
         Confirmar traslado
     </button>
     <a href="{% url 'paciente:detalle_paciente' paciente.id %}" class="btn">Cancelar</a>
+    </div>
+        </section>
 </form>
 </div>
     </div>

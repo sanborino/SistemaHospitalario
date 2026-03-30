@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Confirmar eliminación de factura</h2>
 
-<div class="marco">
+<main class="container">
+<div class="box">
+  <h2>Confirmar eliminación de factura</h2>
+    <div class="row">
+        <div class="col">
   <p>¿Estás seguro de eliminar la factura <strong>#{{ factura.id }}</strong> de <strong>{{ factura.paciente }}</strong> por un total de <strong>${{ factura.total }}</strong>?</p>
 
   {% if factura.estado == "PAGADA" %}
@@ -14,9 +17,14 @@
 
   <form method="post">
     {% csrf_token %}
+    <div style="display: flex; gap: 10px;">
     <button class="btn btn-eliminar" type="submit">Sí, eliminar</button>
     <a class="btn" href="{% url 'facturacion:factura_detalle' factura.id %}">No, volver</a>
+    </div>
   </form>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

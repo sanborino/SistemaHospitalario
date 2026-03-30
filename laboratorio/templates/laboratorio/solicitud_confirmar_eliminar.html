@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Confirmar eliminación de solicitud</h2>
 
-<div class="marco">
+<main class="container">
+<div class="box">
+<h2>Confirmar eliminación de solicitud</h2>
+    <div class="row">
+        <div class="col">
   <p>¿Estás seguro de eliminar la solicitud <strong>#{{ solicitud.id }}</strong> de <strong>{{ solicitud.paciente }}</strong>?</p>
 
   <form method="post">
     {% csrf_token %}
+    <div style="display: flex; gap: 10px;">
     <button class="btn" type="submit">Sí, eliminar</button>
     <a class="btn" href="{% url 'laboratorio:detalle_solicitud' solicitud.id %}">No, volver</a>
+    <div style="display: flex; gap: 10px;">
   </form>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

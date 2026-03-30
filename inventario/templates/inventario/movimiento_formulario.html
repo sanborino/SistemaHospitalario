@@ -1,49 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
+<main class="container">
+<div class="box">
 {% if form.instance.pk %}
   <h2>Editar movimiento</h2>
 {% else %}
   <h2>Registrar movimiento</h2>
 {% endif %}
-
-<div class="marco formulario">
+    <div class="row">
+        <div class="col">
   <form method="post" novalidate>
+    <section>
     {% csrf_token %}
 
     {% if form.non_field_errors %}
       <div class="alert alert-error">{{ form.non_field_errors }}</div>
     {% endif %}
 
-    <div class="campo">
+
       {{ form.insumo.label_tag }}
       {{ form.insumo }}
       {{ form.insumo.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.tipo.label_tag }}
       {{ form.tipo }}
       {{ form.tipo.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.cantidad.label_tag }}
       {{ form.cantidad }}
       {{ form.cantidad.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.realizado_por.label_tag }}
       {{ form.realizado_por }}
       {{ form.realizado_por.errors }}
-    </div>
+
 
     <p>
+      <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Guardar</button>
       <a class="btn" href="{% url 'inventario:lista_movimiento' %}">Cancelar</a>
+      </div>
     </p>
+  </aection>
   </form>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

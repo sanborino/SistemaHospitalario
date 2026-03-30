@@ -10,17 +10,23 @@
 
 </title>
 {% block content %}
-<h1 class="title">Sistema Hospitalario</h1>
-<div class="content">
-    <div class="formulario">
-        
-        <h2>Accede para continuar</h2>
-            <div>
+    <div class="marco">
+    <h1>Sistema Hospitalario</h1>
+    </div>
+<main class="container">
+<div class="box">
+    <h2>Accede para continuar</h2>
+    <div class="row">
+        <div class="col">
+            
+            <section>
+                <div style="display: flex; gap: 10px;">
                 <a href="{% url 'acceso:login' %}" class="btn">Iniciar Sesión</a>
-            </div>
-            <div>
                 <a href="{% url 'acceso:registro' %}" class="btn">Registrarse</a>
-            </div>
+                </div>
+            </section>
+        </div>
     </div>
 </div>
+</main>
 {% endblock %}

@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Altas de urgencia</h2>
 <p><a class="btn" href="{% url 'urgencia:crear_alta' %}">Nueva alta</a></p>
-
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -24,9 +26,11 @@
             <td>{{ a.fecha }}</td>
             <td>{{ a.diagnostico_final|truncatechars:40 }}</td>
             <td>
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'urgencia:detalle_alta' a.id %}">Ver</a>
               <a class="btn" href="{% url 'urgencia:editar_alta' a.id %}">Editar</a>
               <a class="btn" href="{% url 'urgencia:eliminar_alta' a.id %}">Eliminar</a>
+              </div>
             </td>
           </tr>
         {% empty %}
@@ -36,6 +40,8 @@
     </table>
   </div>
 </div>
+</div>
+</main>
 
 {% if is_paginated %}
   <p>

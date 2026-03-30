@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle de Cita</h2>
+<main class="container">
+<div class="box">
+   <h2>Detalle de cita</h2>
+    <div class="row">
+        <div class="col">
 
 <p><strong>Número:</strong> {{ cita.id }}</p>
 <p><strong>Hospital:</strong> {{ cita.hospital }}</p>
@@ -13,9 +17,15 @@
 <p><strong>Estado:</strong> {{ cita.get_estado_display }}</p>
 <hr>
 <p>
+  <div style="display: flex; gap: 10px;">
   <a class="btn" href="{% url 'cita:editar_cita' cita.id %}">Editar</a>
   <a class="btn" href="{% url 'cita:eliminar_cita' cita.id %}">Eliminar</a>
   <a class="btn" href="{% url 'cita:lista_cita' %}">Volver</a>
+  </div>
 </p>
 <hr>
+</div>
+</div>
+</div>
+</main>
 {% endblock %}

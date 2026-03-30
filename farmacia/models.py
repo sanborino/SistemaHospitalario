@@ -5,6 +5,7 @@ from hospital.models import Hospital
 
 # Create your models here.
 
+
 class Medicamento(models.Model):
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=150)
@@ -44,13 +45,16 @@ class Dispensacion(models.Model):
 
     def __str__(self):
         return f"Dispensación {self.id} - Receta {self.receta.id}"
-    
+
     class Meta:
         verbose_name = "Dispensación"
         verbose_name_plural = "Dispensaciones"
-        
+
+
 class DispensacionDetalle(models.Model):
-    dispensacion = models.ForeignKey(Dispensacion, on_delete=models.CASCADE, related_name="detalles")
+    dispensacion = models.ForeignKey(
+        Dispensacion, on_delete=models.CASCADE, related_name="detalles"
+    )
     medicamento = models.ForeignKey(Medicamento, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
 

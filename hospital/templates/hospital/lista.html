@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
+<main class="container">
+<div class="box">
 <h2>Hospitales</h2>
-<p>
+    <div class="row">
+      <p>
   <a class="btn" href="{% url 'hospital:crear_hospital' %}">Nuevo hospital</a>
 </p>
-<div id="content">
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -30,9 +33,11 @@
             <td>{{ hospital.correo }}</td>
             <td>{{ hospital.codigo }}</td>
             <td>
+               <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'hospital:detalle_hospital' hospital.id %}">Ver</a>
               <a class="btn" href="{% url 'hospital:editar_hospital' hospital.id %}">Editar</a>
               <a class="btn" href="{% url 'hospital:eliminar_hospital' hospital.id %}">Eliminar</a>
+               </div>
             </td>
           </tr>
         {% empty %}
@@ -45,7 +50,7 @@
   </div>
   </div>
 </div>
-
+</main>
 {% if is_paginated %}
   <p>
     {% if page_obj.has_previous %}

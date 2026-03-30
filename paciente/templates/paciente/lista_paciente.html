@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Lista de Pacientes</h2>
-<div class="content">
+<main class="container">
+<div class="box">
+    <h2>Lista de Pacientes</h2>
+    <div class="row">
+        <div class="col">
 <p>
   <a class="btn" href="{% url 'paciente:crear_paciente' %}">Registrar Paciente</a>
 </p>
@@ -15,21 +18,16 @@
 {% endif %}
 
 <form method="get">
-<div class="campo">
+
   <input type="text" name="q" placeholder="Buscar (nombre/apellido/teléfono)" value="{{ request.GET.q }}"/>
-</div>
-<div class="campo">
+
   <input type="number" name="hospital" placeholder="Clave de Hospital" value="{{ request.GET.hospital }}"/>
-</div>
+
   <button class="btn" type="submit">Buscar</button>
   <a class="btn" href="{% url 'paciente:lista_paciente' %}">Limpiar</a>
 </form>
-</div>
 
-<div id="content">
-  <div class="tabla-contenedor">
-    <div class="marco">
-        <table class="tabla-moderna">
+        <table>
             <thead>
                 <tr>
                 <th>No expediente</th>
@@ -52,9 +50,11 @@
                 <td>{{ p.telefono }}</td>
                 <td>{{ p.tipo_sangre }}</td>
                 <td>
+                  <div style="display: flex; gap: 10px;">
                     <a class="btn" href="{% url 'paciente:detalle_paciente' p.id %}">Ver</a>
                     <a class="btn" href="{% url 'paciente:editar_paciente' p.id %}">Editar</a>
                     <a class="btn" href="{% url 'paciente:eliminar_paciente' p.id %}">Eliminar</a>
+                  </div>
                 </td>
                 </tr>
                 {% empty %}
@@ -67,6 +67,7 @@
       </div>
     </div>
 </div>
+</main>
 
 {% if is_paginated %}
   <p>
@@ -80,7 +81,7 @@
       ?page={{ page_obj.next_page_number }}Siguiente</a>
     {% endif %}
   </p>
-</div>
+
 {% endif %}
 
 {% endblock %}

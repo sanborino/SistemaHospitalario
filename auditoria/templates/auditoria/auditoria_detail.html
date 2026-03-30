@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Detalle de Auditoría</h2>
 
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+    <h2>Detalle de Auditoría</h2>
+    <div class="row">
+        <div class="col">
         <p><strong>Tabla:</strong> {{ object.tabla }}</p>
         <p><strong>Operación:</strong> {{ object.operacion }}</p>
         <p><strong>ID del registro:</strong> {{ object.registro_id }}</p>
@@ -23,8 +25,11 @@
             <p>No se pudo recuperar el registro original.</p>
         {% endif %}
             <hr>
+            <div style="display: flex; gap: 10px;">
         <a class="btn" href="{% url 'auditoria:auditoria_list' %}">Volver</a>
+            </div>
     </div>
 </div>
-
+</div>
+</main>
 {% endblock %}

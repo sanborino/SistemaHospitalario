@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle del Paciente</h2>
-<div id="content">
-        <hr>
-  <div class="content">
+
+<main class="container">
+<div class="box">
+    <h2>Detalle del Paciente</h2>
+    <div class="row">
+        <div class="col">
   <p><strong>No. de expediente:</strong> {{ paciente.id }}</p>
   <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
   <p><strong>Apellido:</strong> {{ paciente.apellido }}</p>
@@ -53,4 +55,9 @@
 <a href="{% url 'hospitalizacion:historial_asignaciones' %}" class="btn">
     Ver historial de asignaciones
 </a>
+</div>
+</div>
+</div>
+</div>
+</main>
 {% endblock %}

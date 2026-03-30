@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Eliminar Registro</h2>
-<div class="container mt-4">
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+    <h2>Eliminar registro</h2>
+    <div class="row">
+        <div class="col">
 <p>¿Seguro que deseas eliminar la relación entre <strong>{{ registro.usuario }}</strong> y <strong>{{ registro.hospital }}</strong>?</p>
 <hr>
 <form method="post">
     {% csrf_token %}
+    <div style="display: flex; gap: 10px;">
     <button class="btn" type="submit">Eliminar</button>
     <a class="btn" href="{% url 'acceso:usuariohospital_list' %}">Cancelar</a>
+    </div>
 </form>
 <hr>
 </div>
 </div>
-
+</div>
+</main>
 {% endblock %}

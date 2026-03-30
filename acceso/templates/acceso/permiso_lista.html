@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Lista de Permisos</h2>
-<div id="content">
-    <div class="marco">
+
+<main class="container">
+<div class="box">
+    <h2>Lista de Permisos</h2>
+    <div class="row">
+        <div class="col">
         <a href="{% url 'acceso:permiso_crear' %}" class="btn">Crear Permiso</a>
         <div class="formulario">
             <table class="tabla-moderna">
@@ -20,8 +23,10 @@
                         <td>{{ permiso.nombre }}</td>
                         <td>{{ permiso.descripcion }}</td>
                         <td>
+                            <div style="display: flex; gap: 10px;">
                             <a href="{% url 'acceso:permiso_editar' permiso.pk %}" class="btn">Editar</a>
                             <a href="{% url 'acceso:permiso_eliminar' permiso.pk %}" class="btn">Eliminar</a>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
@@ -34,4 +39,6 @@
         </div>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

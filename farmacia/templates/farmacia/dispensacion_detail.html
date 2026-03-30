@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<main class="container">
+<div class="box">
 <h2>Detalle de Dispensación</h2>
-
-<div id="content">
-    <div class="marco">
-
+    <div class="row">
+        <div class="col">
         <p><strong>ID:</strong> {{ dispensacion.id }}</p>
         <p><strong>Receta:</strong> {{ dispensacion.receta }}</p>
         <p><strong>Paciente:</strong> {{ dispensacion.receta.paciente }}</p>
@@ -18,8 +19,6 @@
 
         <h2>Medicamentos Entregados</h2>
 
-        <div class="tabla-contenedor">
-            <div class="tabla-moderna">
             <table >
                 <thead>
                     <tr>
@@ -36,12 +35,11 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        </div>
-
+            <div style="display: flex; gap: 10px;">
         <a href="{% url 'farmacia:dispensacion_list' %}" class="btn">Volver a la lista</a>
-
+            </div>
+        </div>
     </div>
 </div>
-
+</main>
 {% endblock %}

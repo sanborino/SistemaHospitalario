@@ -1,0 +1,505 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tipografía escalable */
+html,
+body {
+    font-family: sans-serif;
+    font-size: clamp(14px, 2vw, 18px);
+    /* se adapta al viewport */
+    line-height: 1.5;
+    margin: 0;
+    height: 100%;
+    /* ocupa toda la altura */
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+main {
+    flex: 1;
+    /* empuja el footer hacia abajo */
+}
+
+
+/* Contenedores fluidos */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    /* límite en pantallas grandes */
+    margin: 0 auto;
+    padding: 5px;
+    display: grid;
+    justify-content: center;
+    /* centra horizontal */
+    align-items: start;
+    /* centra vertical */
+
+
+}
+
+
+.message,
+.alert-succes,
+.alert {
+    padding: 20px;
+    background: #1f7e58;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.alert-warning {
+    background: #972824;
+}
+
+.marco {
+    background: #4e94ab;
+    color: #fff;
+    padding: 10px;
+}
+
+.box {
+    background: #e3f2fd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Imágenes y videos responsivos */
+img,
+video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Formularios */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+input,
+select,
+textarea,
+button {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    /* ocupa todo el ancho en móvil */
+}
+
+/* Layout con Flexbox */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.col {
+    flex: 1;
+    min-width: 250px;
+    /* evita que se encoja demasiado */
+}
+
+/* Breakpoints */
+@media (max-width: 992px) {
+    body {
+        font-size: clamp(13px, 2vw, 16px);
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        /* columnas se apilan */
+    }
+
+    form {
+        flex-direction: column;
+    }
+}
+
+header {
+    width: 100%;
+    background: #4e94ab;
+    position: relative;
+    z-index: 1000;
+}
+
+#btn-menu {
+    display: none;
+}
+
+header label {
+    display: none;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    border-right: 1px solid #fff;
+}
+
+header label:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.menu ul {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+.menu li {
+    border-right: 1px solid #fff;
+}
+
+.menu li:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.menu li a {
+    display: block;
+    padding: 15px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+/* Ocultar submenús por defecto */
+.menu li ul {
+    display: none;
+    list-style: none;
+    position: absolute;
+    background: #4e94ab;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Mostrar submenú cuando el checkbox está marcado */
+.menu li input[type="checkbox"] {
+    display: none;
+}
+
+.menu li input[type="checkbox"]:checked~ul {
+    display: block;
+}
+
+/* Estilos del label que abre submenú */
+.menu li label {
+    display: block;
+    padding: 15px 20px;
+    color: #fff;
+    cursor: pointer;
+}
+
+
+/* Mostrar submenú al hacer hover en el padre */
+.menu li:hover ul {
+    display: block;
+}
+
+/* Ajustes de los elementos dentro del submenú */
+.menu li ul li {
+    border: none;
+    width: 150px;
+    border-bottom: 1px solid #fff;
+    /* ancho fijo para submenús */
+}
+
+/* Opcional: quitar la línea en el último elemento */
+.menu li ul li:last-child {
+    border-bottom: none;
+}
+
+.menu li ul li a {
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+
+.menu li ul li a {
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    header label {
+        display: block;
+    }
+
+    .menu {
+        position: absolute;
+        background: #4e94ab;
+        width: 70%;
+        margin-left: -70%;
+        transition: all 0.3s;
+        z-index: 2000;
+        /* menú encima del banner */
+
+    }
+
+    .menu ul {
+        flex-direction: column;
+    }
+
+    .menu li {
+        border-top: 1px solid #fff;
+    }
+
+    .menu li ul {
+        background: #357a8a;
+    }
+
+    #btn-menu:checked~.menu {
+        margin: 0;
+    }
+}
+
+/* Títulos */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Tablas responsivas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+thead {
+    background: #4e94ab;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    tr {
+        margin-bottom: 15px;
+    }
+
+    th {
+        background: #357a8a;
+        color: #fff;
+    }
+}
+
+/* Enlaces */
+a {
+    color: #4e94ab;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #357a8a;
+    text-decoration: none;
+}
+
+/* Botones */
+button,
+.btn {
+    display: inline-block;
+    background: #4e94ab;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover,
+.btn:hover {
+    background: #357a8a;
+}
+
+/* Botones secundarios */
+.btn-secondary {
+    background: #ccc;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #999;
+    color: #fff;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+
+    button,
+    .btn {
+        width: 100%;
+        /* ocupan todo el ancho en móvil */
+        font-size: 0.9rem;
+    }
+}
+
+footer {
+    background: #4e94ab;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #ffeb3b;
+    /* amarillo al pasar el mouse */
+}
+
+footer p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    footer {
+        font-size: 0.8rem;
+        padding: 15px;
+    }
+
+    footer a {
+        display: block;
+        /* enlaces en columna en móvil */
+        margin: 5px 0;
+    }
+}
+
+/* Carrusel ocupa todo el ancho */
+#bannerHospital {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.banner-img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    filter: brightness(70%);
+}
+
+.carousel-caption {
+    bottom: 150px;
+}
+
+/* Carrusel ocupa todo el ancho */
+#bannerHospital {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Todas las imágenes con mismo tamaño */
+.banner-img {
+    width: 100%;
+    /* siempre a todo el ancho */
+    height: 70vh;
+    /* altura relativa al viewport */
+    object-fit: cover;
+    /* recorta sin deformar */
+    display: block;
+}
+
+/* Evita que el contenedor cambie de tamaño */
+.carousel-item {
+    width: 100%;
+    height: 70vh;
+    /* igual que las imágenes */
+}
+
+/* Texto sobre la imagen */
+.carousel-caption {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px 25px;
+    border-radius: 5px;
+}
+
+.banner-title {
+    font-size: clamp(1.2rem, 3vw, 2.5rem);
+    margin: 0;
+}
+
+/* Botones de control */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+/* Ajustes para móvil */
+@media (max-width: 768px) {
+
+    .banner-img,
+    .carousel-item {
+        height: 40vh;
+        /* más pequeño en móvil */
+    }
+
+    .carousel-caption {
+        bottom: 10%;
+        padding: 10px 15px;
+    }
+}

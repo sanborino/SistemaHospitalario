@@ -159,7 +159,12 @@ class RecetaCreateView(CreateView):
     model = Receta
     form_class = RecetaForm
     template_name = "farmacia/receta_form.html"
-    success_url = reverse_lazy("farmacia:receta_list")
+
+    def get_success_url(self):
+        # Redirige al formulario para agregar medicamentos
+        return reverse_lazy(
+            "farmacia:receta_detalle_add", kwargs={"receta_id": self.object.pk}
+        )
 
 
 class RecetaDetailView(DetailView):
@@ -214,10 +219,11 @@ def dispensacion_create(request, receta_id):
     receta = get_object_or_404(Receta, id=receta_id)
 
     if Dispensacion.objects.filter(receta=receta).exists():
+        dispensacion = Dispensacion.objects.get(receta=receta)
         messages.error(
             request, "Esta receta ya fue surtida y no puede volver a dispensarse."
         )
-        return redirect("farmacia:receta_detalle", pk=receta.id)
+        return redirect("farmacia:dispensacion_detail", pk=dispensacion.pk)
 
     detalles = receta.recetadetalle_set.all()  # RecetaDetalle
 
@@ -234,14 +240,13 @@ def dispensacion_create(request, receta_id):
                 cantidad_entregar = int(request.POST.get(f"entregar_{d.id}", 0))
 
                 if cantidad_entregar > 0:
-
                     if cantidad_entregar > d.cantidad:
                         messages.error(
                             request,
                             f"No puedes dispensar más de lo recetado para {d.medicamento.nombre}. "
                             f"Recetado: {d.cantidad}",
                         )
-                    return redirect(request.path)
+                        return redirect(request.path)
 
                 # Validar stock
                 if cantidad_entregar > d.medicamento.stock:
@@ -263,7 +268,7 @@ def dispensacion_create(request, receta_id):
                 d.medicamento.save()
 
             messages.success(request, "Dispensación realizada correctamente.")
-            return redirect("farmacia:dispensacion_list")
+            return redirect("farmacia:dispensacion_detalle", pk=dispensacion.pk)
 
     else:
         form = DispensacionForm()
@@ -281,11 +286,8 @@ def dispensacion_create(request, receta_id):
 
 class DispensacionDetailView(DetailView):
     model = Dispensacion
-    template_name = "dispensacion/dispensacion_detail.html"
+    template_name = "farmacia/dispensacion_detail.html"
     context_object_name = "dispensacion"
-
-
-from facturacion.models import Cargo
 
 
 def dispensar_medicamentos(request, id):
@@ -301,4 +303,4 @@ def dispensar_medicamentos(request, id):
         )
 
     messages.success(request, "Medicamentos dispensados y cargos generados.")
-    return redirect("farmacia:dispensacion_detalle", id)
+    return redirect("farmacia:dispensacion_detail", id)

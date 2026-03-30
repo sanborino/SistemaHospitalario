@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle de movimiento</h2>
 
-<div class="marco">
+<main class="container">
+<div class="box">
+<h2>Detalle de movimiento</h2>
+    <div class="row">
+        <div class="col">
   <ul class="lista-datos">
     <p><strong>Insumo:</strong> {{ movimiento.insumo }}</p>
     <p><strong>Tipo:</strong> {{ movimiento.get_tipo_display }}</p>
@@ -13,11 +16,16 @@
   </ul>
 <hr>
   <p>
+    <div style="display: flex; gap: 10px;">
     <a class="btn" href="{% url 'inventario:editar_movimiento' movimiento.id %}">Editar</a>
     <a class="btn" href="{% url 'inventario:eliminar_movimiento' movimiento.id %}">Eliminar</a>
     <a class="btn" href="{% url 'inventario:lista_movimiento' %}">Volver</a>
+    </div>
   </p>
     <hr>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Estudios de laboratorio</h2>
 <p><a class="btn" href="{% url 'laboratorio:crear_estudio' %}">Nuevo estudio</a></p>
-
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -24,9 +26,11 @@
             <td>{{ estudio.nombre }}</td>
             <td>${{ estudio.precio }}</td>
             <td>
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'laboratorio:detalle_estudio' estudio.id %}">Ver</a>
               <a class="btn" href="{% url 'laboratorio:editar_estudio' estudio.id %}">Editar</a>
               <a class="btn" href="{% url 'laboratorio:eliminar_estudio' estudio.id %}">Eliminar</a>
+              </div>
             </td>
           </tr>
         {% empty %}
@@ -36,6 +40,8 @@
     </table>
   </div>
 </div>
+</div>
+</main>
 
 {% if is_paginated %}
   <div>

@@ -1,57 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
+<main class="container">
+<div class="box">
 {% if form.instance.pk %}
   <h2>Editar hospital</h2>
 {% else %}
   <h2>Registrar hospital</h2>
 {% endif %}
-
-<div class="formulario">
-  <form method="post">
+    <div class="row">
+        <div class="col">
     {% csrf_token %}
-
+<section>
     {% if form.non_field_errors %}
       <div class="alert alert-error">
         {{ form.non_field_errors }}
       </div>
     {% endif %}
 
-    <div class="campo">
+
       {{ form.nombre.label_tag }}
       {{ form.nombre }}
       {{ form.nombre.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.direccion.label_tag }}
       {{ form.direccion }}
       {{ form.direccion.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.telefono.label_tag }}
       {{ form.telefono }}
       {{ form.telefono.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.correo.label_tag }}
       {{ form.correo }}
       {{ form.correo.errors }}
-    </div>
 
-    <div class="campo">
       {{ form.codigo.label_tag }}
       {{ form.codigo }}
       {{ form.codigo.errors }}
-    </div>
 
     <p>
+      <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Guardar</button>
       <a class="btn" href="{% url 'hospital:lista_hospital' %}">Cancelar</a>
+      <div style="display: flex; gap: 10px;">
     </p>
+  </section>
   </form>
 </div>
+</div>
+</div>
+</main>
+
 
 {% endblock %}

@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<main class="container">
+<div class="box">
 <h2>Detalle de Hospital</h2>
-<div id="content">
-<div class="marco">
+    <div class="row">
+        <div class="col">
   <ul class="lista-datos">
     <p><strong>Nombre:</strong> {{ hospital.nombre }}</p>
     <p><strong>Dirección:</strong> {{ hospital.direccion|linebreaksbr }}</p>
@@ -13,12 +16,15 @@
   </ul>
   <hr>
   <p>
+    <div style="display: flex; gap: 10px;">
     <a class="btn" href="{% url 'hospital:editar_hospital' hospital.id %}">Editar</a>
     <a class="btn" href="{% url 'hospital:eliminar_hospital' hospital.id %}">Eliminar</a>
     <a class="btn" href="{% url 'hospital:lista_hospital' %}">Volver</a>
+    </div>
   </p>
   <hr>
 </div>
 </div>
-
+</div>
+</main>
 {% endblock %}

@@ -1,40 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Usuarios por Hospital</h2>
-<div id="content">
-    <div class="marco">
+
+<main class="container">
+<div class="box">
+    <h2>Usuarios por Hospital</h2>
+    <div class="row">
+        <div class="col">
 <a class="btn" href="{% url 'acceso:usuariohospital_create' %}">Crear nuevo</a>
-        <div class="formulario">
             <table class="tabla-moderna">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Hospital</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for r in registros %}
-        <tr>
-            <td>{{ r.id }}</td>
-            <td>{{ r.usuario }}</td>
-            <td>{{ r.hospital }}</td>
-            <td>
-                <a class="btn" href="{% url 'acceso:usuariohospital_update' r.id %}">Editar</a>
-                <a class="btn" href="{% url 'acceso:usuariohospital_delete' r.id %}">Eliminar</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">No hay registros.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Hospital</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in registros %}
+                    <tr>
+                        <td>{{ r.id }}</td>
+                        <td>{{ r.usuario }}</td>
+                        <td>{{ r.hospital }}</td>
+                        <td>
+                            <div style="display: flex; gap: 10px;">
+                            <a class="btn" href="{% url 'acceso:usuariohospital_update' r.id %}">Editar</a>
+                            <a class="btn" href="{% url 'acceso:usuariohospital_delete' r.id %}">Eliminar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No hay registros.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>  
 </div>
-
+</main>
 {% endblock %}

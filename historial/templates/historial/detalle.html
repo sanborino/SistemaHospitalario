@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2>Detalle de Historial</h2>
-         
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+<h2>Detalle de Historial clinico</h2>
+    <div class="row">
+        <div class="col">
        <hr>
         <p><strong>Fecha:</strong> {{ historial.fecha }}</p>
         <p><strong>Paciente:</strong> {{ historial.paciente }}</p>
@@ -23,13 +24,15 @@
         {% endif %}
         <hr>
         <div>
+          <div style="display: flex; gap: 10px;">
       <a class="btn" href="{% url 'historial:editar_historial' historial.pk %}">Editar</a>
       <a class="btn" href="{% url 'historial:eliminar_historial' historial.pk %}">Eliminar</a>
       <a class="btn" href="{% url 'historial:lista_historial' %}">Volver</a>
+          </div>
 </div>
 <hr>
     </div>
 </div>
-
+</main>
 
 {% endblock %}

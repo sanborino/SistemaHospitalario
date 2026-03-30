@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Atenciones de urgencia</h2>
-<p><a class="btn" href="{% url 'urgencia:crear_atencion' %}">Nueva atención</a></p>
 
-<div class="marco">
-  <div class="tabla-contenedor">
-    <table class="tabla-moderna">
+<main class="container">
+<div class="box">
+   <h2>Atenciones de urgencia</h2>
+<p><a class="btn" href="{% url 'urgencia:crear_atencion' %}">Nueva atención</a></p>
+    <div class="row">
+        <div class="col">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -24,9 +26,11 @@
             <td>{{ a.medico }}</td>
             <td>{{ a.fecha }}</td>
             <td>
+              <div style="display: flex; gap: 10px;">
               <a class="btn" href="{% url 'urgencia:detalle_atencion' a.id %}">Ver</a>
               <a class="btn" href="{% url 'urgencia:editar_atencion' a.id %}">Editar</a>
               <a class="btn" href="{% url 'urgencia:eliminar_atencion' a.id %}">Eliminar</a>
+              </div>
             </td>
           </tr>
         {% empty %}
@@ -36,6 +40,8 @@
     </table>
   </div>
 </div>
+</div>
+</main>
 
 {% if is_paginated %}
   <p>

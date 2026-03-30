@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle de solicitud #{{ solicitud.id }}</h2>
 
-<div class="marco">
+<main class="container">
+<div class="box">
+<h2>Detalle de solicitud #{{ solicitud.id }}</h2>
+    <div class="row">
+        <div class="col">
   <h3>Información General</h3>
   <ul class="lista-datos">
     <p><strong>ID:</strong> {{ solicitud.id }}</p>
@@ -52,10 +55,15 @@
   {% endwith %}
 
   <p>
+    <div style="display: flex; gap: 10px;">
     <a class="btn" href="{% url 'laboratorio:editar_solicitud' solicitud.id %}">Editar</a>
     <a class="btn" href="{% url 'laboratorio:eliminar_solicitud' solicitud.id %}">Eliminar</a>
     <a class="btn" href="{% url 'laboratorio:lista_solicitud' %}">Volver</a>
+    <div style="display: flex; gap: 10px;">
   </p>
 </div>
+</div>
+</div>
+</main>
 
 {% endblock %}

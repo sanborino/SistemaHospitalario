@@ -7,27 +7,33 @@
 {% endblock %}
 
 {% block content %}
-<div id="content">
-    <div class="formulario">
-        <h2 class="title">Crear Cuenta</h2>
+    <div class="marco">
+    <h1>Sistema Hospitalario</h1>
+    </div>
+<main class="container">
+<div class="box">
+    <h2>Crear Cuenta</h2>
+    <div class="row">
+        <div class="col">
         <form method="POST">
-            {% csrf_token %}
-
+            <section>
         {{register_form.errors}}
 
-        <form method="post" action="">
             {% csrf_token %}
 
             {% for field in register_form %}
-            <div class="campo">
+            
                 <label>{{field.label}}</label>
                 {{field}}
-            </div>
+            
             {% endfor %}
-            <div>
+            <div style="display: flex; gap: 10px;">
                 <button class="btn" >Registrarse</button>
             </div>
+            </section>
         </form>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

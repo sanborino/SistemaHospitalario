@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Detalle de resultado</h2>
 
-<div class="marco">
+<main class="container">
+<div class="box">
+<h2>Detalle de resultado</h2>
+    <div class="row">
+        <div class="col">
   <ul class="lista-datos">
     <p><strong>ID:</strong> {{ resultado.id }}</p>
     <p><strong>Solicitud:</strong> #{{ resultado.solicitud.id }}</p>
@@ -17,9 +20,11 @@
   </div>
 
   <p>
+    <div style="display: flex; gap: 10px;">
     <a class="btn" href="{% url 'laboratorio:editar_resultado' resultado.id %}">Editar</a>
     <a class="btn" href="{% url 'laboratorio:eliminar_resultado' resultado.id %}">Eliminar</a>
     <a class="btn" href="{% url 'laboratorio:lista_resultado' %}">Volver</a>
+    </div>
   </p>
 </div>
 

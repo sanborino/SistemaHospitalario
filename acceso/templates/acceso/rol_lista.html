@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Lista de Roles</h2>
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+    <h2>Lista de roles</h2>
+    <div class="row">
+        <div class="col">
         <a href="{% url 'acceso:rol_crear' %}" class="btn">Crear Rol</a>
         <div class="formulario">
             <table class="tabla-moderna">
@@ -18,9 +20,11 @@
                     <tr>
                         <td>{{ rol.nombre }}</td>
                         <td>
+                            <div style="display: flex; gap: 10px;">
                             <a href="{% url 'acceso:rol_detalle' rol.pk %}" class="btn">Ver</a>
                             <a href="{% url 'acceso:rol_editar' rol.pk %}" class="btn">Editar</a>
                             <a href="{% url 'acceso:rol_eliminar' rol.pk %}" class="btn">Eliminar</a>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
@@ -33,4 +37,5 @@
         </div>
     </div>
 </div>
+</main>
 {% endblock %}

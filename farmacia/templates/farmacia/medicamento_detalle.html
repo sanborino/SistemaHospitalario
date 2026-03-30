@@ -4,9 +4,11 @@
 {% block content %}
 
 
-    <h2 class="mb-4">Detalle del Medicamento</h2>
-<div class="container mt-4">
-    <div class="card shadow-sm">
+<main class="container">
+<div class="box">
+      <h2>Detalle del Medicamento</h2>
+    <div class="row">
+        <div class="col">
         <div class="card-header bg-dark text-white">
             <h5 class="mb-0">{{ medicamento.nombre }}</h5>
         </div>
@@ -64,12 +66,13 @@
 
         </div>
 
-        <div class="card-footer text-end">
-            <a href="{% url 'farmacia:medicamento_list' %}" class="btn btn-secondary">Regresar</a>
+       <div style="display: flex; gap: 10px;">
+            <a href="{% url 'farmacia:medicamento_list' %}" class="btn">Regresar</a>
             <a href="{% url 'farmacia:medicamento_edit' medicamento.id %}" class="btn">Editar</a>
             <a href="{% url 'farmacia:medicamento_eliminar' medicamento.id %}" class="btn">Eliminar</a>
         </div>
     </div>
-
 </div>
+</div>
+</main>
 {% endblock %}

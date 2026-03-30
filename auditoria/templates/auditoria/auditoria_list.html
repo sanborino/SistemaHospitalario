@@ -1,19 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Registros de Auditoría</h2>
-<div id="content">
-    <div class="marco">
+<main class="container">
+<div class="box">
+   <h2>Registros de auditoria</h2>
+    <div class="row">
+        <div class="col">
         <ul>
             {% for a in object_list %}
-                <div class="formulrio">
+            <section>
                     <strong>{{ a.tabla }}</strong> - {{ a.operacion }}  
                     (ID: {{ a.registro_id }})  
                     {{ a.fecha }}
+                    <div style="display: flex; gap: 10px;">
                 <a class="btn" href="{% url 'auditoria:auditoria_detail' a.id %}">Ver detalle</a>
-                </div>
+                    </div>
+            </section>
             {% endfor %}
         </ul>
     </div>
 </div>
+</div>
+</main>
 {% endblock %}

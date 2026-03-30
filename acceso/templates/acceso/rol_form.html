@@ -1,20 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>{{ titulo }}</h2>
-<div id="content">
-    <div class="marco">
-        <div class="formulario">
-            
+<main class="container">
+<div class="box">
+    <h2>Crear Rol</h2>
+    <div class="row">
+        <div class="col">
             <form method="post">
+                <section>
                 <div class="campo">
                 {% csrf_token %}
                 {{ form.as_p }}
                 </div>
+                <div style="display: flex; gap: 10px;">
                 <button class="btn" type="submit">Guardar</button>
                 <a href="{% url 'acceso:rol_lista' %}" class="btn">Cancelar</a>
+                </div>
+                </section>
             </form>
         </div>
     </div>
 </div>
+</main>
 {% endblock %}

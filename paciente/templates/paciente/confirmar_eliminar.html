@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Eliminar Paciente</h2>
-<div id="content">
+
+<main class="container">
+<div class="box">
+  <h2>Eliminar Paciente</h2>
+    <div class="row">
+        <div class="col">
   <hr>
       <p>¿Seguro que deseas eliminar a <strong>{{ object }}</strong> (No. de expediente {{ object.id }})?</p>
-  <div class="marco">
       <form method="post">
         {% csrf_token %}
+        <div style="display: flex; gap: 10px;">
         <button class="btn" type="submit">Sí, eliminar</button>
         <a class="btn" href="{% url 'paciente:detalle_paciente' object.id %}">Cancelar</a>
+        </div>
       </form>
           <hr>
     </div>
-
-  </div>
-
+</div>
+</div>
+</main>
 {% endblock %}
