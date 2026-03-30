@@ -107,8 +107,8 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
         "HOST": "localhost",
         "PORT": 3306,
     }
-}"""
-
+}
+"""
 DATABASES = {
     "default": dj_database_url.config(
         conn_max_age=600,

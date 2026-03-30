@@ -45,6 +45,9 @@
         </div>
         {% if not receta.dispensacion_set.exists %}
         <!-- BOTÓN PARA SURTIR LA RECETA -->
+        <a href="{% url 'farmacia:receta_detalle_add' receta_id=receta.pk %}" class="btn">
+    Agregar medicamentos
+</a>
         <a href="{% url 'farmacia:dispensar_receta' receta.id %}" class="btn">
             Surtir receta
         </a>

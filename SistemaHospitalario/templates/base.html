@@ -16,11 +16,21 @@
     <script src="{% static 'js/menu.js' %}"></script>
 </head>
 
-<body>
+<body>   
+{% if user.is_authenticated %}
+ {% include "includes/navbar.html" %}
+ {% endif %}
 
-{% if roles_usuario and roles_usuario.0 in "SISTEMAS,MÉDICO,ENFERMERO,MANTENIMIENTO,DIRECCION,LABORATORIO,ADMINISTRACION,FARMACIA" %}
-    {% include "includes/navbar.html" %}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
 {% endif %}
+
 
         {% block content %}
         {% endblock %}
