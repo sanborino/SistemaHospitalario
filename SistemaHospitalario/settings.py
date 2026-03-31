@@ -98,7 +98,7 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
     }
 }"""
 
-DATABASES = {
+"""DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "sistemahospitalario",
@@ -107,9 +107,9 @@ DATABASES = {
         "HOST": "localhost",
         "PORT": 3306,
     }
-}
+}"""
 
-"""DATABASES = {
+DATABASES = {
     "default": dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
@@ -120,7 +120,7 @@ DATABASES = {
     #'PASSWORD': 'PASSWORD',
     #'HOST': 'HOST',
     #'PORT': '5432',
-}"""
+}
 
 
 # Password validation
