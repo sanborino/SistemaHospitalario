@@ -193,6 +193,27 @@ class RecetaDetalleCreateView(CreateView):
         )
 
 
+class RecetaDetalleUpdateView(UpdateView):
+    model = RecetaDetalle
+    form_class = RecetaDetalleForm
+    template_name = "farmacia/receta_detalle_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "farmacia:receta_detalle", kwargs={"pk": self.object.receta_id}
+        )
+
+
+class RecetaDetalleDeleteView(DeleteView):
+    model = RecetaDetalle
+    template_name = "farmacia/receta_detalle_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "farmacia:receta_detalle", kwargs={"pk": self.object.receta_id}
+        )
+
+
 # -----------------------
 # Dispensaciones
 # -----------------------
@@ -223,7 +244,7 @@ def dispensacion_create(request, receta_id):
         messages.error(
             request, "Esta receta ya fue surtida y no puede volver a dispensarse."
         )
-        return redirect("farmacia:dispensacion_detail", pk=dispensacion.pk)
+        return redirect("farmacia:dispensacion_detalle", pk=dispensacion.pk)
 
     detalles = receta.recetadetalle_set.all()  # RecetaDetalle
 
@@ -231,11 +252,7 @@ def dispensacion_create(request, receta_id):
         form = DispensacionForm(request.POST)
 
         if form.is_valid():
-            dispensacion = form.save(commit=False)
-            dispensacion.receta = receta
-            dispensacion.save()
-
-            # Procesar cada medicamento recetado
+            # Validar primero cantidades y stock ANTES de guardar
             for d in detalles:
                 cantidad_entregar = int(request.POST.get(f"entregar_{d.id}", 0))
 
@@ -248,24 +265,30 @@ def dispensacion_create(request, receta_id):
                         )
                         return redirect(request.path)
 
-                # Validar stock
-                if cantidad_entregar > d.medicamento.stock:
-                    messages.error(
-                        request,
-                        f"No hay suficiente stock de {d.medicamento.nombre}. Disponible: {d.medicamento.stock}",
+                    if cantidad_entregar > d.medicamento.stock:
+                        messages.error(
+                            request,
+                            f"No hay suficiente stock de {d.medicamento.nombre}. "
+                            f"Disponible: {d.medicamento.stock}",
+                        )
+                        return redirect(request.path)
+
+            # Si todas las validaciones pasan, ahora sí guardamos la dispensación
+            dispensacion = form.save(commit=False)
+            dispensacion.receta = receta
+            dispensacion.save()
+
+            # Crear detalles de dispensación y descontar inventario
+            for d in detalles:
+                cantidad_entregar = int(request.POST.get(f"entregar_{d.id}", 0))
+                if cantidad_entregar > 0:
+                    DispensacionDetalle.objects.create(
+                        dispensacion=dispensacion,
+                        medicamento=d.medicamento,
+                        cantidad=cantidad_entregar,
                     )
-                    return redirect(request.path)
-
-                # Crear detalle de dispensación
-                DispensacionDetalle.objects.create(
-                    dispensacion=dispensacion,
-                    medicamento=d.medicamento,
-                    cantidad=cantidad_entregar,
-                )
-
-                # Descontar inventario
-                d.medicamento.stock -= cantidad_entregar
-                d.medicamento.save()
+                    d.medicamento.stock -= cantidad_entregar
+                    d.medicamento.save()
 
             messages.success(request, "Dispensación realizada correctamente.")
             return redirect("farmacia:dispensacion_detalle", pk=dispensacion.pk)

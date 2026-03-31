@@ -4,7 +4,7 @@
 {% block content %}
 <main class="container">
 <div class="box">
-  <h2>Recetas pendientes por surtir</h2>
+  <h2>Recetas</h2>
     <div class="row">
         <div class="col">
     <form method="get">
@@ -90,9 +90,7 @@
                         <div style="display: flex; gap: 10px;">
                         <a href="{% url 'farmacia:receta_detalle' r.id %}" class="btn">Ver</a>
                         <!-- Acción principal: surtir -->
-                        <a href="{% url 'farmacia:dispensacion_create'%}" class="btn btn-sm btn-success">
-                            Surtir
-                        </a>
+                        
                     </div>
                     </td>
                 </tr>

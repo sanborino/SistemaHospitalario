@@ -133,7 +133,7 @@
                 <ul>
                 <input type="checkbox" id="submenu1">
                     <li><a href="{% url 'farmacia:medicamento_list' %}">Medicamentos</a></li>
-                    <li><a href="{% url 'farmacia:receta_list' %}">Dispensar</a></li>
+                    <li><a href="{% url 'farmacia:dispensacion_list' %}">Dispensar</a></li>
                 </ul>
             </li>
 
@@ -223,14 +223,6 @@
 		</ul>
 </nav>
 </header>
-{% if messages %}
-<div class="messages">
-    {% for message in messages %}
-        <div class="alert {{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-</div>
-{% endif %}
+
 
 

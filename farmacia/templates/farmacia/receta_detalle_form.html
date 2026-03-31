@@ -8,17 +8,21 @@
     <div class="row">
         <div class="col">
         <form method="post" >
+             <section>
             {% csrf_token %}
 
             {% for field in form %}
-
+           
                 <label>{{ field.label }}</label>
                 {{ field }}
                 {{ field.errors }}
-
+             
             {% endfor %}
-
-            <button class="btn">Guardar</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn">Guardar</button>
+                    <a href="{% url 'farmacia:receta_list' %}" class="btn">Regresar</a>
+                </div>
+            </section>
         </form>
     </div>
     </div>

@@ -27,6 +27,7 @@
                     <tr>
                         <th>Medicamento</th>
                         <th>Cantidad</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,13 @@
                     <tr>
                         <td>{{ d.medicamento }}</td>
                         <td>{{ d.cantidad }}</td>
+                        <td>
+                            <div style="display: flex; gap: 10px;">
+                            <a href="{% url 'farmacia:receta_detalle_edit' d.pk %}" class="btn">Editar</a>
+                            <a href="{% url 'farmacia:receta_detalle_delete' d.pk %}" class="btn">Eliminar</a>
+                            </div>
+                        </td>
+
                     </tr>
                     {% empty %}
                     <tr>
@@ -48,8 +56,8 @@
         <a href="{% url 'farmacia:receta_detalle_add' receta_id=receta.pk %}" class="btn">
     Agregar medicamentos
 </a>
-        <a href="{% url 'farmacia:dispensar_receta' receta.id %}" class="btn">
-            Surtir receta
+        <a href="{% url 'farmacia:receta_list'%}" class="btn">
+            Regresar
         </a>
         {% endif %}
 </div>

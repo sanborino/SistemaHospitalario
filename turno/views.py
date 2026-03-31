@@ -3,10 +3,13 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Turno, TurnoPersonal, Asistencia
 from .forms import TurnoForm, TurnoPersonalForm, AsistenciaForm
 from django.utils import timezone
+from django.shortcuts import redirect
+
 
 # -----------------------
 # TURNOS
 # -----------------------
+
 
 class TurnoListView(ListView):
     model = Turno
@@ -37,6 +40,7 @@ class TurnoDeleteView(DeleteView):
 # TURNO PERSONAL
 # -----------------------
 
+
 class TurnoPersonalListView(ListView):
     model = TurnoPersonal
     template_name = "turnos/turnopersonal_list.html"
@@ -66,13 +70,14 @@ class TurnoPersonalDeleteView(DeleteView):
 # ASISTENCIA
 # -----------------------
 
+
 class AsistenciaListView(ListView):
     model = Asistencia
     template_name = "turnos/asistencia_list.html"
-    
+
     def get_queryset(self):
         hoy = timezone.localdate()
-        return Asistencia.objects.filter(fecha=hoy).order_by('-hora_entrada')
+        return Asistencia.objects.filter(fecha=hoy).order_by("-hora_entrada")
 
 
 class AsistenciaCreateView(CreateView):
@@ -80,9 +85,9 @@ class AsistenciaCreateView(CreateView):
     form_class = AsistenciaForm
     template_name = "turnos/asistencia_form.html"
     success_url = reverse_lazy("turno:asistencia_list")
-    
+
     def form_valid(self, form):
-        usuario = form.cleaned_data['usuario']
+        usuario = form.cleaned_data["usuario"]
         hoy = timezone.localdate()
 
         # Buscar si ya existe asistencia de este usuario hoy
@@ -92,13 +97,15 @@ class AsistenciaCreateView(CreateView):
             # Ya existe → registrar salida
             asistencia.hora_salida = timezone.localtime().time()
             asistencia.save()
+            self.object = asistencia  # <- importante: vincular el objeto actualizado
         else:
             # No existe → registrar entrada
             nueva = form.save(commit=False)
             nueva.hora_entrada = timezone.localtime().time()
             nueva.save()
+            self.object = nueva  # <- vincular el objeto creado
 
-        return super().form_valid(form)
+        return redirect(self.success_url)
 
 
 class AsistenciaUpdateView(UpdateView):

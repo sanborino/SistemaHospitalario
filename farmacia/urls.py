@@ -36,6 +36,16 @@ urlpatterns = [
         views.RecetaDetalleCreateView.as_view(),
         name="receta_detalle_add",
     ),
+    path(
+        "recetas/detalle/<int:pk>/edit/",
+        views.RecetaDetalleUpdateView.as_view(),
+        name="receta_detalle_edit",
+    ),
+    path(
+        "recetas/detalle/<int:pk>/delete/",
+        views.RecetaDetalleDeleteView.as_view(),
+        name="receta_detalle_delete",
+    ),
     # Dispensaciones
     path(
         "dispensaciones/",
@@ -51,6 +61,6 @@ urlpatterns = [
     path(
         "dispensaciones/<int:pk>/",
         views.DispensacionDetailView.as_view(),
-        name="dispensacion_detail",
+        name="dispensacion_detalle",
     ),
 ]

@@ -2,10 +2,12 @@ from django.views.generic import ListView, DetailView
 from .models import Auditoria
 from django.apps import apps
 
+
 class AuditoriaListView(ListView):
     model = Auditoria
     template_name = "auditoria/auditoria_list.html"
-    ordering = ['-fecha']  # más reciente primero
+    ordering = ["-fecha"]  # más reciente primero
+
 
 class AuditoriaDetailView(DetailView):
     model = Auditoria
@@ -37,7 +39,12 @@ class AuditoriaDetailView(DetailView):
                 for field in registro_original._meta.get_fields():
 
                     # Excluir relaciones inversas y M2M
-                    if field.is_relation and (field.one_to_many or field.many_to_many or field.one_to_one and field.auto_created):
+                    if field.is_relation and (
+                        field.one_to_many
+                        or field.many_to_many
+                        or field.one_to_one
+                        and field.auto_created
+                    ):
                         continue
 
                     nombre = field.verbose_name

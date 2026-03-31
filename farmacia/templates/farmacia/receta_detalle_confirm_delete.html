@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="container">
+<div class="box">
+    <h2>Confirmar eliminación</h2>
+  <p>¿Estás seguro de que quieres eliminar el detalle de la receta: {{ object.medicamento }} ({{ object.cantidad }})?</p>
+    <div class="row">
+        <div class="col">
+  <form method="post">
+    {% csrf_token %}
+    <div style="display: flex; gap: 10px;">
+    <button type="submit" class="btn">Sí, eliminar</button>
+    <a href="{% url 'farmacia:receta_detalle' object.receta_id %}" class="btn">Cancelar</a>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+</main>
+{% endblock %}
