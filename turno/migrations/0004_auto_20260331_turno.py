@@ -10,43 +10,52 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Elimina triggers si existen
+        migrations.RunSQL("DROP TRIGGER IF EXISTS trg_turno_ai ON turno_turno;"),
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_turno_personal_ai ON turno_turnopersonal;"
+        ),
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_asistencia_ai ON turno_asistencia;"
+        ),
+        # Elimina la función si existe
+        migrations.RunSQL("DROP FUNCTION IF EXISTS auditoria_generica();"),
+        # Crea o reemplaza la función
         migrations.RunSQL(
             """
-            -- Elimina el trigger si ya existe
-            DROP TRIGGER IF EXISTS trg_turno_ai;
-            DROP TRIGGER IF EXISTS trg_turno_personal_ai;
-            DROP TRIGGER IF EXISTS trg_asistencia_ai;
-
-            -- Elimina la función si ya existe
-            
-            DROP FUNCTION IF EXISTS auditoria_generica();
-
-            -- Crea o reemplaza la función
-            
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
-
+                INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
+                VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
                 RETURN NEW;
             END;
             $$ LANGUAGE plpgsql;
-            
+            """
+        ),
+        # Crea los triggers nuevamente
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_turno_ai
             AFTER INSERT ON turno_turno
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_turno_personal_ai
             AFTER INSERT ON turno_turnopersonal
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_asistencia_ai
             AFTER INSERT ON turno_asistencia
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            """,
-        )
+            """
+        ),
     ]

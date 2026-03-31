@@ -10,37 +10,41 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Elimina triggers si existen
+        migrations.RunSQL("DROP TRIGGER IF EXISTS trg_medico_ai ON personal_medico;"),
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_enfermero_ai ON personal_enfermero;"
+        ),
+        # Elimina la función si existe
+        migrations.RunSQL("DROP FUNCTION IF EXISTS auditoria_generica();"),
+        # Crea o reemplaza la función
         migrations.RunSQL(
             """
-            -- Elimina el trigger si ya existe
-            DROP TRIGGER IF EXISTS trg_medico_ai;
-            DROP TRIGGER IF EXISTS trg_enfermero_ai;
-
-            -- Elimina la función si ya existe
-            
-            DROP FUNCTION IF EXISTS auditoria_generica();
-
-            -- Crea o reemplaza la función
-            
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
-
+                INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
+                VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
                 RETURN NEW;
             END;
             $$ LANGUAGE plpgsql;
-            
+            """
+        ),
+        # Crea los triggers nuevamente
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_medico_ai
             AFTER INSERT ON personal_medico
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_enfermero_ai
             AFTER INSERT ON personal_enfermero
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            """,
-        )
+            """
+        ),
     ]

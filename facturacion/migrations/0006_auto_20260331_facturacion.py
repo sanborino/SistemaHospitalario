@@ -10,45 +10,52 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Elimina triggers si existen
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_factura_ai ON facturacion_factura;"
+        ),
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_factura_detalle_ai ON facturacion_facturadetalle;"
+        ),
+        migrations.RunSQL("DROP TRIGGER IF EXISTS trg_pago_ai ON facturacion_pago;"),
+        # Elimina la función si existe
+        migrations.RunSQL("DROP FUNCTION IF EXISTS auditoria_generica();"),
+        # Crea o reemplaza la función
         migrations.RunSQL(
             """
-            -- Elimina el trigger si ya existe
-            DROP TRIGGER IF EXISTS trg_factura_ai;
-            DROP TRIGGER IF EXISTS trg_factura_detalle_ai;
-            DROP TRIGGER IF EXISTS trg_pago_ai;
-
-            -- Elimina la función si ya existe
-            
-            DROP FUNCTION IF EXISTS auditoria_generica();
-
-            -- Crea o reemplaza la función
-            
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
                 INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
                 VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
-
                 RETURN NEW;
             END;
             $$ LANGUAGE plpgsql;
-
-            -- Crea el trigger nuevamente
-            
+            """
+        ),
+        # Crea los triggers nuevamente
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_factura_ai
             AFTER INSERT ON facturacion_factura
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_factura_detalle_ai
             AFTER INSERT ON facturacion_facturadetalle
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_pago_ai
             AFTER INSERT ON facturacion_pago
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            """,
-        )
+            """
+        ),
     ]

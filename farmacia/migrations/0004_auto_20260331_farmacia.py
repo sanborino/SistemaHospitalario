@@ -10,51 +10,63 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Elimina triggers si existen
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_medicamento_ai ON farmacia_medicamento;"
+        ),
+        migrations.RunSQL("DROP TRIGGER IF EXISTS trg_receta_ai ON farmacia_receta;"),
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_receta_detalle_ai ON farmacia_recetadetalle;"
+        ),
+        migrations.RunSQL(
+            "DROP TRIGGER IF EXISTS trg_dispensacion_ai ON farmacia_dispensacion;"
+        ),
+        # Elimina la función si existe
+        migrations.RunSQL("DROP FUNCTION IF EXISTS auditoria_generica();"),
+        # Crea o reemplaza la función
         migrations.RunSQL(
             """
-            -- Elimina el trigger si ya existe
-            DROP TRIGGER IF EXISTS trg_medicamento_ai;
-            DROP TRIGGER IF EXISTS trg_receta_ai;
-            DROP TRIGGER IF EXISTS trg_receta_detalle_ai;
-            DROP TRIGGER IF EXISTS trg_dispensacion_ai;
-
-            -- Elimina la función si ya existe
-            
-            DROP FUNCTION IF EXISTS auditoria_generica();
-
-            -- Crea o reemplaza la función
-            
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
                 INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
                 VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
-
                 RETURN NEW;
             END;
             $$ LANGUAGE plpgsql;
-
-            -- Crea el trigger nuevamente
-            
+            """
+        ),
+        # Crea los triggers nuevamente
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_medicamento_ai
             AFTER INSERT ON farmacia_medicamento
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_receta_ai
             AFTER INSERT ON farmacia_receta
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_receta_detalle_ai
             AFTER INSERT ON farmacia_recetadetalle
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-
+            """
+        ),
+        migrations.RunSQL(
+            """
             CREATE TRIGGER trg_dispensacion_ai
             AFTER INSERT ON farmacia_dispensacion
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            """,
-        )
+            """
+        ),
     ]
