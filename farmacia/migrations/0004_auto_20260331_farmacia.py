@@ -12,15 +12,29 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             """
+            -- Elimina el trigger si ya existe
+            DROP TRIGGER IF EXISTS trg_medicamento_ai;
+            DROP TRIGGER IF EXISTS trg_receta_ai;
+            DROP TRIGGER IF EXISTS trg_receta_detalle_ai;
+            DROP TRIGGER IF EXISTS trg_dispensacion_ai;
+
+            -- Elimina la función si ya existe
+            
+            DROP FUNCTION IF EXISTS auditoria_generica();
+
+            -- Crea o reemplaza la función
+            
             CREATE OR REPLACE FUNCTION auditoria_generica()
             RETURNS TRIGGER AS $$
             BEGIN
-            INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
-            VALUES (TG_TABLE_NAME, TG_OP, NEW.id, now());
+                INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
+                VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
 
-            RETURN NEW;
+                RETURN NEW;
             END;
             $$ LANGUAGE plpgsql;
+
+            -- Crea el trigger nuevamente
             
             CREATE TRIGGER trg_medicamento_ai
             AFTER INSERT ON farmacia_medicamento
@@ -41,12 +55,6 @@ class Migration(migrations.Migration):
             AFTER INSERT ON farmacia_dispensacion
             FOR EACH ROW
             EXECUTE FUNCTION auditoria_generica();
-            """,
-            reverse_sql="""
-            DROP TRIGGER IF EXISTS trg_medicamento_ai;
-            DROP TRIGGER IF EXISTS trg_receta_ai;
-            DROP TRIGGER IF EXISTS trg_receta_detalle_ai;
-            DROP TRIGGER IF EXISTS trg_dispensacion_ai;
             """,
         )
     ]
