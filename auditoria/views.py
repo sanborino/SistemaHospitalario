@@ -24,7 +24,7 @@ class AuditoriaDetailView(DetailView):
         # Buscar el modelo en todas las apps
         for app_config in apps.get_app_configs():
             try:
-                Modelo = app_config.get_model(tabla)
+                Modelo = app_config.get_model(tabla.lower())
                 break
             except LookupError:
                 continue
