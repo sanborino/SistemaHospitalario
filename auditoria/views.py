@@ -21,35 +21,33 @@ class AuditoriaDetailView(DetailView):
 
         Modelo = None
 
-        # Buscar el modelo en todas las apps
+        # Buscar modelo por db_table en vez de por nombre
         for app_config in apps.get_app_configs():
-            try:
-                Modelo = app_config.get_model(tabla.lower())
+            for model in app_config.get_models():
+                if model._meta.db_table == tabla:
+                    Modelo = model
+                    break
+            if Modelo:
                 break
-            except LookupError:
-                continue
 
         registro_original = None
         campos = {}
 
         if Modelo:
-            registro_original = Modelo.objects.filter(id=int(id=registro_id)).first()
+            registro_original = Modelo.objects.filter(id=int(registro_id)).first()
 
             if registro_original:
                 for field in registro_original._meta.get_fields():
-
                     # Excluir relaciones inversas y M2M
                     if field.is_relation and (
                         field.one_to_many
                         or field.many_to_many
-                        or field.one_to_one
-                        and field.auto_created
+                        or (field.one_to_one and field.auto_created)
                     ):
                         continue
 
                     nombre = field.verbose_name
                     valor = getattr(registro_original, field.name, None)
-
                     campos[nombre] = valor
 
         context["registro_original"] = registro_original
