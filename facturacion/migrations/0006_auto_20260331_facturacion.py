@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RunSQL("DROP TRIGGER IF EXISTS trg_pago_ai ON facturacion_pago;"),
         # Elimina la función si existe
-        migrations.RunSQL("DROP FUNCTION IF EXISTS auditoria_generica();"),
+        migrations.RunSQL("DROP FUNCTION IF EXISTS auditoria_generica() CASCADE;"),
         # Crea o reemplaza la función
         migrations.RunSQL(
             """
