@@ -33,7 +33,7 @@ class AuditoriaDetailView(DetailView):
         campos = {}
 
         if Modelo:
-            registro_original = Modelo.objects.filter(id=registro_id).first()
+            registro_original = Modelo.objects.filter(id=int(id=registro_id)).first()
 
             if registro_original:
                 for field in registro_original._meta.get_fields():
