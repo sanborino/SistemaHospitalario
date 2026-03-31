@@ -29,8 +29,17 @@ class Migration(migrations.Migration):
             RETURNS TRIGGER AS $$
             BEGIN
                 INSERT INTO auditoria(tabla, operacion, registro_id, fecha)
-                VALUES (TG_TABLE_NAME, TG_OP, NEW.id, NOW());
-                RETURN NEW;
+                VALUES (
+                    TG_TABLE_NAME,
+                    TG_OP,
+                    CASE WHEN TG_OP = 'DELETE' THEN OLD.id ELSE NEW.id END,
+                    NOW()
+                );
+                IF (TG_OP = 'DELETE') THEN
+                    RETURN OLD;
+                ELSE
+                    RETURN NEW;
+                END IF;
             END;
             $$ LANGUAGE plpgsql;
             """

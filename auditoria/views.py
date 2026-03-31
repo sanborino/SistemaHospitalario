@@ -20,8 +20,6 @@ class AuditoriaDetailView(DetailView):
         registro_id = self.object.registro_id
 
         Modelo = None
-
-        # Buscar modelo por db_table en vez de por nombre
         for app_config in apps.get_app_configs():
             for model in app_config.get_models():
                 if model._meta.db_table == tabla:
@@ -34,23 +32,21 @@ class AuditoriaDetailView(DetailView):
         campos = {}
 
         if Modelo:
-            registro_original = Modelo.objects.filter(id=int(registro_id)).first()
+            pk_name = Modelo._meta.pk.name
+            registro_original = Modelo.objects.filter(**{pk_name: registro_id}).first()
 
             if registro_original:
                 for field in registro_original._meta.get_fields():
-                    # Excluir relaciones inversas y M2M
                     if field.is_relation and (
                         field.one_to_many
                         or field.many_to_many
                         or (field.one_to_one and field.auto_created)
                     ):
                         continue
-
                     nombre = field.verbose_name
                     valor = getattr(registro_original, field.name, None)
                     campos[nombre] = valor
 
         context["registro_original"] = registro_original
         context["campos"] = campos
-
         return context
