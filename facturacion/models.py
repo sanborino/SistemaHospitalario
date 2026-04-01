@@ -1,6 +1,9 @@
 from django.db import models
 from paciente.models import Paciente
 from hospital.models import Hospital
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from .models import FacturaDetalle, Factura
 
 # Create your models here.
 
@@ -103,3 +106,19 @@ class Cargo(models.Model):
 
     def __str__(self):
         return f"{self.descripcion} - {self.paciente}"
+
+
+def recalcular_total_factura(factura):
+    subtotal = sum(d.cantidad * d.precio_unitario for d in factura.detalle_set.all())
+    factura.total = subtotal
+    factura.save()
+
+
+@receiver(post_save, sender=FacturaDetalle)
+def actualizar_total_factura(sender, instance, **kwargs):
+    recalcular_total_factura(instance.factura)
+
+
+@receiver(post_delete, sender=FacturaDetalle)
+def actualizar_total_factura_delete(sender, instance, **kwargs):
+    recalcular_total_factura(instance.factura)
