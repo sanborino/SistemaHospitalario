@@ -65,18 +65,6 @@ def crear_factura_solicitud(solicitud):
 
 
 # CRUD Estudio
-class EstudioListView(LoginRequiredMixin, ListView):
-    model = Estudio
-    template_name = "laboratorio/estudio_lista.html"
-    context_object_name = "estudios"
-    paginate_by = 10
-    ordering = ["nombre"]
-
-
-class EstudioDetailView(LoginRequiredMixin, DetailView):
-    model = Estudio
-    template_name = "laboratorio/estudio_detalle.html"
-    context_object_name = "estudio"
 
 
 class EstudioCreateView(LoginRequiredMixin, CreateView):
@@ -105,6 +93,31 @@ class EstudioDeleteView(LoginRequiredMixin, DeleteView):
     model = Estudio
     template_name = "laboratorio/estudio_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_estudio")
+
+
+class EstudioListView(LoginRequiredMixin, ListView):
+    model = Estudio
+    template_name = "laboratorio/estudio_lista.html"
+    context_object_name = "estudios"
+    paginate_by = 10
+    ordering = ["nombre"]
+
+
+class EstudioDetailView(LoginRequiredMixin, DetailView):
+    model = Estudio
+    template_name = "laboratorio/estudio_detalle.html"
+    context_object_name = "estudio"
+
+
+class EstudioUpdateView(LoginRequiredMixin, UpdateView):
+    model = Estudio
+    form_class = EstudioForm
+    template_name = "laboratorio/estudio_formulario.html"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "laboratorio:detalle_estudio", kwargs={"pk": self.object.pk}
+        )
 
 
 # CRUD SolicitudLaboratorio
@@ -199,134 +212,6 @@ class SolicitudDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("laboratorio:lista_solicitud")
 
 
-# CRUD ResultadoLaboratorio
-class ResultadoListView(LoginRequiredMixin, ListView):
-    model = ResultadoLaboratorio
-    template_name = "laboratorio/resultado_lista.html"
-    context_object_name = "resultados"
-    paginate_by = 10
-    ordering = ["-fecha"]
-
-    def get_queryset(self):
-        queryset = super().get_queryset().select_related("solicitud", "firmado_por")
-
-        # Obtener parámetros GET
-        paciente = self.request.GET.get("paciente")
-        estado = self.request.GET.get("estado")
-        fecha = self.request.GET.get("fecha")
-
-        # Filtro por paciente (nombre o apellido)
-        if paciente:
-            queryset = queryset.filter(
-                Q(solicitud__paciente__nombre__icontains=paciente)
-                | Q(solicitud__paciente__apellido__icontains=paciente)
-            )
-
-        # Filtro por estado de la solicitud
-        if estado and estado != "todos":
-            queryset = queryset.filter(solicitud__estado=estado)
-
-        # Filtro por fecha exacta del resultado
-        if fecha:
-            queryset = queryset.filter(fecha=fecha)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Mantener valores seleccionados en el template
-        context["paciente_busqueda"] = self.request.GET.get("paciente", "")
-        context["estado_seleccionado"] = self.request.GET.get("estado", "todos")
-        context["fecha_busqueda"] = self.request.GET.get("fecha", "")
-
-        # Opciones de estado
-        context["estados"] = [
-            ("todos", "Todos"),
-            ("pendiente", "Pendiente"),
-            ("finalizado", "Finalizado"),
-        ]
-
-        return context
-
-
-class ResultadoDetailView(LoginRequiredMixin, DetailView):
-    model = ResultadoLaboratorio
-    template_name = "laboratorio/resultado_detalle.html"
-    context_object_name = "resultado"
-
-
-class ResultadoCreateView(LoginRequiredMixin, CreateView):
-    model = ResultadoLaboratorio
-    form_class = ResultadoLaboratorioForm
-    template_name = "laboratorio/resultado_formulario.html"
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "laboratorio:detalle_resultado", kwargs={"pk": self.object.pk}
-        )
-
-
-class ResultadoUpdateView(LoginRequiredMixin, UpdateView):
-    model = ResultadoLaboratorio
-    form_class = ResultadoLaboratorioForm
-    template_name = "laboratorio/resultado_formulario.html"
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "laboratorio:detalle_resultado", kwargs={"pk": self.object.pk}
-        )
-
-
-class ResultadoDeleteView(LoginRequiredMixin, DeleteView):
-    model = ResultadoLaboratorio
-    template_name = "laboratorio/resultado_confirmar_eliminar.html"
-    success_url = reverse_lazy("laboratorio:lista_resultado")
-
-
-# CRUD Estudio
-class EstudioListView(LoginRequiredMixin, ListView):
-    model = Estudio
-    template_name = "laboratorio/estudio_lista.html"
-    context_object_name = "estudios"
-    paginate_by = 10
-    ordering = ["nombre"]
-
-
-class EstudioDetailView(LoginRequiredMixin, DetailView):
-    model = Estudio
-    template_name = "laboratorio/estudio_detalle.html"
-    context_object_name = "estudio"
-
-
-class EstudioCreateView(LoginRequiredMixin, CreateView):
-    model = Estudio
-    form_class = EstudioForm
-    template_name = "laboratorio/estudio_formulario.html"
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "laboratorio:detalle_estudio", kwargs={"pk": self.object.pk}
-        )
-
-
-class EstudioUpdateView(LoginRequiredMixin, UpdateView):
-    model = Estudio
-    form_class = EstudioForm
-    template_name = "laboratorio/estudio_formulario.html"
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "laboratorio:detalle_estudio", kwargs={"pk": self.object.pk}
-        )
-
-
-class EstudioDeleteView(LoginRequiredMixin, DeleteView):
-    model = Estudio
-    template_name = "laboratorio/estudio_confirmar_eliminar.html"
-    success_url = reverse_lazy("laboratorio:lista_estudio")
-
-
 # CRUD SolicitudLaboratorio
 class SolicitudListView(LoginRequiredMixin, ListView):
     model = SolicitudLaboratorio
@@ -386,13 +271,9 @@ class SolicitudUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class SolicitudDeleteView(LoginRequiredMixin, DeleteView):
-    model = SolicitudLaboratorio
-    template_name = "laboratorio/solicitud_confirmar_eliminar.html"
-    success_url = reverse_lazy("laboratorio:lista_solicitud")
-
-
 # CRUD ResultadoLaboratorio
+
+
 class ResultadoListView(LoginRequiredMixin, ListView):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_lista.html"
@@ -401,7 +282,46 @@ class ResultadoListView(LoginRequiredMixin, ListView):
     ordering = ["-fecha"]
 
     def get_queryset(self):
-        return super().get_queryset().select_related("solicitud", "firmado_por")
+        queryset = super().get_queryset().select_related("solicitud", "firmado_por")
+
+        # Obtener parámetros GET
+        paciente = self.request.GET.get("paciente")
+        estado = self.request.GET.get("estado")
+        fecha = self.request.GET.get("fecha")
+
+        # Filtro por paciente (nombre o apellido)
+        if paciente:
+            queryset = queryset.filter(
+                Q(solicitud__paciente__nombre__icontains=paciente)
+                | Q(solicitud__paciente__apellido__icontains=paciente)
+            )
+
+        # Filtro por estado de la solicitud
+        if estado and estado != "todos":
+            queryset = queryset.filter(solicitud__estado=estado)
+
+        # Filtro por fecha exacta del resultado
+        if fecha:
+            queryset = queryset.filter(fecha=fecha)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Mantener valores seleccionados en el template
+        context["paciente_busqueda"] = self.request.GET.get("paciente", "")
+        context["estado_seleccionado"] = self.request.GET.get("estado", "todos")
+        context["fecha_busqueda"] = self.request.GET.get("fecha", "")
+
+        # Opciones de estado
+        context["estados"] = [
+            ("todos", "Todos"),
+            ("pendiente", "Pendiente"),
+            ("finalizado", "Finalizado"),
+        ]
+
+        return context
 
 
 class ResultadoDetailView(LoginRequiredMixin, DetailView):
