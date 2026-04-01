@@ -35,7 +35,9 @@ class Factura(models.Model):
 
 
 class FacturaDetalle(models.Model):
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
+    factura = models.ForeignKey(
+        Factura, on_delete=models.CASCADE, related_name="detalles"
+    )
     descripcion = models.CharField(max_length=200)
     cantidad = models.IntegerField()
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
@@ -109,7 +111,9 @@ class Cargo(models.Model):
 
 
 def recalcular_total_factura(factura):
-    subtotal = sum(d.cantidad * d.precio_unitario for d in factura.detalles.all())
+    subtotal = sum(
+        d.cantidad * d.precio_unitario for d in factura.facturadetalle_set.all()
+    )
     factura.total = subtotal
     factura.save()
 
