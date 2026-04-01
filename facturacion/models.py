@@ -3,7 +3,7 @@ from paciente.models import Paciente
 from hospital.models import Hospital
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from .models import FacturaDetalle, Factura
+
 
 # Create your models here.
 
