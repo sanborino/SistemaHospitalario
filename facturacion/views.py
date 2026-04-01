@@ -83,8 +83,8 @@ def factura_detalle(request, pk):
     # Total pagado
     total_pagado = sum(p.monto for p in pagos)
 
-    # Saldo pendiente
-    saldo = factura.total - total_pagado
+    # Saldo pendiente (usar subtotal_detalles en lugar de factura.total)
+    saldo = subtotal_detalles - total_pagado
 
     # Si ya se pagó el total, cambiar estado a PAGADA
     if saldo <= 0 and factura.estado != "PAGADA":
