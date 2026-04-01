@@ -57,6 +57,7 @@
                     <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
                     <li><a href="{% url 'farmacia:receta_list' %}">Listado de recetas</a></li>
                     <li><a href="{% url 'laboratorio:crear_solicitud' %}">Solicitar estudio</a></li>
+                    <li><a href="{% url 'historial_asignaciones' %}">Lista de camas</a></li>
                 </ul>
             </li>
 
@@ -156,7 +157,7 @@
                 <input type="checkbox" id="submenu1">
                     <li><a href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
                     <li><a href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
-                    <li><a href="{% url 'infraestructura:infra_lista_camas' %}">Camas</a></li>
+                    <li><a href="{% url 'infraestructura:infra_lista_camas' %}">Lista de Camas</a></li>
                 </ul>
             </li>
 
@@ -199,6 +200,7 @@
                     <li><a href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
                     <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
                     <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
+                    <li><a href="{% url 'historial_asignaciones' %}">Camas</a></li>
                 </ul>
             </li>
 
