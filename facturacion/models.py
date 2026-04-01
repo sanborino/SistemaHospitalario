@@ -109,7 +109,7 @@ class Cargo(models.Model):
 
 
 def recalcular_total_factura(factura):
-    subtotal = sum(d.cantidad * d.precio_unitario for d in factura.detalle_set.all())
+    subtotal = sum(d.cantidad * d.precio_unitario for d in factura.detalles.all())
     factura.total = subtotal
     factura.save()
 
