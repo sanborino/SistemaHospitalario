@@ -140,7 +140,7 @@ def historial_asignaciones(request):
     )
 
 
-def asignar_cama(request, id):
+"""def asignar_cama(request, id):
     asignacion = get_object_or_404(AsignacionCama, pk=id)
 
     Cargo.objects.create(
@@ -149,4 +149,4 @@ def asignar_cama(request, id):
         cantidad=1,
         precio_unitario=asignacion.cama.precio,  # si tienes precio
         cama=asignacion.cama,
-    )
+    )"""
