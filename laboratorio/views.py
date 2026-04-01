@@ -13,16 +13,15 @@ from facturacion.models import Cargo
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
+
 from .models import (
     Estudio,
     SolicitudLaboratorio,
-    SolicitudDetalle,
     ResultadoLaboratorio,
 )
 from .forms import (
     EstudioForm,
     SolicitudLaboratorioForm,
-    SolicitudDetalleForm,
     ResultadoLaboratorioForm,
 )
 
@@ -162,12 +161,6 @@ class SolicitudListView(LoginRequiredMixin, ListView):
         return context
 
 
-class SolicitudDetailView(LoginRequiredMixin, DetailView):
-    model = SolicitudLaboratorio
-    template_name = "laboratorio/solicitud_detalle.html"
-    context_object_name = "solicitud"
-
-
 class SolicitudCreateView(LoginRequiredMixin, CreateView):
     model = SolicitudLaboratorio
     form_class = SolicitudLaboratorioForm
@@ -210,65 +203,6 @@ class SolicitudDeleteView(LoginRequiredMixin, DeleteView):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_solicitud")
-
-
-# CRUD SolicitudLaboratorio
-class SolicitudListView(LoginRequiredMixin, ListView):
-    model = SolicitudLaboratorio
-    template_name = "laboratorio/solicitud_lista.html"
-    context_object_name = "solicitudes"
-    paginate_by = 10
-    ordering = ["-fecha"]
-
-    def get_queryset(self):
-        queryset = super().get_queryset().select_related("paciente", "medico")
-        estado = self.request.GET.get("estado", SolicitudLaboratorio.ESTADO_PENDIENTE)
-        if estado == "todos":
-            return queryset
-        return queryset.filter(estado=estado)
-
-
-class SolicitudDetailView(LoginRequiredMixin, DetailView):
-    model = SolicitudLaboratorio
-    template_name = "laboratorio/solicitud_detalle.html"
-    context_object_name = "solicitud"
-
-
-class SolicitudCreateView(LoginRequiredMixin, CreateView):
-    model = SolicitudLaboratorio
-    form_class = SolicitudLaboratorioForm
-    template_name = "laboratorio/solicitud_formulario.html"
-
-    def form_valid(self, form):
-        try:
-            medico = self.request.user.medico
-        except Exception:
-            raise PermissionDenied(
-                "Solo los médicos pueden crear solicitudes de laboratorio."
-            )
-
-        solicitud = form.save()
-
-        # Crear factura automáticamente
-        crear_factura_solicitud(solicitud)
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "laboratorio:detalle_solicitud", kwargs={"pk": self.object.pk}
-        )
-
-
-class SolicitudUpdateView(LoginRequiredMixin, UpdateView):
-    model = SolicitudLaboratorio
-    form_class = SolicitudLaboratorioForm
-    template_name = "laboratorio/solicitud_formulario.html"
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "laboratorio:detalle_solicitud", kwargs={"pk": self.object.pk}
-        )
 
 
 # CRUD ResultadoLaboratorio
@@ -363,9 +297,6 @@ class ResultadoDeleteView(LoginRequiredMixin, DeleteView):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_resultado")
-
-
-from facturacion.models import Cargo
 
 
 def finalizar_solicitud(request, id):
