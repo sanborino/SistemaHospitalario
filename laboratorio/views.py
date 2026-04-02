@@ -170,18 +170,21 @@ class SolicitudCreateView(LoginRequiredMixin, CreateView):
     template_name = "laboratorio/solicitud_formulario.html"
 
     def form_valid(self, form):
-        # Verificar que el usuario sea médico
-        try:
-            medico = self.request.user.medico
-        except:
-            raise PermissionDenied(
-                "Solo los médicos pueden crear solicitudes de laboratorio."
-            )
+        # Verificar que el usuario tenga al menos un médico asociado
+        medico_qs = Medico.objects.filter(usuario=self.request.user)
+        if not medico_qs.exists():
+            raise PermissionDenied("Solo los médicos pueden crear solicitudes de laboratorio.")
 
-        solicitud = form.save()
+        # Tomar el primer médico asociado (ajusta la lógica si necesitas otro criterio)
+        medico = medico_qs.first()
+
+        # Crear la solicitud y asignar el médico
+        solicitud = form.save(commit=False)
+        solicitud.medico = medico
+        solicitud.save()
 
         # Crear factura automáticamente
-        factura = crear_factura_solicitud(solicitud)
+        crear_factura_solicitud(solicitud)
 
         return super().form_valid(form)
 
