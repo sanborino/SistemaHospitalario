@@ -19,6 +19,7 @@ from paciente.models import Paciente
 from .models import (
     Estudio,
     SolicitudLaboratorio,
+    SolicitudDetalle,
     ResultadoLaboratorio,
 )
 from .forms import (
@@ -207,11 +208,17 @@ class SolicitudDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("laboratorio:lista_solicitud")
     
 
-class SolicitudDetaileView(DetailView):
-    model = SolicitudLaboratorio
-    template_name = "solicitud_detalle.html"  # tu plantilla
-    context_object_name = "detalle"
 
+class SolicitudDetailView(LoginRequiredMixin, DetailView):
+    model = SolicitudLaboratorio
+    template_name = "laboratorio/solicitud_detalle.html"
+    context_object_name = "solicitud"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Agregar los estudios asociados a esta solicitud
+        context["estudios"] = SolicitudDetalle.objects.filter(solicitud=self.object)
+        return context
 
 # CRUD ResultadoLaboratorio
 

@@ -7,7 +7,7 @@ from django.conf import settings
 class Medico(models.Model):
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
+    
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     especialidad = models.CharField(max_length=100)
