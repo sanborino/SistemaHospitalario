@@ -12,6 +12,8 @@ from decimal import Decimal
 from facturacion.models import Cargo
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
+from personal.models import Medico
+from paciente.models import Paciente
 
 
 from .models import (
@@ -203,6 +205,12 @@ class SolicitudDeleteView(LoginRequiredMixin, DeleteView):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_solicitud")
+    
+
+class SolicitudDetaileView(DetailView):
+    model = SolicitudLaboratorio
+    template_name = "solicitud_detalle.html"  # tu plantilla
+    context_object_name = "detalle"
 
 
 # CRUD ResultadoLaboratorio
