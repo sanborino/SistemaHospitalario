@@ -69,7 +69,7 @@
                     <td>{{ s.id }}</td>
                     <td>{{ s.paciente }}</td>
                     <td>{{ s.medico }}</td>
-                    <td>{{ s.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>{{ s.fecha|date:"d/m/Y" }}</td>
                     <td>
                         {% if s.estado == "pendiente" %}
                             <span class="badge bg-warning text-dark">Pendiente</span>
