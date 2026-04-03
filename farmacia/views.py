@@ -308,7 +308,7 @@ def dispensacion_create(request, receta_id):
     )
 
 
-class DispensacionDetailView(login_required, DetailView):
+class DispensacionDetailView(LoginRequiredMixin, DetailView):
     model = Dispensacion
     template_name = "farmacia/dispensacion_detail.html"
     context_object_name = "dispensacion"
