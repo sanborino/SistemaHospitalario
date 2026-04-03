@@ -10,6 +10,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Area, Habitacion, Cama
 from .forms import AreaForm, HabitacionForm
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Habitacion, Cama, Area, Hospital
 
 
 class AreaListView(LoginRequiredMixin, ListView):
@@ -97,14 +100,11 @@ class HabitacionDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # Vista antigua residual si se usa como dashboard
+@login_required
 def infraestructura_dashboard(request):
     return render(request, "infraestructura/dashboard.html")
 
-
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Habitacion, Cama, Area, Hospital
-
-
+@login_required
 def lista_habitaciones(request):
     habitaciones = Habitacion.objects.select_related("area", "hospital")
     return render(
@@ -113,12 +113,12 @@ def lista_habitaciones(request):
         {"habitaciones": habitaciones},
     )
 
-
+@login_required
 def lista_camas(request):
     camas = Cama.objects.select_related("habitacion", "habitacion__area")
     return render(request, "infraestructura/lista_camas.html", {"camas": camas})
 
-
+@login_required
 def crear_cama(request):
     habitaciones = Habitacion.objects.all()
 
@@ -143,7 +143,7 @@ def crear_cama(request):
         },
     )
 
-
+@login_required
 def editar_cama(request, cama_id):
     cama = get_object_or_404(Cama, id=cama_id)
     habitaciones = Habitacion.objects.all()
@@ -167,7 +167,7 @@ def editar_cama(request, cama_id):
         },
     )
 
-
+@login_required
 def eliminar_cama(request, cama_id):
     cama = get_object_or_404(Cama, id=cama_id)
 

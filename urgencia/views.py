@@ -7,12 +7,12 @@ from django.views.generic import (
     DeleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from .models import Urgencia, AtencionUrgencia, AltaUrgencia
 from .forms import UrgenciaForm, AtencionUrgenciaForm, AltaUrgenciaForm
 from facturacion.models import Cargo
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # CRUD Urgencia
@@ -139,7 +139,7 @@ class AltaUrgenciaDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "alta"
     success_url = reverse_lazy("urgencia:lista_alta")
 
-
+@login_required
 def cerrar_urgencia(request, id):
     urgencia = get_object_or_404(Urgencia, pk=id)
 

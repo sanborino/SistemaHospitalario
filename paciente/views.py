@@ -11,6 +11,8 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from hospitalizacion.models import AsignacionCama
+from django.contrib.auth.decorators import login_required
+
 
 
 class PacienteListView(LoginRequiredMixin, ListView):
@@ -53,7 +55,7 @@ class PacienteCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class PacienteUpdateView(UpdateView):
+class PacienteUpdateView(LoginRequiredMixin, UpdateView):
     model = Paciente
     form_class = PacienteForm
     template_name = "paciente/crear_paciente.html"
@@ -64,12 +66,12 @@ class PacienteUpdateView(UpdateView):
         )
 
 
-class PacienteDeleteView(DeleteView):
+class PacienteDeleteView(LoginRequiredMixin, DeleteView):
     model = Paciente
     template_name = "paciente/confirmar_eliminar.html"
     success_url = reverse_lazy("paciente:lista_paciente")
 
-
+@login_required
 def detalle_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
 

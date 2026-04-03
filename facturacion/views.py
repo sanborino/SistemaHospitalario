@@ -2,8 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     DeleteView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
+
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Factura, FacturaDetalle, Pago
@@ -11,10 +10,12 @@ from .forms import FacturaForm, FacturaDetalleForm, PagoForm
 from paciente.models import Paciente
 from hospital.models import Hospital
 from .models import Factura, FacturaDetalle, Pago, Cargo
+from django.contrib.auth.decorators import login_required
+
 
 # ---------------- FACTURAS ----------------
 
-
+@login_required
 def factura_lista(request):
     estado = request.GET.get("estado", "PENDIENTE")
     origen = request.GET.get("origen", "todos")
@@ -54,7 +55,7 @@ def factura_lista(request):
         },
     )
 
-
+@login_required
 def factura_crear(request):
     form = FacturaForm(request.POST or None)
     if form.is_valid():
@@ -62,7 +63,7 @@ def factura_crear(request):
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form.html", {"form": form})
 
-
+@login_required
 def factura_editar(request, pk):
     factura = get_object_or_404(Factura, pk=pk)
     form = FacturaForm(request.POST or None, instance=factura)
@@ -71,7 +72,7 @@ def factura_editar(request, pk):
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form.html", {"form": form})
 
-
+@login_required
 def factura_detalle(request, pk):
     factura = get_object_or_404(Factura, pk=pk)
     detalles = FacturaDetalle.objects.filter(factura=factura)
@@ -120,7 +121,7 @@ class FacturaDeleteView(DeleteView):
 
 # ---------------- DETALLES ----------------
 
-
+@login_required
 def detalle_crear(request):
     form = FacturaDetalleForm(request.POST or None)
     if form.is_valid():
@@ -128,7 +129,7 @@ def detalle_crear(request):
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form_detalle.html", {"form": form})
 
-
+@login_required
 def detalle_editar(request, pk):
     detalle = get_object_or_404(FacturaDetalle, pk=pk)
     form = FacturaDetalleForm(request.POST or None, instance=detalle)
@@ -137,7 +138,7 @@ def detalle_editar(request, pk):
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form_detalle.html", {"form": form})
 
-
+@login_required
 def detalle_eliminar(request, pk):
     detalle = get_object_or_404(FacturaDetalle, pk=pk)
     detalle.delete()
@@ -146,7 +147,7 @@ def detalle_eliminar(request, pk):
 
 # ---------------- PAGOS ----------------
 
-
+@login_required
 def pago_crear(request):
     form = PagoForm(request.POST or None)
     if form.is_valid():
@@ -165,7 +166,7 @@ def pago_crear(request):
 
     return render(request, "facturacion/form_pago.html", {"form": form})
 
-
+@login_required
 def pago_editar(request, pk):
     pago = get_object_or_404(Pago, pk=pk)
     form = PagoForm(request.POST or None, instance=pago)
@@ -174,14 +175,14 @@ def pago_editar(request, pk):
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form_pago.html", {"form": form})
 
-
+@login_required
 def pago_eliminar(request, pk):
     pago = get_object_or_404(Pago, pk=pk)
     factura_id = pago.factura.id  # 🔑 obtener la factura asociada
     pago.delete()
     return redirect("facturacion:factura_detalle", pk=factura_id)
 
-
+@login_required
 def generar_factura_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, pk=paciente_id)
 

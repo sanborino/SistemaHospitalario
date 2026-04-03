@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-
+from django.contrib.auth.decorators import login_required
 from infraestructura.models import Cama
 from .models import AsignacionCama
 from .utils import cama_disponible, paciente_con_cama_activa
@@ -11,7 +11,7 @@ from facturacion.models import Cargo
 
 from facturacion.models import Cargo
 
-
+@login_required
 def asignar_cama(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     camas = Cama.objects.filter(estado="DISPONIBLE")
@@ -56,7 +56,7 @@ def asignar_cama(request, paciente_id):
         },
     )
 
-
+@login_required
 def liberar_cama(request, asignacion_id):
     asignacion = get_object_or_404(AsignacionCama, id=asignacion_id)
 
@@ -85,7 +85,7 @@ def liberar_cama(request, asignacion_id):
         },
     )
 
-
+@login_required
 def trasladar_cama(request, asignacion_id):
     asignacion = get_object_or_404(AsignacionCama, id=asignacion_id)
     paciente = asignacion.paciente
@@ -126,7 +126,7 @@ def trasladar_cama(request, asignacion_id):
         },
     )
 
-
+@login_required
 def historial_asignaciones(request):
     asignaciones = AsignacionCama.objects.select_related(
         "paciente", "cama", "cama__habitacion", "cama__habitacion__area"
@@ -138,15 +138,3 @@ def historial_asignaciones(request):
             "asignaciones": asignaciones,
         },
     )
-
-
-"""def asignar_cama(request, id):
-    asignacion = get_object_or_404(AsignacionCama, pk=id)
-
-    Cargo.objects.create(
-        paciente=asignacion.paciente,
-        descripcion=f"Cama {asignacion.cama.numero}",
-        cantidad=1,
-        precio_unitario=asignacion.cama.precio,  # si tienes precio
-        cama=asignacion.cama,
-    )"""

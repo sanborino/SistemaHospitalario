@@ -4,6 +4,7 @@ from .models import Turno, TurnoPersonal, Asistencia
 from .forms import TurnoForm, TurnoPersonalForm, AsistenciaForm
 from django.utils import timezone
 from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # -----------------------
@@ -11,26 +12,26 @@ from django.shortcuts import redirect
 # -----------------------
 
 
-class TurnoListView(ListView):
+class TurnoListView(LoginRequiredMixin, ListView):
     model = Turno
     template_name = "turnos/turno_list.html"
 
 
-class TurnoCreateView(CreateView):
+class TurnoCreateView(LoginRequiredMixin, CreateView):
     model = Turno
     form_class = TurnoForm
     template_name = "turnos/turno_form.html"
     success_url = reverse_lazy("turno:turno_list")
 
 
-class TurnoUpdateView(UpdateView):
+class TurnoUpdateView(LoginRequiredMixin, UpdateView):
     model = Turno
     form_class = TurnoForm
     template_name = "turnos/turno_form.html"
     success_url = reverse_lazy("turno:turno_list")
 
 
-class TurnoDeleteView(DeleteView):
+class TurnoDeleteView(LoginRequiredMixin, DeleteView):
     model = Turno
     template_name = "turnos/turno_confirm_delete.html"
     success_url = reverse_lazy("turno:turno_list")
@@ -41,26 +42,26 @@ class TurnoDeleteView(DeleteView):
 # -----------------------
 
 
-class TurnoPersonalListView(ListView):
+class TurnoPersonalListView(LoginRequiredMixin, ListView):
     model = TurnoPersonal
     template_name = "turnos/turnopersonal_list.html"
 
 
-class TurnoPersonalCreateView(CreateView):
+class TurnoPersonalCreateView(LoginRequiredMixin, CreateView):
     model = TurnoPersonal
     form_class = TurnoPersonalForm
     template_name = "turnos/turnopersonal_form.html"
     success_url = reverse_lazy("turno:turnopersonal_list")
 
 
-class TurnoPersonalUpdateView(UpdateView):
+class TurnoPersonalUpdateView(LoginRequiredMixin, UpdateView):
     model = TurnoPersonal
     form_class = TurnoPersonalForm
     template_name = "turnos/turnopersonal_form.html"
     success_url = reverse_lazy("turno:turnopersonal_list")
 
 
-class TurnoPersonalDeleteView(DeleteView):
+class TurnoPersonalDeleteView(LoginRequiredMixin, DeleteView):
     model = TurnoPersonal
     template_name = "turnos/turnopersonal_confirm_delete.html"
     success_url = reverse_lazy("turno:turnopersonal_list")
@@ -71,7 +72,7 @@ class TurnoPersonalDeleteView(DeleteView):
 # -----------------------
 
 
-class AsistenciaListView(ListView):
+class AsistenciaListView(LoginRequiredMixin, ListView):
     model = Asistencia
     template_name = "turnos/asistencia_list.html"
 
@@ -80,7 +81,7 @@ class AsistenciaListView(ListView):
         return Asistencia.objects.filter(fecha=hoy).order_by("-hora_entrada")
 
 
-class AsistenciaCreateView(CreateView):
+class AsistenciaCreateView(LoginRequiredMixin, CreateView):
     model = Asistencia
     form_class = AsistenciaForm
     template_name = "turnos/asistencia_form.html"
@@ -108,14 +109,14 @@ class AsistenciaCreateView(CreateView):
         return redirect(self.success_url)
 
 
-class AsistenciaUpdateView(UpdateView):
+class AsistenciaUpdateView(LoginRequiredMixin, UpdateView):
     model = Asistencia
     form_class = AsistenciaForm
     template_name = "turnos/asistencia_form.html"
     success_url = reverse_lazy("turno:asistencia_list")
 
 
-class AsistenciaDeleteView(DeleteView):
+class AsistenciaDeleteView(LoginRequiredMixin, DeleteView):
     model = Asistencia
     template_name = "turnos/asistencia_confirm_delete.html"
     success_url = reverse_lazy("turno:asistencia_list")

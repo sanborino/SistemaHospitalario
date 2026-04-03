@@ -2,8 +2,10 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import HistorialClinico
 from .forms import HistorialClinicoForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class HistorialListView(ListView):
+
+class HistorialListView(LoginRequiredMixin, ListView):
     model = HistorialClinico
     template_name = "historial/lista.html"
     context_object_name = "historiales"
@@ -28,13 +30,13 @@ class HistorialListView(ListView):
         return qs
 
 
-class HistorialDetailView(DetailView):
+class HistorialDetailView(LoginRequiredMixin, DetailView):
     model = HistorialClinico
     template_name = "historial/detalle.html"
     context_object_name = "historial"
 
 
-class HistorialCreateView(CreateView):
+class HistorialCreateView(LoginRequiredMixin, CreateView):
     model = HistorialClinico
     form_class = HistorialClinicoForm
     template_name = "historial/formulario.html"
@@ -75,7 +77,7 @@ class HistorialCreateView(CreateView):
         return reverse_lazy("historial:detalle_historial", kwargs={"pk": self.object.pk})    
 
 
-class HistorialUpdateView(UpdateView):
+class HistorialUpdateView(LoginRequiredMixin, UpdateView):
     model = HistorialClinico
     form_class = HistorialClinicoForm
     template_name = "historial/formulario.html"
@@ -84,7 +86,7 @@ class HistorialUpdateView(UpdateView):
         return reverse_lazy("historial:detalle:_historial", kwargs={"pk": self.object.pk})
 
 
-class HistorialDeleteView(DeleteView):
+class HistorialDeleteView(LoginRequiredMixin, DeleteView):
     model = HistorialClinico
     template_name = "historial/confirmar_eliminar.html"
     success_url = reverse_lazy("historial:lista_historial")

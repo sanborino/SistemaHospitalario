@@ -14,8 +14,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from personal.models import Medico
 from paciente.models import Paciente
-
-
 from .models import (
     Estudio,
     SolicitudLaboratorio,
@@ -27,8 +25,9 @@ from .forms import (
     SolicitudLaboratorioForm,
     ResultadoLaboratorioForm,
 )
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def crear_factura_solicitud(solicitud):
     """Crea automaticamente una Factura + FacturaDetalles para la solicitud."""
     from facturacion.models import Factura, FacturaDetalle
@@ -316,7 +315,7 @@ class ResultadoDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "laboratorio/resultado_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_resultado")
 
-
+@login_required
 def finalizar_solicitud(request, id):
     solicitud = get_object_or_404(SolicitudLaboratorio, pk=id)
 

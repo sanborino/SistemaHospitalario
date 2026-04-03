@@ -7,7 +7,6 @@ from django.views.generic import (
     DeleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from .models import Insumo, MovimientoInventario
 from .forms import InsumoForm, MovimientoInventarioForm
 
@@ -96,6 +95,3 @@ class MovimientoDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "movimiento"
     success_url = reverse_lazy("inventario:lista_movimiento")
 
-
-def inventario_dashboard(request):
-    return render(request, "inventario/dashboard.html")

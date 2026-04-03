@@ -1,15 +1,16 @@
 from django.views.generic import ListView, DetailView
 from .models import Auditoria
 from django.apps import apps
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AuditoriaListView(ListView):
+class AuditoriaListView(LoginRequiredMixin, ListView):
     model = Auditoria
     template_name = "auditoria/auditoria_list.html"
     ordering = ["-fecha"]  # más reciente primero
 
 
-class AuditoriaDetailView(DetailView):
+class AuditoriaDetailView(LoginRequiredMixin, DetailView):
     model = Auditoria
     template_name = "auditoria/auditoria_detail.html"
 

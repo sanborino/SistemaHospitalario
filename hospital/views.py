@@ -7,10 +7,6 @@ from django.views.generic import (
     DeleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from acceso.models import UsuarioRol
-
 from .models import Hospital
 from .forms import HospitalForm
 

@@ -3,8 +3,10 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import Cita
 from .forms import CitaForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
     
-class CitaListView(ListView):
+class CitaListView(LoginRequiredMixin, ListView):
     model = Cita
     template_name = "cita/lista.html"
     context_object_name = "citas"
@@ -44,13 +46,13 @@ class CitaListView(ListView):
 
 
 
-class CitaDetailView(DetailView):
+class CitaDetailView(LoginRequiredMixin, DetailView):
     model = Cita
     template_name = "cita/detalle.html"
     context_object_name = "cita"
 
 
-class CitaCreateView(CreateView):
+class CitaCreateView(LoginRequiredMixin, CreateView):
     model = Cita
     form_class = CitaForm
     template_name = "cita/formulario.html"
@@ -75,7 +77,7 @@ class CitaCreateView(CreateView):
         return reverse_lazy("cita:detalle_cita", kwargs={"pk": self.object.pk})
 
 
-class CitaUpdateView(UpdateView):
+class CitaUpdateView(LoginRequiredMixin, UpdateView):
     model = Cita
     form_class = CitaForm
     template_name = "cita/formulario.html"
@@ -84,13 +86,13 @@ class CitaUpdateView(UpdateView):
         return reverse_lazy("cita:detalle_cita", kwargs={"pk": self.object.pk})
 
 
-class CitaDeleteView(DeleteView):
+class CitaDeleteView(LoginRequiredMixin, DeleteView):
     model = Cita
     template_name = "cita/confirmar_eliminar.html"
     success_url = reverse_lazy("cita:lista_cita")
 
 
-class CitaCalendarioView(TemplateView):
+class CitaCalendarioView(LoginRequiredMixin, TemplateView):
     template_name = "cita/calendario.html"
 
     def get_context_data(self, **kwargs):
