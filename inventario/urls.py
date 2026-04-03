@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import (
-    inventario_dashboard,
     InsumoListView, InsumoDetailView, InsumoCreateView, InsumoUpdateView, InsumoDeleteView,
     MovimientoListView, MovimientoDetailView, MovimientoCreateView, MovimientoUpdateView, MovimientoDeleteView,
 )
