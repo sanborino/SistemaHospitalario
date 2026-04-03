@@ -8,8 +8,6 @@ from .views import (
 app_name = "inventario"
 
 urlpatterns = [
-    path("", inventario_dashboard, name="dashboard"),
-
     path("insumos/", InsumoListView.as_view(), name="lista_insumo"),
     path("insumos/nuevo/", InsumoCreateView.as_view(), name="crear_insumo"),
     path("insumos/<int:pk>/", InsumoDetailView.as_view(), name="detalle_insumo"),
