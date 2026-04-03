@@ -48,7 +48,7 @@ main {
 .alert-succes,
 .alert {
     padding: 20px;
-    background: #1f7e58;
+    background: #86e6bf;
     color: white;
     text-align: center;
     margin-bottom: 10px;
@@ -65,7 +65,7 @@ main {
 }
 
 .box {
-    background: #e3f2fd;
+    background: #dadada;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
