@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
-from SistemaHospitalario.views import test_404
+from django.conf.urls import handler404, handler403, handler500
+from SistemaHospitalario import views
 
 handler404 = "SistemaHospitalario.views.custom_404"
+handler403 = "SistemaHospitalario.views.custom_403"
+handler500 = "SistemaHospitalario.views.custom_500"
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -22,7 +26,6 @@ urlpatterns = [
     path("inventario/", include("inventario.urls", namespace="inventario")),
     path("laboratorio/", include("laboratorio.urls", namespace="laboratorio")),
     path("urgencia/", include("urgencia.urls", namespace="urgencia")),
-    path("test-404/", test_404),
     path("turnos/", include("turno.urls", namespace="turno")),
     path("auditoria/", include("auditoria.urls", namespace="auditoria")),
     path("factura/", include("facturacion.urls", namespace="facturacion")),

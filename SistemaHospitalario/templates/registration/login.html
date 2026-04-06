@@ -8,14 +8,6 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-succes">
-            {{message}}
-        </div>
-    {% endfor %}
-{% endif %}
-
 {{register_form.errors}}
     <div class="marco">
     <h1>Sistema Hospitalario</h1>

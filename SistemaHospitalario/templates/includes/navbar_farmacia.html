@@ -1,0 +1,50 @@
+
+<header>
+    <input type="checkbox" id="btn-menu">
+    <label for="btn-menu">☰</label>
+<nav class="menu">        
+        <ul class="menu">
+
+            <li>
+                <a href="{% url 'acceso:hospitales' %}"
+                class="{% if url_name == 'hospitales' %}active{% endif %}">
+                    Inicio
+                </a>
+            </li>
+
+			<!-- Barra de navegación menu Farmacia-->
+			{% if roles_usuario and roles_usuario.0 == "FARMACIA" %}
+
+            <li>
+                {% with urls="medicamento_list,medicamento_create,medicamento_edit,dispensacion_list,dispensacion_create,dispensacion_detail,dispensar_receta,receta_list,receta_detalle,receta_detalle_add"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Farmacia
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'farmacia:medicamento_list' %}">Medicamentos</a></li>
+                    <li><a href="{% url 'farmacia:dispensacion_list' %}">Dispensar</a></li>
+                </ul>
+            </li>
+
+            <li>
+                {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Checar asistencia
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
+                </ul>
+            </li>
+
+            {% endif %}
+            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+		</ul>
+</nav>
+</header>
+
+
+

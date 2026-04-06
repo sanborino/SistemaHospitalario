@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="container">
+<div class="box">
+<h2>Eliminar personal</h2>
+    <div class="row">
+        <div class="col">
+<p>¿Seguro que deseas eliminar a {{ object.nombre }} ({{ object.get_area_display }})?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn">Confirmar</button>
+    <a href="{% url 'personal:personal_list' %}" class="btn">Cancelar</a>
+</form>
+</div>
+</div>
+</div>
+</main>
+{% endblock %}

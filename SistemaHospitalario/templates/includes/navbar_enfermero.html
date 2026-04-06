@@ -1,0 +1,89 @@
+
+<header>
+    <input type="checkbox" id="btn-menu">
+    <label for="btn-menu">☰</label>
+<nav class="menu">        
+        <ul class="menu">
+
+            <li>
+                <a href="{% url 'acceso:hospitales' %}"
+                class="{% if url_name == 'hospitales' %}active{% endif %}">
+                    Inicio
+                </a>
+            </li>
+           
+			<!-- Barra de navegación menu Enfermero-->
+			{% if roles_usuario and roles_usuario.0 == "ENFERMERO" %}
+
+            <li>
+                {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Paciente
+                </a>
+                {% endwith %}
+                
+                <ul>
+                    <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
+                    <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
+                    <li><a href="{% url 'farmacia:receta_list' %}">Listado de recetas</a></li>
+                    <li><a href="{% url 'laboratorio:crear_solicitud' %}">Solicitar estudio</a></li>
+                    <li><a href="{% url 'hospitalizacion:historial_asignaciones' %}">Lista de camas</a></li>
+                </ul>
+            </li>
+
+            <li>
+                {% with urls="lista_historial,crear_historial,detalle_historial,eliminar_historial,editar_historial"|cut:"," %}
+                <a href="{% url 'historial:lista_historial' %}"
+                class="{% if url_name in urls %}active{% endif %}">
+                    Historial Clínico
+                </a>
+                {% endwith %}
+            </li>
+
+            <li>
+                {% with urls="lista_cita,crear_cita,calendario_cita,editar_cita,detalle_cita,eliminar_cita"|cut:"," %}
+                <a href="{% url 'cita:lista_cita' %}"
+                class="{% if url_name in urls %}active{% endif %}">
+                    Citas
+                </a>
+                {% endwith %}
+            </li>
+
+            <li>
+                {% with urls="lista_urgencia,crear_urgencia,detalle_urgencia,editar_urgencia,eliminar_urgencia,lista_atencion,lista_alta"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Urgencias
+                </a>
+                {% endwith %}
+
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
+                    <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
+                    <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
+                    <li><a href="{% url 'hospitalizacion:historial_asignaciones' %}">Lista de camas</a></li>
+                </ul>
+            </li>
+
+            <li>
+                {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Checar asistencia
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
+                </ul>
+            </li>
+            
+
+            {% endif %}
+            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+		</ul>
+</nav>
+</header>
+
+
+

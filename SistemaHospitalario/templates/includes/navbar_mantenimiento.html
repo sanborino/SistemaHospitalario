@@ -1,0 +1,64 @@
+
+<header>
+    <input type="checkbox" id="btn-menu">
+    <label for="btn-menu">☰</label>
+<nav class="menu">        
+        <ul class="menu">
+
+            <li>
+                <a href="{% url 'acceso:hospitales' %}"
+                class="{% if url_name == 'hospitales' %}active{% endif %}">
+                    Inicio
+                </a>
+            </li>
+           
+			<!-- Barra de navegación menu Mantenimiento-->
+			{% if roles_usuario and roles_usuario.0 == "MANTENIMIENTO" %}
+
+            <li>
+                {% with urls="lista_area,crear_area,detalle_area,editar_area,eliminar_area,lista_habitacion,crear_habitacion,detalle_habitacion,editar_habitacion,eliminar_habitacion"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Infraestructura
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
+                    <li><a href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
+                    <li><a href="{% url 'infraestructura:infra_lista_camas' %}">Lista de Camas</a></li>
+                </ul>
+            </li>
+
+            <li>
+                {% with urls="lista_insumo,crear_insumo,detalle_insumo,editar_insumo,eliminar_insumo,lista_movimiento,crear_movimiento,detalle_movimiento,editar_movimiento,eliminar_movimiento"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Inventario
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'inventario:lista_insumo' %}">Insumos</a></li>
+                    <li><a href="{% url 'inventario:lista_movimiento' %}">Movimientos</a></li>
+                </ul>
+            </li>
+
+            <li>
+                {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Checar asistencia
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
+                </ul>
+            </li>
+
+            {% endif %}
+            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+		</ul>
+</nav>
+</header>
+
+
+

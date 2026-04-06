@@ -1,25 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <main class="container">
-<div class="box">
-<h2>Formulario de Asistencia</h2>
-    <div class="row">
-        <div class="col">
-            <form method="post">
-                <section>
-                {% csrf_token %}
+    <div class="box">
+        <h2>Formulario de Asistencia</h2>
+        <div class="row">
+            <div class="col">
+                <form method="post">
+                    <CONTAINER>
+                    {% csrf_token %}
+                    <p>Presiona el botón para registrar tu asistencia.</p>
 
-                {{ form.as_p }}
-                <div style="display: flex; gap: 10px;">
-                <button class="btn" type="submit">Guardar</button>
-                <a class="btn" href="{% url 'turno:asistencia_list' %}">Volver</a>
-                </div>
-            </section>
-            </form>
+                                        {# Mostrar campo usuario solo si existe en el form (Dirección) #}
+                    {% if form.usuario %}
+                        <div>
+                            {{ form.usuario.label_tag }}
+                            {{ form.usuario }}
+                        </div>
+                    {% endif %}
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" type="submit">Registrar asistencia</button>
+                        <a class="btn" href="{% url 'turno:asistencia_list' %}">Volver</a>
+                    </div>
+                </container>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 </main>
- {% endblock %}
+{% endblock %}

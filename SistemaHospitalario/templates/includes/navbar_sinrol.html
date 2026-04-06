@@ -1,0 +1,22 @@
+
+<header>
+    <input type="checkbox" id="btn-menu">
+    <label for="btn-menu">☰</label>
+<nav class="menu">        
+        <ul class="menu">
+
+            <li>
+                <a href="{% url 'acceso:hospitales' %}"
+                class="{% if url_name == 'hospitales' %}active{% endif %}">
+                    Inicio
+                </a>
+            </li>
+
+            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+		</ul>
+
+</nav>
+</header>
+
+
+

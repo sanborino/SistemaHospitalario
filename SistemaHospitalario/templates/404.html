@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block content %}
-<div id="content">
-    <h1 class="display-4 text-danger">404 - Página no encontrada</h1>
+<div class="alert alert-danger" style="margin: 2rem;">
+    <h1 class="display-4 text-danger">404 - Error Página no encontrada</h1>
     <p class="lead">Lo sentimos, la página que buscas no existe.</p>
 
-    <a href="/" class="btn">Volver al inicio</a>
+    <a href="{% url "acceso:hospitales" %}" class="btn">Volver al inicio</a>
 </div>
 {% endblock %}

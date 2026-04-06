@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+{# vacío: no se muestra el nav #}
+{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger" style="margin: 2rem;">
+    <h1 class="display-4 text-danger">500 - Error interno del servidor</h1>
+    <p class="lead">Por favor contacta al administrador.</p>
+
+    <a href="{% url "acceso:hospitales" %}" class="btn">Volver al inicio</a>
+</div>
+{% endblock %}

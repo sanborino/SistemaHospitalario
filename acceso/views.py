@@ -13,13 +13,32 @@ from .forms import (
 from .models import Usuario, Rol, Permiso, UsuarioRol, RolPermiso, UsuarioHospital
 
 
-# Create your views here.
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from acceso.models import UsuarioRol
+
+
+@login_required
 def index(request):
-    if request.user.is_authenticated:
+    usuario = request.user
+
+    # Si el usuario está autenticado, obtenemos sus roles
+    roles_usuario = list(
+        UsuarioRol.objects.filter(usuario=usuario).values_list("rol__nombre", flat=True)
+    )
+
+    # Si quieres que al entrar se redirija a hospitales directamente:
+    if usuario.is_authenticated:
         return redirect("acceso:hospitales")
 
+    # Si no está autenticado, mostramos la página de inicio
     return render(
-        request, "acceso/index.html", {"title": "Bienvenido Sistema Hospitalario"}
+        request,
+        "acceso/index.html",
+        {
+            "title": "Bienvenido Sistema Hospitalario",
+            "roles_usuario": roles_usuario,
+        },
     )
 
 
@@ -235,17 +254,26 @@ def quitar_rol_usuario(request, usuario_id, rol_id):
 
 # Asignar Permiso a Rol
 @login_required
+@login_required
 def asignar_permiso_rol(request, rol_id):
     rol = get_object_or_404(Rol, pk=rol_id)
+
     if request.method == "POST":
         form = RolPermisoForm(request.POST)
         if form.is_valid():
-            form.save()
+            rp = form.save(commit=False)
+            rp.rol = rol
+            rp.save()
             messages.success(request, "Permiso asignado correctamente.")
             return redirect("acceso:rol_detalle", pk=rol_id)
     else:
         form = RolPermisoForm(initial={"rol": rol})
-    return render(request, "acceso/asignar_permiso.html", {"form": form, "rol": rol})
+
+    return render(
+        request,
+        "acceso/asignar_permiso.html",
+        {"form": form, "rol": rol},
+    )
 
 
 @login_required
@@ -253,7 +281,7 @@ def quitar_permiso_rol(request, rol_id, permiso_id):
     rol_permiso = get_object_or_404(RolPermiso, rol_id=rol_id, permiso_id=permiso_id)
     rol_permiso.delete()
     messages.success(request, "Permiso quitado correctamente.")
-    return redirect("acceso:rol_detalle", pk=rol_id)
+    return redirect("acceso:rol_detalle", kwargs={"pk": rol_id})
 
 
 # Detalles

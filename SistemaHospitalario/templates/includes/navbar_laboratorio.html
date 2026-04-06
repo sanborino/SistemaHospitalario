@@ -1,0 +1,52 @@
+
+<header>
+    <input type="checkbox" id="btn-menu">
+    <label for="btn-menu">☰</label>
+<nav class="menu">        
+        <ul class="menu">
+
+            <li>
+                <a href="{% url 'acceso:hospitales' %}"
+                class="{% if url_name == 'hospitales' %}active{% endif %}">
+                    Inicio
+                </a>
+            </li>
+           
+
+			<!-- Barra de navegación menu Laboratorio-->
+			{% if roles_usuario and roles_usuario.0 == "LABORATORIO" %}
+
+            <li>
+                {% with urls="lista_estudio,crear_estudio,detalle_estudio,editar_estudio,eliminar_estudio,lista_resultado,crear_resultado,detalle_resultado,editar_resultado,eliminar_resultado"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Laboratorio
+                </a>
+                {% endwith %}
+
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
+                    <li><a href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
+                </ul>
+            </li>
+
+            <li>
+                {% with urls="asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
+                <a class="{% if url_name in urls %}active{% endif %}">
+                    Checar asistencia
+                </a>
+                {% endwith %}
+                <ul>
+                <input type="checkbox" id="submenu1">
+                    <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
+                </ul>
+            </li>
+
+            {% endif %}
+            <li><a href="{% url 'acceso:logout' %}">{{ user.username }} Salir</a></li>
+		</ul>
+</nav>
+</header>
+
+
+

@@ -1,58 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-
 <main class="container">
-<div class="box">
-{% if form.instance.pk %}
-  <h2>Editar hospital</h2>
-{% else %}
-  <h2>Registrar hospital</h2>
-{% endif %}
-    <div class="row">
-        <div class="col">
-    {% csrf_token %}
-<section>
-    {% if form.non_field_errors %}
-      <div class="alert alert-error">
-        {{ form.non_field_errors }}
-      </div>
+  <div class="box">
+    {% if form.instance.pk %}
+      <h2>Editar hospital</h2>
+    {% else %}
+      <h2>Registrar hospital</h2>
     {% endif %}
 
+    <div class="row">
+      <div class="col">
 
-      {{ form.nombre.label_tag }}
-      {{ form.nombre }}
-      {{ form.nombre.errors }}
+        <form method="post">
+          {% csrf_token %}
+          <section>
+            {% if form.non_field_errors %}
+              <div class="alert alert-error">
+                {{ form.non_field_errors }}
+              </div>
+            {% endif %}
 
-      {{ form.direccion.label_tag }}
-      {{ form.direccion }}
-      {{ form.direccion.errors }}
+            {{ form.nombre.label_tag }}
+            {{ form.nombre }}
+            {{ form.nombre.errors }}
 
-      {{ form.telefono.label_tag }}
-      {{ form.telefono }}
-      {{ form.telefono.errors }}
+            {{ form.direccion.label_tag }}
+            {{ form.direccion }}
+            {{ form.direccion.errors }}
 
-      {{ form.correo.label_tag }}
-      {{ form.correo }}
-      {{ form.correo.errors }}
+            {{ form.telefono.label_tag }}
+            {{ form.telefono }}
+            {{ form.telefono.errors }}
 
-      {{ form.codigo.label_tag }}
-      {{ form.codigo }}
-      {{ form.codigo.errors }}
+            {{ form.correo.label_tag }}
+            {{ form.correo }}
+            {{ form.correo.errors }}
 
-    <p>
-      <div style="display: flex; gap: 10px;">
-      <button class="btn" type="submit">Guardar</button>
-      <a class="btn" href="{% url 'hospital:lista_hospital' %}">Cancelar</a>
-      <div style="display: flex; gap: 10px;">
-    </p>
-  </section>
-  </form>
-</div>
-</div>
-</div>
+            {{ form.codigo.label_tag }}
+            {{ form.codigo }}
+            {{ form.codigo.errors }}
+
+            <p>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn" type="submit">Guardar</button>
+                <a class="btn" href="{% url 'hospital:lista_hospital' %}">Cancelar</a>
+              </div>
+            </p>
+          </section>
+        </form>
+
+      </div>
+    </div>
+  </div>
 </main>
-
 
 {% endblock %}

@@ -21,7 +21,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = [".onrender.com", "localhost"]
+ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1", "[::1]"]
 
 """CSRF_TRUSTED_ORIGINS = [
     'http://192.168.1.186:8000',
@@ -65,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "SistemaHospitalario.middleware.NoCacheMiddleware",
+    "SistemaHospitalario.middleware.RoleRequiredMiddleware",
 ]
 
 ROOT_URLCONF = "SistemaHospitalario.urls"
@@ -110,19 +111,26 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
     }
 }
 """
+
+# BASE DE DATOS WEB
 DATABASES = {
     "default": dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
     ),
-    #'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #'NAME': 'sistemahospitalario',
-    #'USER': 'sistemahospitalario_user',
-    #'PASSWORD': 'PASSWORD',
-    #'HOST': 'HOST',
-    #'PORT': '5432',
 }
 
+# BASE DE DATOS LOCAL
+"""DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "sistemahospitalario",
+        "USER": "root",
+        "PASSWORD": "toor",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}"""
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -148,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "es-es"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Mexico_City"
 
 USE_I18N = True
 

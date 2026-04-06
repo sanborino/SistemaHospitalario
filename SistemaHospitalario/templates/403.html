@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-danger" style="margin: 2rem;">
+    <h1 class="display-4 text-danger">403 - Error Acceso restringido</h1>
+    <p>No tienes un rol asignado en el sistema. 
+       Por favor contacta al administrador para obtener acceso.</p>
+    <a href="{% url 'acceso:hospitales' %}" class="btn">Volver al inicio</a>
+</div>
+{% endblock %}

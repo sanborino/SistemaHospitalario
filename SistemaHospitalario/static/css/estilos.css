@@ -503,3 +503,12 @@ footer p {
         padding: 10px 15px;
     }
 }
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #a5a5a5;
+    color: #fff;
+    padding: 10px;
+}

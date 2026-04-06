@@ -2,6 +2,8 @@ from django.db import models
 from personal.models import Medico, Enfermero
 from hospital.models import Hospital
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -40,11 +42,6 @@ class Asistencia(models.Model):
 
     def __str__(self):
         return f"Asistencia {self.usuario} - {self.fecha}"
-
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import Asistencia
 
 
 @receiver(post_save, sender=Asistencia)

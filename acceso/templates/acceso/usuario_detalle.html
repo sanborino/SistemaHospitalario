@@ -2,6 +2,7 @@
 {% block content %}
 
 <main class="container">
+    <section>
 <div class="box">
     <h2>Detalle de Usuario: {{ usuario.username }}</h2>
     <div class="row">
@@ -12,19 +13,30 @@
             <p><strong>Estado:</strong> {{ usuario.estado }}</p>
         </ul>
         <a href="{% url 'acceso:asignar_rol_usuario' usuario.pk %}" class="btn">Asignar Rol</a>
-        <h3>Roles asignados</h3>
+    
+        <h2>Roles asignados</h2>
         
         {% if roles %}
             <ul>
                 {% for ur in roles %}
-                <p>{{ ur.rol.nombre }} <a href="{% url 'acceso:quitar_rol_usuario' usuario.pk ur.rol.pk %}" class="btn">Quitar</a></p>
+                <p>{{ ur.rol.nombre }}</p>
+                <a href="{% url 'acceso:quitar_rol_usuario' usuario.pk ur.rol.pk %}" class="btn">Quitar</a>
                 {% endfor %}
             </ul>
         {% else %}
             <p>No tiene roles asignados.</p>
         {% endif %}
-
-        <h3>Hospitales asignados</h3>
+           <hr>
+            {% for ur in roles %}
+            <li>
+                {{ ur.rol.nombre }}
+                <p>{% if ur.rol.pk %}</p>
+                    <a href="{% url 'acceso:rol_detalle' ur.rol.pk %}" class="btn">Ver detalle del rol</a>
+                {% endif %}
+            </li>
+                {% endfor %}
+<hr>
+        <h2>Hospitales asignados</h2>
         {% if hospitales %}
             <ul>
                 {% for uh in hospitales %}
@@ -41,7 +53,9 @@
             <a href="{% url 'acceso:usuario_lista' %}" class="btn">Volver</a>
             </div>
         </p>
+
     </div>
 </div>
+
 </main>
 {% endblock %}

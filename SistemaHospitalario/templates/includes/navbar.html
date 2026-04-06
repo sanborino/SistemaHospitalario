@@ -11,56 +11,6 @@
                     Inicio
                 </a>
             </li>
-           
-			<!-- Barra de navegación menu Medico-->
-			{% if roles_usuario and roles_usuario.0 == "MÉDICO" %}
-
-            <li>
-                {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Paciente
-                </a>
-                {% endwith %}
-                
-                <ul>
-                    <input type="checkbox" id="submenu1">
-                    <li><a href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
-                    <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
-                    <li><a href="{% url 'farmacia:receta_list' %}">Listado de recetas</a></li>
-                    <li><a href="{% url 'laboratorio:crear_solicitud' %}">Solicitar estudio</a></li>
-                    <li><a href="{% url 'hospitalizacion:historial_asignaciones' %}">Lista de camas</a></li>
-                </ul>
-            </li>
-
-            
-			{% endif %}
-
-			<!-- Barra de navegación menu Enfermero-->
-			{% if roles_usuario and roles_usuario.0 == "ENFERMERO" %}
-            {% endif %}
-
-			<!-- Barra de navegación menu Farmacia-->
-			{% if roles_usuario and roles_usuario.0 == "FARMACIA" %}
-			{% endif %}
-
-			<!-- Barra de navegación menu Laboratorio-->
-			{% if roles_usuario and roles_usuario.0 == "LABORATORIO" %}
-			{% endif %}
-
-			<!-- Barra de navegación menu Administración-->
-			{% if roles_usuario and roles_usuario.0 == "ADMINISTRACION" %}
-			{% endif %}
-
-			<!-- Barra de navegación menu Dirección-->
-			{% if roles_usuario and roles_usuario.0 == "DIRECCION" %}
-			{% endif %}
-
-			<!-- Barra de navegación menu Mantenimiento-->
-			{% if roles_usuario and roles_usuario.0 == "MANTENIMIENTO" %}
-			{% endif %}
-
-			<!-- Barra de navegación menu Sistemas-->
-			{% if roles_usuario and roles_usuario.0 == "SISTEMAS" %}
 
             <li>
                 {% with urls="lista_solicitud,crear_solicitud,detalle_solicitud,editar_solicitud,eliminar_solicitud,lista_paciente,crear_paciente,detalle_paciente,editar_paciente,eliminar_paciente,receta_create,receta_list,asignar_cama,liberar_cama,trasladar_cama,historial_asignaciones"|cut:"," %}
@@ -108,6 +58,7 @@
                 <input type="checkbox" id="submenu1">
                     <li><a href="{% url 'personal:medico_list' %}">Médicos</a></li>
                     <li><a href="{% url 'personal:enfermero_list' %}">Enfermeros</a></li>
+                    <li><a href="{% url 'personal:personal_list' %}">Personal</a></li>
                 </ul>
             </li>
 
@@ -122,6 +73,7 @@
                     <li><a href="{% url 'turno:turno_list' %}">Turno</a></li>
                     <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
                     <li><a href="{% url 'turno:turnopersonal_list' %}">Turno y personal</a></li>
+                    <li><a href="{% url 'turno:reporte_asistencias' %}">Lista de asistencia</a></li>
                 </ul>
             </li>
 
@@ -238,9 +190,9 @@
                 </ul>
             </li>
 
-            {% endif %}
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+            <li><a href="{% url 'acceso:logout' %}">{{ user.username }} Salir </a></li>
 		</ul>
+
 </nav>
 </header>
 

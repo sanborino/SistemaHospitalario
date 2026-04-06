@@ -9,22 +9,32 @@
         <a class="btn" href="{% url 'turno:asistencia_create' %}">Registrar entrada/salida</a>
         <div class="col">
             <ul>
-                {% for a in object_list %}
-                        
-                        {{ a.usuario }} - {{ a.fecha }}  
-                        Entrada: {{ a.hora_entrada }}  
-                        Salida: {{ a.hora_salida|default:"---" }}
-                    <div style="display: flex; gap: 10px;">
-                        <a class="btn" href="{% url 'turno:asistencia_update' a.id %}">Editar</a>
-                        <a class="btn" href="{% url 'turno:asistencia_delete' a.id %}">Eliminar</a>
-                    </div>
-                {% endfor %}
                  
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in object_list %}
+                    <tr>
+                        <td>{{ a.usuario }}</td>
+                        <td>{{ a.fecha }}</td>
+                        <td>{{ a.hora_entrada }}</td>
+                        <td>{{ a.hora_salida|default:"---" }}</td>
+                    </tr>
+                    {% empty %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             </ul>
-           
         </div>
     </div>
 </div>
 </main>
 {% endblock %}
-    
+
