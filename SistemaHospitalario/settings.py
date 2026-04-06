@@ -113,15 +113,15 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
 """
 
 # BASE DE DATOS WEB
-"""DATABASES = {
+DATABASES = {
     "default": dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
     ),
-}"""
+}
 
 # BASE DE DATOS LOCAL
-DATABASES = {
+"""DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "sistemahospitalario",
@@ -130,7 +130,7 @@ DATABASES = {
         "HOST": "localhost",
         "PORT": "5432",
     }
-}
+}"""
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
