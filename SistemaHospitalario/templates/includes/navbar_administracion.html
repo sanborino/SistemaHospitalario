@@ -1,4 +1,3 @@
-
 <header>
     <input type="checkbox" id="btn-menu">
     <label for="btn-menu">☰</label>
@@ -13,7 +12,7 @@
             </li>
 
 			<!-- Barra de navegación menu Administración-->
-			{% if roles_usuario and roles_usuario.0 == "ADMINISTRACION" %}
+			{% if roles_usuario and roles_usuario.0 == "ADMINISTRACIÓN" %}
 
             <li>
                 {% with urls="factura_lista,factura_crear,factura_editar,factura_eliminar,factura_detalle,detalle_crear,detalle_editar,detalle_eliminar,pago_crear,pago_editar,pago_eliminar"|cut:"," %}
@@ -31,13 +30,13 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-checar-asistencia"></li>
                     <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
                 </ul>
             </li>
 
             {% endif %}
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+            <li><a href="{% url 'acceso:logout' %}">{{ user.username }} Salir</a></li>
 		</ul>
 </nav>
 </header>

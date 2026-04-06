@@ -4,10 +4,23 @@ from django.apps import apps
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Auditoria
+
+
 class AuditoriaListView(LoginRequiredMixin, ListView):
     model = Auditoria
     template_name = "auditoria/auditoria_list.html"
     ordering = ["-fecha"]  # más reciente primero
+    paginate_by = 10  # 10 registros por página
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        fecha = self.request.GET.get("fecha", None)
+        if fecha:
+            queryset = queryset.filter(fecha__date=fecha)
+        return queryset
 
 
 class AuditoriaDetailView(LoginRequiredMixin, DetailView):

@@ -8,6 +8,14 @@
 <p><a class="btn" href="{% url 'inventario:crear_movimiento' %}">Nuevo movimiento</a></p>
     <div class="row">
         <div class="col">
+      <form method="get" class="mb-3">
+        <div style="display: flex; gap: 10px;">
+          <label for="nombre">Buscar por nombre de insumo:</label>
+          <input type="text" id="nombre" name="nombre" value="{{ request.GET.nombre }}">
+          <button type="submit" class="btn">Buscar</button>
+        </div>
+      </form>
+
     <table>
       <thead>
         <tr>
@@ -50,13 +58,14 @@
 {% if is_paginated %}
   <div>
     {% if page_obj.has_previous %}
-      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}{% if request.GET.nombre %}&nombre={{ request.GET.nombre }}{% endif %}">Anterior</a>
     {% endif %}
     Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
     {% if page_obj.has_next %}
-      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+      <a class="btn" href="?page={{ page_obj.next_page_number }}{% if request.GET.nombre %}&nombre={{ request.GET.nombre }}{% endif %}">Siguiente</a>
     {% endif %}
   </div>
 {% endif %}
+
 
 {% endblock %}

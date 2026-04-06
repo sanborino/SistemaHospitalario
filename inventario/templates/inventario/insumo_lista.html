@@ -8,6 +8,13 @@
 <p><a class="btn" href="{% url 'inventario:crear_insumo' %}">Nuevo insumo</a></p>
     <div class="row">
         <div class="col">
+        <form method="get" class="mb-3">
+          <div style="display: flex; gap: 10px;">
+            <label for="nombre">Buscar por nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ request.GET.nombre }}">
+            <button type="submit" class="btn">Buscar</button>
+          </div>
+        </form>
     <table>
       <thead>
         <tr>

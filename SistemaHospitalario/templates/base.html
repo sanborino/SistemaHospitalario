@@ -18,8 +18,7 @@
 
 <body>   
 {% if user.is_superuser %}
-    {% include "includes/navbar.html" %}s
-
+    {% include "includes/navbar.html" %}
 {% elif user.is_authenticated and roles_usuario %}
     {% if roles_usuario.0 == "SISTEMAS" %}
         {% include "includes/navbar_sistemas.html" %}
@@ -27,9 +26,9 @@
         {% include "includes/navbar_medico.html" %}
     {% elif roles_usuario.0 == "ENFERMERO" %}
         {% include "includes/navbar_enfermero.html" %}
-    {% elif roles_usuario.0 == "ADMINISTRACION" %}
+    {% elif roles_usuario.0 == "ADMINISTRACIÓN" %}
         {% include "includes/navbar_administracion.html" %}
-    {% elif roles_usuario.0 == "DIRECCION" %}
+    {% elif roles_usuario.0 == "DIRECCIÓN" %}
         {% include "includes/navbar_direccion.html" %}
     {% elif roles_usuario.0 == "MANTENIMIENTO" %}
         {% include "includes/navbar_mantenimiento.html" %}
@@ -42,9 +41,6 @@
 {% elif user.is_authenticated %}
     {% include "includes/navbar_sinrol.html" %}
 {% endif %}
-
-
-
 
 {% if messages %}
 <div class="messages">

@@ -1,4 +1,3 @@
-
 <header>
     <input type="checkbox" id="btn-menu">
     <label for="btn-menu">☰</label>
@@ -23,7 +22,7 @@
                 {% endwith %}
                 
                 <ul>
-                    <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-paciente"></li>
                     <li><a href="{% url 'paciente:lista_paciente' %}">Pacientes</a></li>
                     <li><a href="{% url 'farmacia:receta_create' %}">Receta</a></li>
                     <li><a href="{% url 'farmacia:receta_list' %}">Listado de recetas</a></li>
@@ -58,7 +57,7 @@
                 {% endwith %}
                 
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-personal"></li>
                     <li><a href="{% url 'personal:medico_list' %}">Médicos</a></li>
                     <li><a href="{% url 'personal:enfermero_list' %}">Enfermeros</a></li>
                     <li><a href="{% url 'personal:personal_list' %}">Personal</a></li>
@@ -72,7 +71,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-turnos"></li>
                     <li><a href="{% url 'turno:turno_list' %}">Turno</a></li>
                     <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
                     <li><a href="{% url 'turno:turnopersonal_list' %}">Turno y personal</a></li>
@@ -105,7 +104,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-farmacia"></li>
                     <li><a href="{% url 'farmacia:medicamento_list' %}">Medicamentos</a></li>
                     <li><a href="{% url 'farmacia:dispensacion_list' %}">Dispensar</a></li>
                 </ul>
@@ -127,7 +126,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-infraestructura"></li>
                     <li><a href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
                     <li><a href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
                     <li><a href="{% url 'infraestructura:infra_lista_camas' %}">Lista de Camas</a></li>
@@ -141,7 +140,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-inventario"></li>
                     <li><a href="{% url 'inventario:lista_insumo' %}">Insumos</a></li>
                     <li><a href="{% url 'inventario:lista_movimiento' %}">Movimientos</a></li>
                 </ul>
@@ -155,7 +154,7 @@
                 {% endwith %}
 
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-laboratorio"></li>
                     <li><a href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
                     <li><a href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
                 </ul>
@@ -169,7 +168,7 @@
                 {% endwith %}
 
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-urgencias"></li>
                     <li><a href="{% url 'urgencia:lista_urgencia' %}">Urgencias</a></li>
                     <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
                     <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
@@ -185,7 +184,7 @@
                 {% endwith %}
 
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-asignaciones"></li>
                     <li><a href="{% url 'acceso:usuario_lista' %}">Usuarios</a></li>
                     <li><a href="{% url 'acceso:rol_lista' %}">Roles</a></li>
                     <li><a href="{% url 'acceso:permiso_lista' %}">Permisos</a></li>
@@ -194,10 +193,7 @@
             </li>
 
             {% endif %}
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+            <li><a href="{% url 'acceso:logout' %}">{{ user.username }} Salir</a></li>
 		</ul>
 </nav>
 </header>
-
-
-

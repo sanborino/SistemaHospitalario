@@ -1,4 +1,3 @@
-
 <header>
     <input type="checkbox" id="btn-menu">
     <label for="btn-menu">☰</label>
@@ -22,7 +21,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-infraestructura"></li>
                     <li><a href="{% url 'infraestructura:lista_area' %}">Áreas</a></li>
                     <li><a href="{% url 'infraestructura:lista_habitacion' %}">Habitaciones</a></li>
                     <li><a href="{% url 'infraestructura:infra_lista_camas' %}">Lista de Camas</a></li>
@@ -36,7 +35,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-inventario"></li>
                     <li><a href="{% url 'inventario:lista_insumo' %}">Insumos</a></li>
                     <li><a href="{% url 'inventario:lista_movimiento' %}">Movimientos</a></li>
                 </ul>
@@ -49,13 +48,13 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-checar-asistencia"></li>
                     <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
                 </ul>
             </li>
 
             {% endif %}
-            <li><a href="{% url 'acceso:logout' %}">Salir</a></li>
+            <li><a href="{% url 'acceso:logout' %}">{{ user.username }} Salir</a></li>
 		</ul>
 </nav>
 </header>

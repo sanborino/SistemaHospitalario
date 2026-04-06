@@ -1,4 +1,3 @@
-
 <header>
     <input type="checkbox" id="btn-menu">
     <label for="btn-menu">☰</label>
@@ -24,7 +23,7 @@
                 {% endwith %}
 
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-laboratorio"></li>
                     <li><a href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
                     <li><a href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
                 </ul>
@@ -37,7 +36,7 @@
                 </a>
                 {% endwith %}
                 <ul>
-                <input type="checkbox" id="submenu1">
+                    <li><input type="checkbox" id="submenu-checar-asistencia"></li>
                     <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
                 </ul>
             </li>
@@ -47,6 +46,3 @@
 		</ul>
 </nav>
 </header>
-
-
-

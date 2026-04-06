@@ -18,6 +18,13 @@ class InsumoListView(LoginRequiredMixin, ListView):
     paginate_by = 10
     ordering = ["nombre"]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        nombre = self.request.GET.get("nombre", None)
+        if nombre:
+            queryset = queryset.filter(nombre__icontains=nombre)
+        return queryset
+
 
 class InsumoDetailView(LoginRequiredMixin, DetailView):
     model = Insumo
@@ -58,7 +65,11 @@ class MovimientoListView(LoginRequiredMixin, ListView):
     ordering = ["-fecha"]
 
     def get_queryset(self):
-        return super().get_queryset().select_related("insumo", "realizado_por")
+        queryset = super().get_queryset().select_related("insumo", "realizado_por")
+        nombre = self.request.GET.get("nombre", None)
+        if nombre:
+            queryset = queryset.filter(insumo__nombre__icontains=nombre)
+        return queryset
 
 
 class MovimientoDetailView(LoginRequiredMixin, DetailView):
@@ -94,4 +105,3 @@ class MovimientoDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "inventario/movimiento_confirmar_eliminar.html"
     context_object_name = "movimiento"
     success_url = reverse_lazy("inventario:lista_movimiento")
-

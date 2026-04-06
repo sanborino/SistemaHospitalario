@@ -1,27 +1,59 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
 
 <main class="container">
 <div class="box">
-   <h2>Registros de auditoria</h2>
-    <div class="row">
-        <div class="col">
-        <ul>
-            {% for a in object_list %}
-            <section>
-                    <strong>{{ a.tabla }}</strong> - {{ a.operacion }}  
-                    (ID: {{ a.registro_id }})  
-                    {{ a.fecha }}
-                    <div style="display: flex; gap: 10px;">
-                <a class="btn" href="{% url 'auditoria:auditoria_detail' a.id %}">Ver detalle</a>
-                    </div>
-            </section>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
+   <h2>Registros de auditoría</h2>
+
+   <!-- Formulario de filtro -->
+   <form method="get" class="mb-3">
+       <label for="fecha">Filtrar por fecha:</label>
+       <input type="date" id="fecha" name="fecha" value="{{ request.GET.fecha }}">
+       <button type="submit" class="btn">Filtrar</button>
+   </form>
+
+   <div class="row">
+       <div class="col">
+           <table>
+               <thead>
+                   <tr>
+                       <th>Tabla</th>
+                       <th>Operación</th>
+                       <th>Id</th>
+                       <th>Fecha</th>
+                       <th>Ver detalle</th>
+                   </tr>
+               </thead>
+               <tbody>
+               {% for a in object_list %}
+                   <tr>
+                       <td>{{ a.tabla }}</td>
+                       <td>{{ a.operacion }}</td>
+                       <td>(ID: {{ a.registro_id }})</td>
+                       <td>{{ a.fecha }}</td>
+                       <td><a class="btn" href="{% url 'auditoria:auditoria_detail' a.id %}">Ver</a></td>
+                   </tr>
+               {% empty %}
+                   <tr><td colspan="5">No hay registros</td></tr>
+               {% endfor %}
+               </tbody>
+               
+           </table>
+
+           <!-- Paginación -->
+           <div class="pagination">
+               {% if page_obj.has_previous %}
+                   <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}">Anterior</a>
+               {% endif %}
+
+               <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+               {% if page_obj.has_next %}
+                   <a href="?page={{ page_obj.next_page_number }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}">  Siguiente</a>
+               {% endif %}
+           </div>
+       </div>
+   </div>
 </div>
 </main>
 {% endblock %}
