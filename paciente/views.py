@@ -11,11 +11,12 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from hospitalizacion.models import AsignacionCama
-from django.contrib.auth.decorators import login_required
+from acceso.models import UsuarioRol, UsuarioHospital
+from acceso.mixins import PermisoMedicoMixin, PermisoAltoMixin
+from acceso.mixins import permiso_medico_required
 
 
-
-class PacienteListView(LoginRequiredMixin, ListView):
+class PacienteListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     model = Paciente
     template_name = "paciente/lista_paciente.html"
     context_object_name = "pacientes"
@@ -44,7 +45,44 @@ class PacienteListView(LoginRequiredMixin, ListView):
         return qs
 
 
-class PacienteCreateView(LoginRequiredMixin, CreateView):
+class PacienteCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
+    model = Paciente
+    form_class = PacienteForm
+    template_name = "paciente/crear_paciente.html"
+    success_url = reverse_lazy("paciente:paciente_list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        paciente = form.save(commit=False)
+        user = self.request.user
+
+        # Refuerzo de seguridad: si no es director, forzar hospital correcto
+        if not UsuarioRol.objects.filter(
+            usuario=user, rol__nombre="DIRECCIÓN"
+        ).exists():
+            hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
+            if hospital_usuario:
+                paciente.hospital = hospital_usuario.hospital
+
+        paciente.save()
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        # Pasar hospital al contexto para mostrarlo en la plantilla
+        hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
+        if hospital_usuario:
+            context["hospital_nombre"] = hospital_usuario.hospital.nombre
+        return context
+
+
+class PacienteUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
     model = Paciente
     form_class = PacienteForm
     template_name = "paciente/crear_paciente.html"
@@ -55,23 +93,13 @@ class PacienteCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class PacienteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Paciente
-    form_class = PacienteForm
-    template_name = "paciente/crear_paciente.html"
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "paciente:detalle_paciente", kwargs={"paciente_id": self.object.pk}
-        )
-
-
-class PacienteDeleteView(LoginRequiredMixin, DeleteView):
+class PacienteDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Paciente
     template_name = "paciente/confirmar_eliminar.html"
     success_url = reverse_lazy("paciente:lista_paciente")
 
-@login_required
+
+@permiso_medico_required
 def detalle_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
 

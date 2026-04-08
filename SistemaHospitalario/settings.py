@@ -16,6 +16,9 @@ AUTH_USER_MODEL = "acceso.Usuario"
 env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
 
+# Leer entorno desde .env
+ENVIRONMENT = env("DJANGO_ENV")
+
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -93,6 +96,29 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+if ENVIRONMENT == "development":
+    # BASE DE DATOS LOCAL
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "sistemahospitalario",
+            "USER": "root",
+            "PASSWORD": "toor",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
+
+else:  # producción
+    # BASE DE DATOS WEB
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+        ),
+    }
+
+
 """DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -111,26 +137,6 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
     }
 }
 """
-
-# BASE DE DATOS WEB
-DATABASES = {
-    "default": dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-    ),
-}
-
-# BASE DE DATOS LOCAL
-"""DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "sistemahospitalario",
-        "USER": "root",
-        "PASSWORD": "toor",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-}"""
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -172,10 +178,10 @@ STATICFILES_DIRS = [
     BASE_DIR / "SistemaHospitalario" / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = "/static/"
 
 # Media
-
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = BASE_DIR / "media"

@@ -49,20 +49,6 @@
             </li>
 
             <li>
-                {% with urls="medico_list,enfermero_list,medico_create,medico_edit,medico_delete,enfermero_create,enfermero_edit,enfermero_delete"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Personal
-                </a>
-                {% endwith %}
-                
-                <ul>
-                    <li><input type="checkbox" id="submenu-personal"></li>
-                    <li><a href="{% url 'personal:medico_list' %}">Médicos</a></li>
-                    <li><a href="{% url 'personal:enfermero_list' %}">Enfermeros</a></li>
-                </ul>
-            </li>
-
-            <li>
                 {% with urls="turno_list,turno_create,turno_update,turno_delete,turnopersonal_list,turnopersonal_crerate,turno_personal_update,turnopersonal_delete,asistencia_list,asistencia_create,asistencia_update,asistencia_delete"|cut:"," %}
                 <a class="{% if url_name in urls %}active{% endif %}">
                     Turnos
@@ -71,18 +57,8 @@
                 <ul>
                     <li><input type="checkbox" id="submenu-turnos"></li>
                     <li><a href="{% url 'turno:turno_list' %}">Turno</a></li>
-                    <li><a href="{% url 'turno:asistencia_list' %}">Asistencia</a></li>
                     <li><a href="{% url 'turno:turnopersonal_list' %}">Turno y personal</a></li>
                 </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_hospital ,crear_hospital ,detalle_hospital ,editar_hospital ,eliminar_hospital "|cut:"," %}
-                <a href="{% url 'hospital:lista_hospital' %}"
-                class="{% if url_name in urls %}active{% endif %}">
-                    Hospitales
-                </a>
-                {% endwith %}
             </li>
 
             <li>
@@ -93,22 +69,7 @@
                 {% endwith %}
                 <ul>
                     <li><input type="checkbox" id="submenu-inventario"></li>
-                    <li><a href="{% url 'inventario:lista_insumo' %}">Insumos</a></li>
                     <li><a href="{% url 'inventario:lista_movimiento' %}">Movimientos</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="lista_estudio,crear_estudio,detalle_estudio,editar_estudio,eliminar_estudio,lista_resultado,crear_resultado,detalle_resultado,editar_resultado,eliminar_resultado"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Laboratorio
-                </a>
-                {% endwith %}
-
-                <ul>
-                    <li><input type="checkbox" id="submenu-laboratorio"></li>
-                    <li><a href="{% url 'laboratorio:lista_resultado' %}">Resultados</a></li>
-                    <li><a href="{% url 'laboratorio:lista_estudio' %}">Estudios</a></li>
                 </ul>
             </li>
 
@@ -125,22 +86,6 @@
                     <li><a href="{% url 'urgencia:lista_atencion' %}">Atenciones</a></li>
                     <li><a href="{% url 'urgencia:lista_alta' %}">Altas</a></li>
                     <li><a href="{% url 'hospitalizacion:historial_asignaciones' %}">Lista de camas</a></li>
-                </ul>
-            </li>
-
-            <li>
-                {% with urls="usuario_lista,usuario_crear,usuario_editar,usuario_eliminar,usuario_detalle,rol_lista,rol_crear,rol_editar,rol_eliminar,rol_detalle,permiso_lista,permiso_crear,permiso_editar,permiso_eliminar,permiso_detalle,usuariohospital_list,usuariohospital_create,usuariohospital_update,usuariohospital_delete"|cut:"," %}
-                <a class="{% if url_name in urls %}active{% endif %}">
-                    Asignaciones
-                </a>
-                {% endwith %}
-
-                <ul>
-                    <li><input type="checkbox" id="submenu-asignaciones"></li>
-                    <li><a href="{% url 'acceso:usuario_lista' %}">Usuarios</a></li>
-                    <li><a href="{% url 'acceso:rol_lista' %}">Roles</a></li>
-                    <li><a href="{% url 'acceso:permiso_lista' %}">Permisos</a></li>
-                    <li><a href="{% url 'acceso:usuariohospital_list' %}">Asignar hospitales</a></li>
                 </ul>
             </li>
 

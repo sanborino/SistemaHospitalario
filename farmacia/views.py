@@ -22,7 +22,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from paciente.models import Paciente
 from personal.models import Medico
-from django.contrib.auth.decorators import login_required
+from acceso.mixins import permiso_farmacia_required
+from acceso.mixins import PermisoFarmaciaMixin, PermisoAltoMixin, PermisoMedicoMixin
 
 
 # -----------------------
@@ -30,7 +31,7 @@ from django.contrib.auth.decorators import login_required
 # -----------------------
 
 
-class MedicamentoListView(LoginRequiredMixin, ListView):
+class MedicamentoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     model = Medicamento
     template_name = "farmacia/medicamento_list.html"
     context_object_name = "medicamentos"
@@ -75,27 +76,27 @@ class MedicamentoListView(LoginRequiredMixin, ListView):
         return context
 
 
-class MedicamentoCreateView(LoginRequiredMixin, CreateView):
+class MedicamentoCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
     model = Medicamento
     form_class = MedicamentoForm
     template_name = "farmacia/medicamento_form.html"
     success_url = reverse_lazy("farmacia:medicamento_list")
 
 
-class MedicamentoUpdateView(LoginRequiredMixin, UpdateView):
+class MedicamentoUpdateView(LoginRequiredMixin, PermisoFarmaciaMixin, UpdateView):
     model = Medicamento
     form_class = MedicamentoForm
     template_name = "farmacia/medicamento_form.html"
     success_url = reverse_lazy("farmacia:medicamento_list")
 
 
-class MedicamentoDetailView(LoginRequiredMixin, DetailView):
+class MedicamentoDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
     model = Medicamento
     template_name = "farmacia/medicamento_detalle.html"
     context_object_name = "medicamento"
 
 
-class MedicamentoDeleteView(LoginRequiredMixin, DeleteView):
+class MedicamentoDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Medicamento
     template_name = "farmacia/medicamento_confirm_delete.html"
     success_url = reverse_lazy("medicamento_list")
@@ -106,7 +107,7 @@ class MedicamentoDeleteView(LoginRequiredMixin, DeleteView):
 # -----------------------
 
 
-class RecetaListView(LoginRequiredMixin, ListView):
+class RecetaListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     model = Receta
     template_name = "farmacia/receta_list.html"
     context_object_name = "recetas"
@@ -156,7 +157,7 @@ class RecetaListView(LoginRequiredMixin, ListView):
         return context
 
 
-class RecetaCreateView(LoginRequiredMixin, CreateView):
+class RecetaCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
     model = Receta
     form_class = RecetaForm
     template_name = "farmacia/receta_form.html"
@@ -168,7 +169,7 @@ class RecetaCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class RecetaDetailView(LoginRequiredMixin, DetailView):
+class RecetaDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
     model = Receta
     template_name = "farmacia/receta_detalle.html"
     context_object_name = "receta"
@@ -178,7 +179,7 @@ class RecetaDetailView(LoginRequiredMixin, DetailView):
         return Receta.objects.filter(dispensacion__isnull=True)
 
 
-class RecetaDetalleCreateView(LoginRequiredMixin, CreateView):
+class RecetaDetalleCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
     model = RecetaDetalle
     form_class = RecetaDetalleForm
     template_name = "farmacia/receta_detalle_form.html"
@@ -194,7 +195,7 @@ class RecetaDetalleCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class RecetaDetalleUpdateView(LoginRequiredMixin, UpdateView):
+class RecetaDetalleUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
     model = RecetaDetalle
     form_class = RecetaDetalleForm
     template_name = "farmacia/receta_detalle_form.html"
@@ -205,7 +206,7 @@ class RecetaDetalleUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class RecetaDetalleDeleteView(LoginRequiredMixin, DeleteView):
+class RecetaDetalleDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = RecetaDetalle
     template_name = "farmacia/receta_detalle_confirm_delete.html"
 
@@ -220,7 +221,7 @@ class RecetaDetalleDeleteView(LoginRequiredMixin, DeleteView):
 # -----------------------
 
 
-class DispensacionListView(LoginRequiredMixin, ListView):
+class DispensacionListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     model = Receta
     template_name = "farmacia/dispensacion_list.html"
     context_object_name = "recetas"
@@ -230,13 +231,14 @@ class DispensacionListView(LoginRequiredMixin, ListView):
         return Receta.objects.filter(dispensacion__isnull=True)
 
 
-class DispensacionCreateView(LoginRequiredMixin, CreateView):
+class DispensacionCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
     model = Dispensacion
     form_class = DispensacionForm
     template_name = "farmacia/dispensacion_form.html"
     success_url = reverse_lazy("farmacia:dispensacion_list")
 
-@login_required
+
+@permiso_farmacia_required
 def dispensacion_create(request, receta_id):
     receta = get_object_or_404(Receta, id=receta_id)
 
@@ -308,12 +310,13 @@ def dispensacion_create(request, receta_id):
     )
 
 
-class DispensacionDetailView(LoginRequiredMixin, DetailView):
+class DispensacionDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
     model = Dispensacion
     template_name = "farmacia/dispensacion_detail.html"
     context_object_name = "dispensacion"
 
-@login_required
+
+@permiso_farmacia_required
 def dispensar_medicamentos(request, id):
     dispensacion = get_object_or_404(Dispensacion, pk=id)
 

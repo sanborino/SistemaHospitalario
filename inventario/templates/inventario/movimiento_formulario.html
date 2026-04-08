@@ -33,10 +33,8 @@
       {{ form.cantidad }}
       {{ form.cantidad.errors }}
 
-      {{ form.realizado_por.label_tag }}
-      {{ form.realizado_por }}
-      {{ form.realizado_por.errors }}
-
+<label>Realizado por:</label><br>
+<p><strong>{{ request.user.get_full_name|default:request.user.username }}</strong></p>
 
     <p>
       <div style="display: flex; gap: 10px;">

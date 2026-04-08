@@ -19,11 +19,17 @@
       <div class="alert alert-error">{{ form.non_field_errors }}</div>
     {% endif %}
 
-    <div class="campo">
-      {{ form.hospital.label_tag }}<br>
-      {{ form.hospital }}
-      {{ form.hospital.errors }}
-    </div>
+      <div class="campo">
+        {{ form.hospital.label_tag }}<br>
+        {% if es_director %}
+            {{ form.hospital }}
+        {% else %}
+            <p><strong>{{ hospital_nombre }}</strong></p>
+            {{ form.hospital }} <!-- hidden input -->
+        {% endif %}
+        {{ form.hospital.errors }}
+      </div>
+
 
     <div class="campo">
       {{ form.paciente.label_tag }}<br>

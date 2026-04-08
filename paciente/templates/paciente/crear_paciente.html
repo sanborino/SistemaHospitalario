@@ -18,10 +18,15 @@
         {{ form.non_field_errors }}
 
         <div class="campo">
-          <label>Hospital</label><br>
-          {{ form.hospital }}<br>
-          {{ form.hospital.errors }}
-      </div>
+        <label>Hospital</label><br>
+        {% if hospital_nombre %}
+            <p><strong>{{ hospital_nombre }}</strong></p>
+        {% endif %}
+        {{ form.hospital }}
+        {{ form.hospital.errors }}
+        </div>
+
+
 
       <div class="campo">
           <label>Nombres</label><br>

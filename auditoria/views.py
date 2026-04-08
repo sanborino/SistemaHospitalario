@@ -2,14 +2,12 @@ from django.views.generic import ListView, DetailView
 from .models import Auditoria
 from django.apps import apps
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
+from acceso.mixins import PermisoAltoMixin
 from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Auditoria
 
 
-class AuditoriaListView(LoginRequiredMixin, ListView):
+class AuditoriaListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     model = Auditoria
     template_name = "auditoria/auditoria_list.html"
     ordering = ["-fecha"]  # más reciente primero
@@ -23,7 +21,7 @@ class AuditoriaListView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class AuditoriaDetailView(LoginRequiredMixin, DetailView):
+class AuditoriaDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
     model = Auditoria
     template_name = "auditoria/auditoria_detail.html"
 

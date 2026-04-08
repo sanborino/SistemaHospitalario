@@ -19,8 +19,14 @@
       {% endif %}
 
           <label class="form-label">Hospital</label>
-          {{ form.hospital }}
+          {% if es_director %}
+              {{ form.hospital }}
+          {% else %}
+              <p><strong>{{ hospital_nombre }}</strong></p>
+              {{ form.hospital }} <!-- campo oculto -->
+          {% endif %}
           <div class="text-danger small">{{ form.hospital.errors }}</div>
+
 
           <label class="form-label">Paciente</label>
           {{ form.paciente }}

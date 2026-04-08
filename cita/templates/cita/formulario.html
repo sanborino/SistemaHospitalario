@@ -17,41 +17,40 @@
           {{ form.non_field_errors }}
 
             <label>Hospital</label><br>
-
-            {{ form.hospital }}<br>
+            {% if es_director %}
+                {{ form.hospital }}<br>
+            {% else %}
+                <p><strong>{{ hospital_nombre }}</strong></p>
+                {{ form.hospital }} <!-- hidden input -->
+            {% endif %}
             {{ form.hospital.errors }}
 
             <label>Paciente</label><br>
-
             {{ form.paciente }}<br>
             {{ form.paciente.errors }}
 
             <label>Médico</label><br>
-
             {{ form.medico }}<br>
             {{ form.medico.errors }}
 
             <label>Fecha</label><br>
-
             {{ form.fecha }}<br>
             {{ form.fecha.errors }}
 
             <label>Hora</label><br>
-  
             {{ form.hora }}<br>
             {{ form.hora.errors }}
 
             <label>Motivo</label><br>
-
             {{ form.motivo }}<br>
             {{ form.motivo.errors }}
 
             <label>Estado</label><br>
-
             {{ form.estado }}<br>
+
             <div style="display: flex; gap: 10px;">
-    <button class="btn" type="submit">Guardar</button>
-    <a class="btn" href="{% url 'cita:lista_cita' %}">Cancelar</a>
+              <button class="btn" type="submit">Guardar</button>
+              <a class="btn" href="{% url 'cita:lista_cita' %}">Cancelar</a>
             </div>
         </section>
 </form>

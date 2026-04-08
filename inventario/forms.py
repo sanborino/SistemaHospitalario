@@ -15,4 +15,4 @@ class InsumoForm(forms.ModelForm):
 class MovimientoInventarioForm(forms.ModelForm):
     class Meta:
         model = MovimientoInventario
-        fields = ["insumo", "tipo", "cantidad", "realizado_por"]
+        fields = ["insumo", "tipo", "cantidad"]

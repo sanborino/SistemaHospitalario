@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from .forms import (
     UsuarioForm,
     RolForm,
@@ -11,11 +11,7 @@ from .forms import (
     UsuarioHospitalForm,
 )
 from .models import Usuario, Rol, Permiso, UsuarioRol, RolPermiso, UsuarioHospital
-
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from acceso.models import UsuarioRol
+from acceso.mixins import permiso_alto_required
 
 
 @login_required
@@ -98,13 +94,13 @@ def logout_usuario(request):
 
 
 # CRUD Usuario
-@login_required
+@permiso_alto_required
 def usuario_lista(request):
     usuarios = Usuario.objects.all()
     return render(request, "acceso/usuario_lista.html", {"usuarios": usuarios})
 
 
-@login_required
+@permiso_alto_required
 def usuario_crear(request):
     form = UsuarioForm(request.POST or None)
     if form.is_valid():
@@ -116,7 +112,7 @@ def usuario_crear(request):
     )
 
 
-@login_required
+@permiso_alto_required
 def usuario_editar(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
     form = UsuarioForm(request.POST or None, instance=usuario)
@@ -129,7 +125,7 @@ def usuario_editar(request, pk):
     )
 
 
-@login_required
+@permiso_alto_required
 def usuario_eliminar(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
     if request.method == "POST":
@@ -142,13 +138,13 @@ def usuario_eliminar(request, pk):
 
 
 # CRUD Rol
-@login_required
+@permiso_alto_required
 def rol_lista(request):
     roles = Rol.objects.all()
     return render(request, "acceso/rol_lista.html", {"roles": roles})
 
 
-@login_required
+@permiso_alto_required
 def rol_crear(request):
     form = RolForm(request.POST or None)
     if form.is_valid():
@@ -160,7 +156,7 @@ def rol_crear(request):
     )
 
 
-@login_required
+@permiso_alto_required
 def rol_editar(request, pk):
     rol = get_object_or_404(Rol, pk=pk)
     form = RolForm(request.POST or None, instance=rol)
@@ -173,7 +169,7 @@ def rol_editar(request, pk):
     )
 
 
-@login_required
+@permiso_alto_required
 def rol_eliminar(request, pk):
     rol = get_object_or_404(Rol, pk=pk)
     if request.method == "POST":
@@ -184,13 +180,13 @@ def rol_eliminar(request, pk):
 
 
 # CRUD Permiso
-@login_required
+@permiso_alto_required
 def permiso_lista(request):
     permisos = Permiso.objects.all()
     return render(request, "acceso/permiso_lista.html", {"permisos": permisos})
 
 
-@login_required
+@permiso_alto_required
 def permiso_crear(request):
     form = PermisoForm(request.POST or None)
     if form.is_valid():
@@ -202,7 +198,7 @@ def permiso_crear(request):
     )
 
 
-@login_required
+@permiso_alto_required
 def permiso_editar(request, pk):
     permiso = get_object_or_404(Permiso, pk=pk)
     form = PermisoForm(request.POST or None, instance=permiso)
@@ -215,7 +211,7 @@ def permiso_editar(request, pk):
     )
 
 
-@login_required
+@permiso_alto_required
 def permiso_eliminar(request, pk):
     permiso = get_object_or_404(Permiso, pk=pk)
     if request.method == "POST":
@@ -228,7 +224,7 @@ def permiso_eliminar(request, pk):
 
 
 # Asignar Rol a Usuario
-@login_required
+@permiso_alto_required
 def asignar_rol_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     if request.method == "POST":
@@ -244,7 +240,7 @@ def asignar_rol_usuario(request, usuario_id):
     )
 
 
-@login_required
+@permiso_alto_required
 def quitar_rol_usuario(request, usuario_id, rol_id):
     usuario_rol = get_object_or_404(UsuarioRol, usuario_id=usuario_id, rol_id=rol_id)
     usuario_rol.delete()
@@ -253,8 +249,7 @@ def quitar_rol_usuario(request, usuario_id, rol_id):
 
 
 # Asignar Permiso a Rol
-@login_required
-@login_required
+@permiso_alto_required
 def asignar_permiso_rol(request, rol_id):
     rol = get_object_or_404(Rol, pk=rol_id)
 
@@ -276,7 +271,7 @@ def asignar_permiso_rol(request, rol_id):
     )
 
 
-@login_required
+@permiso_alto_required
 def quitar_permiso_rol(request, rol_id, permiso_id):
     rol_permiso = get_object_or_404(RolPermiso, rol_id=rol_id, permiso_id=permiso_id)
     rol_permiso.delete()
@@ -285,7 +280,7 @@ def quitar_permiso_rol(request, rol_id, permiso_id):
 
 
 # Detalles
-@login_required
+@permiso_alto_required
 def usuario_detalle(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
     roles = UsuarioRol.objects.filter(usuario=usuario).select_related("rol")
@@ -299,7 +294,7 @@ def usuario_detalle(request, pk):
     )
 
 
-@login_required
+@permiso_alto_required
 def rol_detalle(request, pk):
     rol = get_object_or_404(Rol, pk=pk)
     permisos = RolPermiso.objects.filter(rol=rol).select_related("permiso")
@@ -311,13 +306,13 @@ def rol_detalle(request, pk):
     )
 
 
-@login_required
+@permiso_alto_required
 def usuariohospital_list(request):
     registros = UsuarioHospital.objects.select_related("usuario", "hospital")
     return render(request, "acceso/list.html", {"registros": registros})
 
 
-@login_required
+@permiso_alto_required
 def usuariohospital_create(request):
     if request.method == "POST":
         form = UsuarioHospitalForm(request.POST)
@@ -330,7 +325,7 @@ def usuariohospital_create(request):
     return render(request, "acceso/form.html", {"form": form})
 
 
-@login_required
+@permiso_alto_required
 def usuariohospital_update(request, pk):
     registro = get_object_or_404(UsuarioHospital, pk=pk)
     if request.method == "POST":
@@ -344,7 +339,7 @@ def usuariohospital_update(request, pk):
     return render(request, "acceso/form.html", {"form": form})
 
 
-@login_required
+@permiso_alto_required
 def usuariohospital_delete(request, pk):
     registro = get_object_or_404(UsuarioHospital, pk=pk)
     if request.method == "POST":

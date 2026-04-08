@@ -10,12 +10,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Area, Habitacion, Cama
 from .forms import AreaForm, HabitacionForm
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Habitacion, Cama, Area, Hospital
+from .models import Habitacion, Cama, Area
+from acceso.mixins import PermisoAltoMixin
+from acceso.mixins import permiso_alto_required, permiso_medico_required
 
 
-class AreaListView(LoginRequiredMixin, ListView):
+class AreaListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     model = Area
     template_name = "infraestructura/area_lista.html"
     context_object_name = "areas"
@@ -23,13 +23,13 @@ class AreaListView(LoginRequiredMixin, ListView):
     ordering = ["hospital__nombre", "nombre"]
 
 
-class AreaDetailView(LoginRequiredMixin, DetailView):
+class AreaDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
     model = Area
     template_name = "infraestructura/area_detalle.html"
     context_object_name = "area"
 
 
-class AreaCreateView(LoginRequiredMixin, CreateView):
+class AreaCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
     model = Area
     form_class = AreaForm
     template_name = "infraestructura/area_formulario.html"
@@ -40,7 +40,7 @@ class AreaCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class AreaUpdateView(LoginRequiredMixin, UpdateView):
+class AreaUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
     model = Area
     form_class = AreaForm
     template_name = "infraestructura/area_formulario.html"
@@ -51,13 +51,13 @@ class AreaUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class AreaDeleteView(LoginRequiredMixin, DeleteView):
+class AreaDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Area
     template_name = "infraestructura/area_confirmar_eliminar.html"
     success_url = reverse_lazy("infraestructura:lista_area")
 
 
-class HabitacionListView(LoginRequiredMixin, ListView):
+class HabitacionListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     model = Habitacion
     template_name = "infraestructura/habitacion_lista.html"
     context_object_name = "habitaciones"
@@ -65,13 +65,13 @@ class HabitacionListView(LoginRequiredMixin, ListView):
     ordering = ["hospital__nombre", "area__nombre", "numero"]
 
 
-class HabitacionDetailView(LoginRequiredMixin, DetailView):
+class HabitacionDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
     model = Habitacion
     template_name = "infraestructura/habitacion_detalle.html"
     context_object_name = "habitacion"
 
 
-class HabitacionCreateView(LoginRequiredMixin, CreateView):
+class HabitacionCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
     model = Habitacion
     form_class = HabitacionForm
     template_name = "infraestructura/habitacion_formulario.html"
@@ -82,7 +82,7 @@ class HabitacionCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class HabitacionUpdateView(LoginRequiredMixin, UpdateView):
+class HabitacionUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
     model = Habitacion
     form_class = HabitacionForm
     template_name = "infraestructura/habitacion_formulario.html"
@@ -93,18 +93,19 @@ class HabitacionUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class HabitacionDeleteView(LoginRequiredMixin, DeleteView):
+class HabitacionDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Habitacion
     template_name = "infraestructura/habitacion_confirmar_eliminar.html"
     success_url = reverse_lazy("infraestructura:lista_habitacion")
 
 
 # Vista antigua residual si se usa como dashboard
-@login_required
+@permiso_alto_required
 def infraestructura_dashboard(request):
     return render(request, "infraestructura/dashboard.html")
 
-@login_required
+
+@permiso_alto_required
 def lista_habitaciones(request):
     habitaciones = Habitacion.objects.select_related("area", "hospital")
     return render(
@@ -113,12 +114,14 @@ def lista_habitaciones(request):
         {"habitaciones": habitaciones},
     )
 
-@login_required
+
+@permiso_alto_required
 def lista_camas(request):
     camas = Cama.objects.select_related("habitacion", "habitacion__area")
     return render(request, "infraestructura/lista_camas.html", {"camas": camas})
 
-@login_required
+
+@permiso_alto_required
 def crear_cama(request):
     habitaciones = Habitacion.objects.all()
 
@@ -143,7 +146,8 @@ def crear_cama(request):
         },
     )
 
-@login_required
+
+@permiso_alto_required
 def editar_cama(request, cama_id):
     cama = get_object_or_404(Cama, id=cama_id)
     habitaciones = Habitacion.objects.all()
@@ -167,7 +171,8 @@ def editar_cama(request, cama_id):
         },
     )
 
-@login_required
+
+@permiso_alto_required
 def eliminar_cama(request, cama_id):
     cama = get_object_or_404(Cama, id=cama_id)
 

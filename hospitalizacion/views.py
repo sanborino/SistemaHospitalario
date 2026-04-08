@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-from django.contrib.auth.decorators import login_required
 from infraestructura.models import Cama
 from .models import AsignacionCama
 from .utils import cama_disponible, paciente_con_cama_activa
 from paciente.models import Paciente
 from facturacion.models import Cargo
+from acceso.mixins import permiso_medico_required
 
 
 from facturacion.models import Cargo
 
-@login_required
+
+@permiso_medico_required
 def asignar_cama(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     camas = Cama.objects.filter(estado="DISPONIBLE")
@@ -56,7 +57,8 @@ def asignar_cama(request, paciente_id):
         },
     )
 
-@login_required
+
+@permiso_medico_required
 def liberar_cama(request, asignacion_id):
     asignacion = get_object_or_404(AsignacionCama, id=asignacion_id)
 
@@ -85,7 +87,8 @@ def liberar_cama(request, asignacion_id):
         },
     )
 
-@login_required
+
+@permiso_medico_required
 def trasladar_cama(request, asignacion_id):
     asignacion = get_object_or_404(AsignacionCama, id=asignacion_id)
     paciente = asignacion.paciente
@@ -126,7 +129,8 @@ def trasladar_cama(request, asignacion_id):
         },
     )
 
-@login_required
+
+@permiso_medico_required
 def historial_asignaciones(request):
     asignaciones = AsignacionCama.objects.select_related(
         "paciente", "cama", "cama__habitacion", "cama__habitacion__area"

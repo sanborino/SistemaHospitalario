@@ -1,5 +1,5 @@
 from django import forms
-
+from acceso.models import UsuarioRol, UsuarioHospital
 from .models import Urgencia, AtencionUrgencia, AltaUrgencia
 
 
@@ -7,9 +7,21 @@ class UrgenciaForm(forms.ModelForm):
     class Meta:
         model = Urgencia
         fields = ["hospital", "paciente", "nivel_triaje", "motivo", "estado"]
-        widgets = {
-            "motivo": forms.Textarea(attrs={"rows": 4}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        if (
+            user
+            and not UsuarioRol.objects.filter(
+                usuario=user, rol__nombre="DIRECCIÓN"
+            ).exists()
+        ):
+            hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
+            if hospital_usuario:
+                self.fields["hospital"].initial = hospital_usuario.hospital
+            self.fields["hospital"].widget = forms.HiddenInput()
 
 
 class AtencionUrgenciaForm(forms.ModelForm):

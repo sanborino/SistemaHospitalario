@@ -25,9 +25,11 @@ from .forms import (
     SolicitudLaboratorioForm,
     ResultadoLaboratorioForm,
 )
-from django.contrib.auth.decorators import login_required
+from acceso.mixins import permiso_farmacia_required, permiso_medico_required
+from acceso.mixins import PermisoMedicoMixin, PermisoFarmaciaMixin, PermisoAltoMixin
 
-@login_required
+
+@permiso_medico_required
 def crear_factura_solicitud(solicitud):
     """Crea automaticamente una Factura + FacturaDetalles para la solicitud."""
     from facturacion.models import Factura, FacturaDetalle
@@ -68,7 +70,7 @@ def crear_factura_solicitud(solicitud):
 # CRUD Estudio
 
 
-class EstudioCreateView(LoginRequiredMixin, CreateView):
+class EstudioCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
     model = Estudio
     form_class = EstudioForm
     template_name = "laboratorio/estudio_formulario.html"
@@ -79,7 +81,7 @@ class EstudioCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class EstudioUpdateView(LoginRequiredMixin, UpdateView):
+class EstudioUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
     model = Estudio
     form_class = EstudioForm
     template_name = "laboratorio/estudio_formulario.html"
@@ -90,13 +92,13 @@ class EstudioUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class EstudioDeleteView(LoginRequiredMixin, DeleteView):
+class EstudioDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Estudio
     template_name = "laboratorio/estudio_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_estudio")
 
 
-class EstudioListView(LoginRequiredMixin, ListView):
+class EstudioListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     model = Estudio
     template_name = "laboratorio/estudio_lista.html"
     context_object_name = "estudios"
@@ -104,13 +106,13 @@ class EstudioListView(LoginRequiredMixin, ListView):
     ordering = ["nombre"]
 
 
-class EstudioDetailView(LoginRequiredMixin, DetailView):
+class EstudioDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
     model = Estudio
     template_name = "laboratorio/estudio_detalle.html"
     context_object_name = "estudio"
 
 
-class EstudioUpdateView(LoginRequiredMixin, UpdateView):
+class EstudioUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
     model = Estudio
     form_class = EstudioForm
     template_name = "laboratorio/estudio_formulario.html"
@@ -122,7 +124,7 @@ class EstudioUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # CRUD SolicitudLaboratorio
-class SolicitudListView(LoginRequiredMixin, ListView):
+class SolicitudListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_lista.html"
     context_object_name = "solicitudes"
@@ -163,7 +165,7 @@ class SolicitudListView(LoginRequiredMixin, ListView):
         return context
 
 
-class SolicitudCreateView(LoginRequiredMixin, CreateView):
+class SolicitudCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
     model = SolicitudLaboratorio
     form_class = SolicitudLaboratorioForm
     template_name = "laboratorio/solicitud_formulario.html"
@@ -172,7 +174,9 @@ class SolicitudCreateView(LoginRequiredMixin, CreateView):
         # Verificar que el usuario tenga al menos un médico asociado
         medico_qs = Medico.objects.filter(usuario=self.request.user)
         if not medico_qs.exists():
-            raise PermissionDenied("Solo los médicos pueden crear solicitudes de laboratorio.")
+            raise PermissionDenied(
+                "Solo los médicos pueden crear solicitudes de laboratorio."
+            )
 
         # Tomar el primer médico asociado (ajusta la lógica si necesitas otro criterio)
         medico = medico_qs.first()
@@ -193,7 +197,7 @@ class SolicitudCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class SolicitudUpdateView(LoginRequiredMixin, UpdateView):
+class SolicitudUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
     model = SolicitudLaboratorio
     form_class = SolicitudLaboratorioForm
     template_name = "laboratorio/solicitud_formulario.html"
@@ -204,14 +208,13 @@ class SolicitudUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class SolicitudDeleteView(LoginRequiredMixin, DeleteView):
+class SolicitudDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_solicitud")
-    
 
 
-class SolicitudDetailView(LoginRequiredMixin, DetailView):
+class SolicitudDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_detalle.html"
     context_object_name = "solicitud"
@@ -222,10 +225,11 @@ class SolicitudDetailView(LoginRequiredMixin, DetailView):
         context["estudios"] = SolicitudDetalle.objects.filter(solicitud=self.object)
         return context
 
+
 # CRUD ResultadoLaboratorio
 
 
-class ResultadoListView(LoginRequiredMixin, ListView):
+class ResultadoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_lista.html"
     context_object_name = "resultados"
@@ -275,13 +279,13 @@ class ResultadoListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ResultadoDetailView(LoginRequiredMixin, DetailView):
+class ResultadoDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_detalle.html"
     context_object_name = "resultado"
 
 
-class ResultadoCreateView(LoginRequiredMixin, CreateView):
+class ResultadoCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
     model = ResultadoLaboratorio
     form_class = ResultadoLaboratorioForm
     template_name = "laboratorio/resultado_formulario.html"
@@ -299,7 +303,7 @@ class ResultadoCreateView(LoginRequiredMixin, CreateView):
         )
 
 
-class ResultadoUpdateView(LoginRequiredMixin, UpdateView):
+class ResultadoUpdateView(LoginRequiredMixin, PermisoFarmaciaMixin, UpdateView):
     model = ResultadoLaboratorio
     form_class = ResultadoLaboratorioForm
     template_name = "laboratorio/resultado_formulario.html"
@@ -310,12 +314,14 @@ class ResultadoUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class ResultadoDeleteView(LoginRequiredMixin, DeleteView):
+class ResultadoDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_confirmar_eliminar.html"
     success_url = reverse_lazy("laboratorio:lista_resultado")
 
-@login_required
+
+@permiso_farmacia_required
+@permiso_medico_required
 def finalizar_solicitud(request, id):
     solicitud = get_object_or_404(SolicitudLaboratorio, pk=id)
 

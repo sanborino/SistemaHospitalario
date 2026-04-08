@@ -3,33 +3,34 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Medico, Enfermero, Personal
 from .forms import MedicoForm, EnfermeroForm, PersonalForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from acceso.mixins import PermisoAltoMixin
 
 # -----------------------
 # MÉDICOS
 # -----------------------
 
 
-class MedicoListView(LoginRequiredMixin, ListView):
+class MedicoListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     model = Medico
     template_name = "medicos/medico_list.html"
     context_object_name = "medicos"
 
 
-class MedicoCreateView(LoginRequiredMixin, CreateView):
+class MedicoCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
     model = Medico
     form_class = MedicoForm
     template_name = "medicos/medico_form.html"
     success_url = reverse_lazy("personal:medico_list")
 
 
-class MedicoUpdateView(LoginRequiredMixin, UpdateView):
+class MedicoUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
     model = Medico
     form_class = MedicoForm
     template_name = "medicos/medico_form.html"
     success_url = reverse_lazy("personal:medico_list")
 
 
-class MedicoDeleteView(LoginRequiredMixin, DeleteView):
+class MedicoDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Medico
     template_name = "medicos/medico_confirm_delete.html"
     success_url = reverse_lazy("personal:medico_list")
@@ -40,34 +41,34 @@ class MedicoDeleteView(LoginRequiredMixin, DeleteView):
 # -----------------------
 
 
-class EnfermeroListView(LoginRequiredMixin, ListView):
+class EnfermeroListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     model = Enfermero
     template_name = "enfermeros/enfermero_list.html"
     context_object_name = "enfermeros"
 
 
-class EnfermeroCreateView(LoginRequiredMixin, CreateView):
+class EnfermeroCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
     model = Enfermero
     form_class = EnfermeroForm
     template_name = "enfermeros/enfermero_form.html"
     success_url = reverse_lazy("personal:enfermero_list")
 
 
-class EnfermeroUpdateView(LoginRequiredMixin, UpdateView):
+class EnfermeroUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
     model = Enfermero
     form_class = EnfermeroForm
     template_name = "enfermeros/enfermero_form.html"
     success_url = reverse_lazy("personal:enfermero_list")
 
 
-class EnfermeroDeleteView(LoginRequiredMixin, DeleteView):
+class EnfermeroDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Enfermero
     template_name = "enfermeros/enfermero_confirm_delete.html"
     success_url = reverse_lazy("personal:enfermero_list")
 
 
 # CRUD genérico para Personal
-class PersonalListView(LoginRequiredMixin, ListView):
+class PersonalListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     model = Personal
     template_name = "personal/personal_list.html"
     context_object_name = "personal"
@@ -79,21 +80,21 @@ class PersonalListView(LoginRequiredMixin, ListView):
         return Personal.objects.all()
 
 
-class PersonalCreateView(LoginRequiredMixin, CreateView):
+class PersonalCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
     model = Personal
     form_class = PersonalForm
     template_name = "personal/personal_form.html"
     success_url = reverse_lazy("personal:personal_list")
 
 
-class PersonalUpdateView(LoginRequiredMixin, UpdateView):
+class PersonalUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
     model = Personal
     form_class = PersonalForm
     template_name = "personal/personal_form.html"
     success_url = reverse_lazy("personal:personal_list")
 
 
-class PersonalDeleteView(LoginRequiredMixin, DeleteView):
+class PersonalDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     model = Personal
     template_name = "personal/personal_confirm_delete.html"
     success_url = reverse_lazy("personal:personal_list")
