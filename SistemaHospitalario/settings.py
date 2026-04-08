@@ -98,6 +98,8 @@ WSGI_APPLICATION = "SistemaHospitalario.wsgi.application"
 
 if ENVIRONMENT == "development":
     # BASE DE DATOS LOCAL
+    STATICFILES_DIRS = [BASE_DIR / "SistemaHospitalario" / "static"]
+    STATIC_ROOT = None
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -111,6 +113,8 @@ if ENVIRONMENT == "development":
 
 else:  # producción
     # BASE DE DATOS WEB
+    STATICFILES_DIRS = []
+    STATIC_ROOT = BASE_DIR / "static"
     DATABASES = {
         "default": dj_database_url.config(
             conn_max_age=600,
@@ -171,19 +175,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-
 STATIC_URL = "/static/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-STATICFILES_DIRS = [
-    BASE_DIR / "SistemaHospitalario" / "static",
-]
-
-STATIC_ROOT = BASE_DIR / "static"
-STATIC_URL = "/static/"
 
 # Media
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "media"
 
 # CONFIGUARION PARA GMAIL
