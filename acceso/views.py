@@ -21,20 +21,19 @@ from acceso.mixins import PermisoAltoMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-@login_required
 def index(request):
     usuario = request.user
 
-    # Si el usuario está autenticado, obtenemos sus roles
-    roles_usuario = list(
-        UsuarioRol.objects.filter(usuario=usuario).values_list("rol__nombre", flat=True)
-    )
-
-    # Si quieres que al entrar se redirija a hospitales directamente:
+    roles_usuario = []
     if usuario.is_authenticated:
+        roles_usuario = list(
+            UsuarioRol.objects.filter(usuario=usuario).values_list(
+                "rol__nombre", flat=True
+            )
+        )
         return redirect("acceso:hospitales")
 
-    # Si no está autenticado, mostramos la página de inicio
+    # Si no está autenticado, mostramos la página de bienvenida
     return render(
         request,
         "acceso/index.html",

@@ -1,1 +1,0 @@
-web: gunicorn sistemahospitalario.wsgi:application
