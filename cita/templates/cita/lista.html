@@ -19,6 +19,7 @@
 
 <form method="get">
   <section>
+    <input type="number" name="hospital" placeholder="ID hospital" value="{{ request.GET.hospital }}">
     <input type="number" name="paciente" placeholder="ID paciente" value="{{ request.GET.paciente }}">
     <input type="number" name="medico" placeholder="ID médico" value="{{ request.GET.medico }}">
     <input type="date" name="fecha" value="{{ request.GET.fecha }}">
@@ -29,9 +30,6 @@
       <option value="cancelada" {% if request.GET.estado == "cancelada" %}selected{% endif %}>Cancelada</option>
     </select>
 
-    {% if es_director %}
-    <input type="number" name="hospital" placeholder="ID hospital" value="{{ request.GET.hospital }}">
-    {% endif %}
 
     <div style="display: flex; gap: 10px;">
       <button class="btn" type="submit">Filtrar</button>
@@ -48,11 +46,7 @@
       <th>Hora</th>
       <th>Paciente (ID)</th>
       <th>Médico</th>
-      {% if es_director %}
       <th>Hospital</th>
-      {% else %}
-      <th>Hospital asignado</th>
-      {% endif %}
       <th>Estado</th>
       <th>Acciones</th>
     </tr>
@@ -65,11 +59,7 @@
       <td>{{ c.hora }}</td>
       <td>{{ c.paciente }} ({{ c.paciente.id }})</td>
       <td>{{ c.medico }}</td>
-      {% if es_director %}
       <td>{{ c.hospital }}</td>
-      {% else %}
-      <td>{{ hospital_nombre }}</td>
-      {% endif %}
       <td>{{ c.get_estado_display }}</td>
       <td>
         <div style="display: flex; gap: 10px;">

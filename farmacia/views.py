@@ -24,14 +24,17 @@ from paciente.models import Paciente
 from personal.models import Medico
 from acceso.mixins import permiso_farmacia_required
 from acceso.mixins import PermisoFarmaciaMixin, PermisoAltoMixin, PermisoMedicoMixin
-
+from acceso.models import UsuarioRol, UsuarioHospital
+from acceso.access import HospitalAccessMixin, visibles_para
 
 # -----------------------
 # Medicamentos
 # -----------------------
 
 
-class MedicamentoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
+class MedicamentoListView(
+    LoginRequiredMixin, PermisoFarmaciaMixin, HospitalAccessMixin, ListView
+):
     model = Medicamento
     template_name = "farmacia/medicamento_list.html"
     context_object_name = "medicamentos"
@@ -39,7 +42,7 @@ class MedicamentoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     ordering = ["nombre"]
 
     def get_queryset(self):
-        queryset = Medicamento.objects.all()
+        qs = visibles_para(Medicamento, self.request.user)
 
         # --- Filtros ---
         nombre = self.request.GET.get("nombre")
@@ -48,46 +51,43 @@ class MedicamentoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
         stock_min = self.request.GET.get("stock_min")
 
         if nombre:
-            queryset = queryset.filter(nombre__icontains=nombre)
-
+            qs = qs.filter(nombre__icontains=nombre)
         if categoria:
-            queryset = queryset.filter(categoria_id=categoria)
-
+            qs = qs.filter(categoria_id=categoria)
         if presentacion:
-            queryset = queryset.filter(presentacion__icontains=presentacion)
-
+            qs = qs.filter(presentacion__icontains=presentacion)
         if stock_min:
-            queryset = queryset.filter(stock__lte=stock_min)
+            qs = qs.filter(stock__lte=stock_min)
 
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Para selects dinámicos
-        context["categorias"] = Medicamento.objects.all().order_by("nombre")
-
-        # Mantener valores seleccionados
-        context["filtro_nombre"] = self.request.GET.get("nombre", "")
-        context["filtro_categoria"] = self.request.GET.get("categoria", "")
-        context["filtro_presentacion"] = self.request.GET.get("presentacion", "")
-        context["filtro_stock_min"] = self.request.GET.get("stock_min", "")
-
-        return context
+        return qs
 
 
-class MedicamentoCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
+class MedicamentoCreateView(
+    LoginRequiredMixin, PermisoFarmaciaMixin, HospitalAccessMixin, CreateView
+):
     model = Medicamento
     form_class = MedicamentoForm
     template_name = "farmacia/medicamento_form.html"
     success_url = reverse_lazy("farmacia:medicamento_list")
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
-class MedicamentoUpdateView(LoginRequiredMixin, PermisoFarmaciaMixin, UpdateView):
+
+class MedicamentoUpdateView(
+    LoginRequiredMixin, PermisoFarmaciaMixin, HospitalAccessMixin, UpdateView
+):
     model = Medicamento
     form_class = MedicamentoForm
     template_name = "farmacia/medicamento_form.html"
     success_url = reverse_lazy("farmacia:medicamento_list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class MedicamentoDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
@@ -162,21 +162,22 @@ class RecetaCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
     form_class = RecetaForm
     template_name = "farmacia/receta_form.html"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        receta = form.save(commit=False)
+        # hospital y paciente ya se filtran en el formulario con filtrar_queryset
+        receta.save()
+        self.object = receta
+        return super().form_valid(form)
+
     def get_success_url(self):
-        # Redirige al formulario para agregar medicamentos
         return reverse_lazy(
             "farmacia:receta_detalle_add", kwargs={"receta_id": self.object.pk}
         )
-
-
-class RecetaDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
-    model = Receta
-    template_name = "farmacia/receta_detalle.html"
-    context_object_name = "receta"
-
-    def get_queryset(self):
-        # Solo recetas que NO han sido surtidas
-        return Receta.objects.filter(dispensacion__isnull=True)
 
 
 class RecetaDetalleCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
@@ -184,14 +185,21 @@ class RecetaDetalleCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView
     form_class = RecetaDetalleForm
     template_name = "farmacia/receta_detalle_form.html"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
-        receta_id = self.kwargs["receta_id"]
-        form.instance.receta_id = receta_id
+        receta = get_object_or_404(
+            visibles_para(Receta, self.request.user), pk=self.kwargs["receta_id"]
+        )
+        form.instance.receta = receta
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy(
-            "farmacia:receta_detalle", kwargs={"pk": self.kwargs["receta_id"]}
+            "farmacia:receta_detalle", kwargs={"pk": self.object.receta_id}
         )
 
 
@@ -200,13 +208,50 @@ class RecetaDetalleUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView
     form_class = RecetaDetalleForm
     template_name = "farmacia/receta_detalle_form.html"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def get_success_url(self):
         return reverse_lazy(
             "farmacia:receta_detalle", kwargs={"pk": self.object.receta_id}
         )
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
 
-class RecetaDetalleDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
+        es_alto = (
+            user.is_superuser
+            or UsuarioRol.objects.filter(
+                usuario=user, rol__nombre__in=["DIRECCIÓN", "SISTEMAS"]
+            ).exists()
+        )
+
+        if es_alto:
+            return qs
+        else:
+            hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
+            if hospital_usuario:
+                return qs.filter(receta__paciente__hospital=hospital_usuario.hospital)
+            return qs.none()
+
+
+class RecetaDetailView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, DetailView
+):
+    model = Receta
+    template_name = "farmacia/receta_detalle.html"
+    context_object_name = "receta"
+
+    def get_queryset(self):
+        return visibles_para(Receta, self.request.user).filter(
+            dispensacion__isnull=True
+        )
+
+
+class RecetaDetalleDeleteView(LoginRequiredMixin, PermisoMedicoMixin, DeleteView):
     model = RecetaDetalle
     template_name = "farmacia/receta_detalle_confirm_delete.html"
 
@@ -216,19 +261,53 @@ class RecetaDetalleDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
         )
 
 
+class RecetaDeleteView(LoginRequiredMixin, PermisoMedicoMixin, DeleteView):
+    model = Receta
+    template_name = "farmacia/receta_confirm_delete.html"
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        user = self.request.user
+
+        es_alto = (
+            user.is_superuser
+            or UsuarioRol.objects.filter(
+                usuario=user, rol__nombre__in=["DIRECCIÓN", "SISTEMAS"]
+            ).exists()
+        )
+
+        if not es_alto:
+            hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
+            if (
+                hospital_usuario
+                and self.object.paciente.hospital != hospital_usuario.hospital
+            ):
+                # Bloquear si la receta no pertenece al hospital del usuario
+                return redirect("farmacia:receta_list")
+
+        return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        # Redirige al listado de recetas después de eliminar
+        return reverse_lazy("farmacia:receta_list")
+
+
 # -----------------------
 # Dispensaciones
 # -----------------------
 
 
-class DispensacionListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
+class DispensacionListView(
+    LoginRequiredMixin, PermisoFarmaciaMixin, HospitalAccessMixin, ListView
+):
     model = Receta
     template_name = "farmacia/dispensacion_list.html"
     context_object_name = "recetas"
 
     def get_queryset(self):
-        # Solo recetas que NO han sido surtidas
-        return Receta.objects.filter(dispensacion__isnull=True)
+        return visibles_para(Receta, self.request.user).filter(
+            dispensacion__isnull=True
+        )
 
 
 class DispensacionCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
@@ -240,7 +319,7 @@ class DispensacionCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateVie
 
 @permiso_farmacia_required
 def dispensacion_create(request, receta_id):
-    receta = get_object_or_404(Receta, id=receta_id)
+    receta = get_object_or_404(visibles_para(Receta, request.user), id=receta_id)
 
     if Dispensacion.objects.filter(receta=receta).exists():
         dispensacion = Dispensacion.objects.get(receta=receta)
@@ -279,6 +358,7 @@ def dispensacion_create(request, receta_id):
             # Si todas las validaciones pasan, ahora sí guardamos la dispensación
             dispensacion = form.save(commit=False)
             dispensacion.receta = receta
+            dispensacion.entregado_por = request.user
             dispensacion.save()
 
             # Crear detalles de dispensación y descontar inventario

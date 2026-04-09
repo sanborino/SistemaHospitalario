@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "personal",
     "turno",
     "urgencia",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [

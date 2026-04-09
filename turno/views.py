@@ -5,26 +5,31 @@ from .forms import TurnoForm, TurnoPersonalForm, AsistenciaForm
 from django.utils import timezone
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.utils import timezone
 from acceso.models import UsuarioRol
 import csv
 from django.http import HttpResponse
 from .forms import AsistenciaForm
-from acceso.mixins import PermisoAltoMixin
+from acceso.mixins import PermisoAltoMixin, PermisoMedicoMixin, PermisoBasicoMixin
 from django.contrib.auth.decorators import login_required, user_passes_test
-from acceso.mixins import PermisoMedicoMixin, PermisoBasicoMixin
 
 
 # -----------------------
 # TURNOS
 # -----------------------
 
+from acceso.access import HospitalAccessMixin, visibles_para
 
-class TurnoListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
+
+class TurnoListView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, ListView
+):
     model = Turno
     template_name = "turnos/turno_list.html"
+
+    def get_queryset(self):
+        return visibles_para(Turno, self.request.user).select_related("hospital")
 
 
 class TurnoCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
@@ -52,9 +57,14 @@ class TurnoDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
 # -----------------------
 
 
-class TurnoPersonalListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
+class TurnoPersonalListView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, ListView
+):
     model = TurnoPersonal
     template_name = "turnos/turnopersonal_list.html"
+
+    def get_queryset(self):
+        return visibles_para(TurnoPersonal, self.request.user).select_related("turno")
 
 
 class TurnoPersonalCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
@@ -89,22 +99,26 @@ class AsistenciaListView(PermisoBasicoMixin, ListView):
     model = Asistencia
     template_name = "turnos/asistencia_list.html"
     context_object_name = "asistencias"
-    paginate_by = 10  # número de registros por página
+    paginate_by = 10
 
     def get_queryset(self):
         user = self.request.user
-        qs = Asistencia.objects.all().order_by("-fecha", "-hora_entrada")
 
-        # Restricción por rol
-        if not UsuarioRol.objects.filter(
-            usuario=user, rol__nombre="DIRECCION"
-        ).exists():
-            qs = qs.filter(usuario=user)
+        # Dirección/Sistemas/Superusuario → todas
+        if (
+            user.is_superuser
+            or UsuarioRol.objects.filter(
+                usuario=user, rol__nombre__in=["DIRECCIÓN", "SISTEMAS"]
+            ).exists()
+        ):
+            qs = Asistencia.objects.all()
+        else:
+            # Médicos/Enfermeros/etc → solo las suyas
+            qs = Asistencia.objects.filter(usuario=user)
 
         # Filtro por fechas
         fecha_inicio = self.request.GET.get("fecha_inicio")
         fecha_fin = self.request.GET.get("fecha_fin")
-
         if fecha_inicio and fecha_fin:
             qs = qs.filter(fecha__range=[fecha_inicio, fecha_fin])
         elif fecha_inicio:
@@ -112,13 +126,7 @@ class AsistenciaListView(PermisoBasicoMixin, ListView):
         elif fecha_fin:
             qs = qs.filter(fecha__lte=fecha_fin)
 
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["fecha_inicio"] = self.request.GET.get("fecha_inicio", "")
-        context["fecha_fin"] = self.request.GET.get("fecha_fin", "")
-        return context
+        return qs.order_by("-fecha", "-hora_entrada")
 
 
 class AsistenciaCreateView(PermisoBasicoMixin, CreateView):
@@ -162,16 +170,16 @@ class AsistenciaUpdateView(PermisoBasicoMixin, UpdateView):
     success_url = reverse_lazy("turno:asistencia_list")
 
 
-class AsistenciaDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
+class AsistenciaDeleteView(LoginRequiredMixin, PermisoBasicoMixin, DeleteView):
     model = Asistencia
     template_name = "turnos/asistencia_confirm_delete.html"
     success_url = reverse_lazy("turno:asistencia_list")
 
 
 def es_director(user):
-    return (
-        user.is_authenticated
-        and UsuarioRol.objects.filter(usuario=user, rol__nombre="DIRECCIÓN").exists()
+    return user.is_authenticated and (
+        user.is_superuser
+        or UsuarioRol.objects.filter(usuario=user, rol__nombre="DIRECCIÓN").exists()
     )
 
 

@@ -43,7 +43,11 @@
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="6">No hay insumos registrados.</td></tr>
+          {% if search_performed %}
+            <tr><td colspan="6">No se encontraron insumos para esa búsqueda.</td></tr>
+          {% else %}
+            <tr><td colspan="6">Usa el filtro para buscar insumos en tu hospital.</td></tr>
+          {% endif %}
         {% endfor %}
       </tbody>
     </table>
@@ -55,11 +59,11 @@
 {% if is_paginated %}
   <div>
     {% if page_obj.has_previous %}
-      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+      <a class="btn" href="?page={{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Anterior</a>
     {% endif %}
     Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
     {% if page_obj.has_next %}
-      <a class="btn" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+      <a class="btn" href="?page={{ page_obj.next_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Siguiente</a>
     {% endif %}
   </div>
 {% endif %}

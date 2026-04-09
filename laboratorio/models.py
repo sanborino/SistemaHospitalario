@@ -2,6 +2,7 @@ from django.db import models
 from paciente.models import Paciente
 from personal.models import Medico
 from hospital.models import Hospital
+from django.conf import settings
 
 # Create your models here.
 
@@ -27,6 +28,9 @@ class SolicitudLaboratorio(models.Model):
 
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
+    )
     fecha = models.DateField(auto_now_add=True)
     estado = models.CharField(
         max_length=20,

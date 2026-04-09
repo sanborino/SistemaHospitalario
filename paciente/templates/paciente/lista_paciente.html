@@ -20,8 +20,9 @@
 <form method="get">
 
   <input type="text" name="q" placeholder="Buscar (nombre/apellido/teléfono)" value="{{ request.GET.q }}"/>
+    
+      <input type="number" name="hospital" placeholder="Filtrar por clave de hospital" value="{{ request.GET.hospital }}">
 
-  <input type="number" name="hospital" placeholder="Clave de Hospital" value="{{ request.GET.hospital }}"/>
 
   <button class="btn" type="submit">Buscar</button>
   <a class="btn" href="{% url 'paciente:lista_paciente' %}">Limpiar</a>

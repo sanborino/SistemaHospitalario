@@ -8,17 +8,7 @@
     <div class="row">
         <div class="col">
 <p><strong>Paciente:</strong> {{ factura.paciente }}</p>
-<div class="campo">
-  {{ form.hospital.label_tag }}<br>
-  {% if request.user|has_role:"DIRECCIÓN" %}
-      {{ form.hospital }}
-  {% else %}
-      <p><strong>{{ form.hospital.value }}</strong></p>
-      {{ form.hospital }} <!-- hidden input -->
-  {% endif %}
-  {{ form.hospital.errors }}
-</div>
-
+<p><strong>Hospital:</strong> {{ factura.hospital }}</p>
 <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
 <p><strong>Total Facturado:</strong> {{ factura.total }}</p>
 <p><strong>Estado:</strong> {{ factura.estado }}</p>

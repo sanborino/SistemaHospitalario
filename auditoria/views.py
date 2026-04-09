@@ -5,23 +5,36 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from acceso.mixins import PermisoAltoMixin
 from django.views.generic import ListView
 from .models import Auditoria
+from acceso.access import HospitalAccessMixin, visibles_para
 
 
-class AuditoriaListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
+class AuditoriaListView(
+    LoginRequiredMixin, PermisoAltoMixin, HospitalAccessMixin, ListView
+):
     model = Auditoria
     template_name = "auditoria/auditoria_list.html"
-    ordering = ["-fecha"]  # más reciente primero
-    paginate_by = 10  # 10 registros por página
+    ordering = ["fecha"]
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        fecha = self.request.GET.get("fecha", None)
+        qs = visibles_para(Auditoria, self.request.user)
+
+        # 🔹 Si visibles_para devolvió None, forzamos queryset vacío
+        if qs is None:
+            qs = Auditoria.objects.none()
+
+        # 🔹 Si tu modelo Auditoria no tiene hospital/usuario, quita select_related
+        # qs = qs.select_related("hospital", "usuario")  # solo si existen esos campos
+
+        fecha = self.request.GET.get("fecha")
         if fecha:
-            queryset = queryset.filter(fecha__date=fecha)
-        return queryset
+            qs = qs.filter(fecha__date=fecha)
+        return qs
 
 
-class AuditoriaDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
+class AuditoriaDetailView(
+    LoginRequiredMixin, PermisoAltoMixin, HospitalAccessMixin, DetailView
+):
     model = Auditoria
     template_name = "auditoria/auditoria_detail.html"
 
@@ -45,7 +58,11 @@ class AuditoriaDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
 
         if Modelo:
             pk_name = Modelo._meta.pk.name
-            registro_original = Modelo.objects.filter(**{pk_name: registro_id}).first()
+            registro_original = (
+                visibles_para(Modelo, self.request.user)
+                .filter(**{pk_name: registro_id})
+                .first()
+            )
 
             if registro_original:
                 for field in registro_original._meta.get_fields():

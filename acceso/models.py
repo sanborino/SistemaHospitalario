@@ -107,6 +107,7 @@ class UsuarioRol(models.Model):
     class Meta:
         verbose_name = "Usuario y Rol"
         verbose_name_plural = "Usuarios y Roles"
+        unique_together = ("usuario", "rol")
 
 
 class RolPermiso(models.Model):

@@ -2,7 +2,6 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     DeleteView,
 )
-
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Factura, FacturaDetalle, Pago
@@ -12,7 +11,8 @@ from .models import Factura, FacturaDetalle, Pago, Cargo
 from acceso.mixins import permiso_admin_required, permiso_alto_required
 from acceso.mixins import PermisoAltoMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from acceso.models import UsuarioRol, UsuarioHospital
+from acceso.access import visibles_para
+from acceso.access import HospitalAccessMixin
 
 # ---------------- FACTURAS ----------------
 
@@ -22,7 +22,7 @@ def factura_lista(request):
     estado = request.GET.get("estado", "PENDIENTE")
     origen = request.GET.get("origen", "todos")
 
-    facturas = Factura.objects.all()
+    facturas = visibles_para(Factura, request.user)
 
     if estado != "todos":
         facturas = facturas.filter(estado=estado)
@@ -60,22 +60,30 @@ def factura_lista(request):
 
 @permiso_admin_required
 def factura_crear(request):
-    user = request.user
-
-    # Pasamos el usuario al formulario
-    form = FacturaForm(request.POST or None, user=user)
+    form = FacturaForm(request.POST or None, user=request.user)
 
     if form.is_valid():
         factura = form.save(commit=False)
+        # hospital ya se asigna/oculta en el formulario
+        factura.save()
+        return redirect("facturacion:factura_lista")
 
-        # Si no es director, asignamos hospital automáticamente
-        if not UsuarioRol.objects.filter(
-            usuario=user, rol__nombre="DIRECCIÓN"
-        ).exists():
-            hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
-            if hospital_usuario:
-                factura.hospital = hospital_usuario.hospital
+    return render(request, "facturacion/form.html", {"form": form})
 
+
+from acceso.access import visibles_para
+
+
+@permiso_admin_required
+def factura_editar(request, pk):
+    # 🔑 Filtrar facturas por hospital del usuario
+    factura = get_object_or_404(visibles_para(Factura, request.user), pk=pk)
+
+    form = FacturaForm(request.POST or None, instance=factura, user=request.user)
+
+    if form.is_valid():
+        factura = form.save(commit=False)
+        # hospital ya se controla en el formulario con filtrar_queryset
         factura.save()
         return redirect("facturacion:factura_lista")
 
@@ -83,31 +91,15 @@ def factura_crear(request):
 
 
 @permiso_admin_required
-def factura_editar(request, pk):
-    factura = get_object_or_404(Factura, pk=pk)
-    form = FacturaForm(request.POST or None, instance=factura)
-    if form.is_valid():
-        form.save()
-        return redirect("facturacion:factura_lista")
-    return render(request, "facturacion/form.html", {"form": form})
-
-
-@permiso_admin_required
 def factura_detalle(request, pk):
-    factura = get_object_or_404(Factura, pk=pk)
+    factura = get_object_or_404(visibles_para(Factura, request.user), pk=pk)
     detalles = FacturaDetalle.objects.filter(factura=factura)
     pagos = Pago.objects.filter(factura=factura)
 
-    # Calcular subtotal por detalle
     subtotal_detalles = sum(d.cantidad * d.precio_unitario for d in detalles)
-
-    # Total pagado
     total_pagado = sum(p.monto for p in pagos)
-
-    # Saldo pendiente (usar subtotal_detalles en lugar de factura.total)
     saldo = subtotal_detalles - total_pagado
 
-    # Si ya se pagó el total, cambiar estado a PAGADA
     if saldo <= 0 and factura.estado != "PAGADA":
         factura.estado = "PAGADA"
         factura.save()
@@ -126,7 +118,9 @@ def factura_detalle(request, pk):
     )
 
 
-class FacturaDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
+class FacturaDeleteView(
+    LoginRequiredMixin, PermisoAltoMixin, HospitalAccessMixin, DeleteView
+):
     model = Factura
     template_name = "facturacion/factura_confirmar_eliminar.html"
     success_url = reverse_lazy("facturacion:factura_lista")
@@ -144,9 +138,16 @@ class FacturaDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
 
 @permiso_admin_required
 def detalle_crear(request):
-    form = FacturaDetalleForm(request.POST or None)
+    form = FacturaDetalleForm(request.POST or None, user=request.user)
     if form.is_valid():
-        form.save()
+        detalle = form.save(commit=False)
+        # 🔑 Validar que la factura pertenece al hospital del usuario
+        if detalle.factura not in visibles_para(Factura, request.user):
+            messages.error(
+                request, "No puedes agregar detalles a facturas de otro hospital."
+            )
+            return redirect("facturacion:factura_lista")
+        detalle.save()
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form_detalle.html", {"form": form})
 
@@ -154,17 +155,33 @@ def detalle_crear(request):
 @permiso_admin_required
 def detalle_editar(request, pk):
     detalle = get_object_or_404(FacturaDetalle, pk=pk)
-    form = FacturaDetalleForm(request.POST or None, instance=detalle)
+    # 🔑 Validar que la factura pertenece al hospital del usuario
+    if detalle.factura not in visibles_para(Factura, request.user):
+        return redirect("facturacion:factura_lista")
+
+    form = FacturaDetalleForm(request.POST or None, instance=detalle, user=request.user)
     if form.is_valid():
         form.save()
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form_detalle.html", {"form": form})
 
 
+from acceso.access import visibles_para
+
+
 @permiso_alto_required
 def detalle_eliminar(request, pk):
     detalle = get_object_or_404(FacturaDetalle, pk=pk)
+
+    # 🔑 Validar que la factura asociada pertenece al hospital del usuario
+    if detalle.factura not in visibles_para(Factura, request.user):
+        messages.error(
+            request, "No puedes eliminar detalles de facturas de otro hospital."
+        )
+        return redirect("facturacion:factura_lista")
+
     detalle.delete()
+    messages.success(request, "Detalle eliminado correctamente.")
     return redirect("facturacion:factura_lista")
 
 
@@ -173,15 +190,20 @@ def detalle_eliminar(request, pk):
 
 @permiso_admin_required
 def pago_crear(request):
-    form = PagoForm(request.POST or None)
+    form = PagoForm(request.POST or None, user=request.user)
     if form.is_valid():
-        pago = form.save()
+        pago = form.save(commit=False)
+        # 🔑 Validar que la factura pertenece al hospital del usuario
+        if pago.factura not in visibles_para(Factura, request.user):
+            messages.error(
+                request, "No puedes registrar pagos en facturas de otro hospital."
+            )
+            return redirect("facturacion:factura_lista")
+        pago.save()
 
         # Recalcular total pagado
         factura = pago.factura
         total_pagado = sum(p.monto for p in Pago.objects.filter(factura=factura))
-
-        # Cambiar estado si ya está pagada
         if total_pagado >= factura.total:
             factura.estado = "PAGADA"
             factura.save()
@@ -194,27 +216,44 @@ def pago_crear(request):
 @permiso_admin_required
 def pago_editar(request, pk):
     pago = get_object_or_404(Pago, pk=pk)
-    form = PagoForm(request.POST or None, instance=pago)
+    # 🔑 Validar que la factura pertenece al hospital del usuario
+    if pago.factura not in visibles_para(Factura, request.user):
+        return redirect("facturacion:factura_lista")
+
+    form = PagoForm(request.POST or None, instance=pago, user=request.user)
     if form.is_valid():
         form.save()
         return redirect("facturacion:factura_lista")
     return render(request, "facturacion/form_pago.html", {"form": form})
 
 
+from acceso.access import visibles_para
+
+
 @permiso_alto_required
 def pago_eliminar(request, pk):
     pago = get_object_or_404(Pago, pk=pk)
-    factura_id = pago.factura.id  # 🔑 obtener la factura asociada
+
+    # 🔑 Validar que la factura asociada pertenece al hospital del usuario
+    if pago.factura not in visibles_para(Factura, request.user):
+        messages.error(
+            request, "No puedes eliminar pagos de facturas de otro hospital."
+        )
+        return redirect("facturacion:factura_lista")
+
+    factura_id = pago.factura.id
     pago.delete()
+    messages.success(request, "Pago eliminado correctamente.")
     return redirect("facturacion:factura_detalle", pk=factura_id)
+
+
+from acceso.access import visibles_para
 
 
 @permiso_admin_required
 def generar_factura_paciente(request, paciente_id):
-    paciente = get_object_or_404(Paciente, pk=paciente_id)
-
-    # aquí puedes ajustar cómo obtienes el hospital (por usuario logueado, por selección, etc.)
-    hospital = paciente.hospital
+    # 🔑 Validar que el paciente pertenece al hospital del usuario
+    paciente = get_object_or_404(visibles_para(Paciente, request.user), pk=paciente_id)
 
     cargos = Cargo.objects.filter(paciente=paciente, facturado=False)
 
@@ -224,7 +263,7 @@ def generar_factura_paciente(request, paciente_id):
 
     factura = Factura.objects.create(
         paciente=paciente,
-        hospital=hospital,
+        hospital=paciente.hospital,  # hospital ya validado
         total=0,
         estado="PENDIENTE",
     )

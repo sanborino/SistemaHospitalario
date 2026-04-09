@@ -21,12 +21,7 @@
 
       <div class="campo">
         {{ form.hospital.label_tag }}<br>
-        {% if es_director %}
-            {{ form.hospital }}
-        {% else %}
-            <p><strong>{{ hospital_nombre }}</strong></p>
-            {{ form.hospital }} <!-- hidden input -->
-        {% endif %}
+        {{ form.hospital }} <!-- hidden input -->
         {{ form.hospital.errors }}
       </div>
 

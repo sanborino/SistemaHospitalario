@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,12 @@ from .forms import (
 )
 from .models import Usuario, Rol, Permiso, UsuarioRol, RolPermiso, UsuarioHospital
 from acceso.mixins import permiso_alto_required
+from acceso.access import visibles_para
+
+# acceso/views.py
+from django.views.generic import ListView
+from acceso.mixins import PermisoAltoMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 @login_required
@@ -96,7 +103,7 @@ def logout_usuario(request):
 # CRUD Usuario
 @permiso_alto_required
 def usuario_lista(request):
-    usuarios = Usuario.objects.all()
+    usuarios = visibles_para(Usuario, request.user)
     return render(request, "acceso/usuario_lista.html", {"usuarios": usuarios})
 
 
@@ -242,8 +249,10 @@ def asignar_rol_usuario(request, usuario_id):
 
 @permiso_alto_required
 def quitar_rol_usuario(request, usuario_id, rol_id):
-    usuario_rol = get_object_or_404(UsuarioRol, usuario_id=usuario_id, rol_id=rol_id)
-    usuario_rol.delete()
+    usuario_roles = UsuarioRol.objects.filter(usuario_id=usuario_id, rol_id=rol_id)
+    if not usuario_roles.exists():
+        raise Http404("No existe asignación de rol para este usuario.")
+    usuario_roles.delete()
     messages.success(request, "Rol quitado correctamente.")
     return redirect("acceso:usuario_detalle", pk=usuario_id)
 
@@ -308,7 +317,9 @@ def rol_detalle(request, pk):
 
 @permiso_alto_required
 def usuariohospital_list(request):
-    registros = UsuarioHospital.objects.select_related("usuario", "hospital")
+    registros = visibles_para(UsuarioHospital, request.user).select_related(
+        "usuario", "hospital"
+    )
     return render(request, "acceso/list.html", {"registros": registros})
 
 
@@ -345,7 +356,7 @@ def usuariohospital_delete(request, pk):
     if request.method == "POST":
         registro.delete()
         messages.success(request, "Registro eliminado correctamente.")
-        return redirect("usuariohospital_list")
+        return redirect("acceso:usuariohospital_list")
     return render(request, "acceso/delete.html", {"registro": registro})
 
 
@@ -359,3 +370,9 @@ def hospital(request):
     )
 
     return render(request, "acceso/hospital.html", {"roles_usuario": roles_usuario})
+
+
+class UsuarioHospitalListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
+    model = UsuarioHospital
+    template_name = "acceso/usuariohospital_list.html"
+    context_object_name = "usuariohospitales"

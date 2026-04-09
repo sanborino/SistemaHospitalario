@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<main class="container">
+<div class="box">
+      <h2>Eliminar Receta</h2>
+    <div class="row">
+        <div class="col">
+        <div class="card-body">
+
+            <p class="fs-5">
+                ¿Estás seguro de que deseas eliminar la receta
+                <strong>{{ object.nombre }}</strong>?
+            </p>
+
+            <p class="text-muted">
+                Esta acción no se puede deshacer.
+            </p>
+
+                <div style="display: flex; gap: 10px;">
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Sí, eliminar</button>
+                    <a href="{% url 'farmacia:receta_detalle' object.pk %}" class="btn">Cancelar</a>
+                </form>
+                </div>
+        </div>
+    </div>
+</div>
+</main>
+{% endblock %}

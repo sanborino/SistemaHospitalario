@@ -8,19 +8,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 class PermisoAltoMixin(UserPassesTestMixin):
-    """
-    Mixin para restringir acceso a usuarios con permisos altos:
-    - Superuser
-    - Rol DIRECCIÓN
-    - Rol SISTEMAS
-    """
-
     def test_func(self):
         user = self.request.user
         if user.is_superuser:
             return True
         return UsuarioRol.objects.filter(
-            usuario=user, rol__nombre__in=["DIRECCIÓN", "SISTEMAS"]
+            usuario=user, rol__nombre__in=["DIRECCIÓN", "SISTEMAS", "MÉDICO"]
         ).exists()
 
     def handle_no_permission(self):
@@ -34,7 +27,13 @@ class PermisoMedicoMixin(UserPassesTestMixin):
             return True
         return UsuarioRol.objects.filter(
             usuario=user,
-            rol__nombre__in=["MÉDICO", "DIRECCIÓN", "ENFERMERO", "SISTEMAS"],
+            rol__nombre__in=[
+                "MÉDICO",
+                "DIRECCIÓN",
+                "ENFERMERO",
+                "SISTEMAS",
+                "MANTENIMIENTO",
+            ],
         ).exists()
 
     def handle_no_permission(self):
@@ -47,8 +46,7 @@ class PermisoAdminMixin(UserPassesTestMixin):
         if user.is_superuser:
             return True
         return UsuarioRol.objects.filter(
-            usuario=user,
-            rol__nombre__in=["ADMINISTRACIÓN", "DIRECCIÓN", "SISTEMAS"],
+            usuario=user, rol__nombre__in=["ADMINISTRACIÓN", "DIRECCIÓN", "SISTEMAS"]
         ).exists()
 
     def handle_no_permission(self):
@@ -62,16 +60,38 @@ class PermisoFarmaciaMixin(UserPassesTestMixin):
             return True
         return UsuarioRol.objects.filter(
             usuario=user,
-            rol__nombre__in=["FARMACIA", "DIRECCIÓN", "SISTEMAS", "LABORATORIO"],
+            rol__nombre__in=[
+                "FARMACIA",
+                "DIRECCIÓN",
+                "SISTEMAS",
+                "LABORATORIO",
+                "MÉDICO",
+                "MANTENIMIENTO",
+            ],
         ).exists()
 
     def handle_no_permission(self):
         raise PermissionDenied("No tienes permiso para acceder a esta vista.")
 
 
-class PermisoBasicoMixin(LoginRequiredMixin):
-    # No necesitas test_func, basta con que esté logueado
-    pass
+class PermisoBasicoMixin(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        if user.is_superuser:
+            return True
+        return UsuarioRol.objects.filter(
+            usuario=user,
+            rol__nombre__in=[
+                "MÉDICO",
+                "ENFERMERO",
+                "DIRECCIÓN",
+                "SISTEMAS",
+                "ADMINISTRACIÓN",
+                "FARMACIA",
+                "LABORATORIO",
+                "MANTENIMIENTO",
+            ],
+        ).exists()
 
 
 # --- Decorador para permisos altos (Director, Sistemas, Superuser) ---
@@ -98,7 +118,13 @@ def permiso_medico_required(view_func):
             return True
         return UsuarioRol.objects.filter(
             usuario=user,
-            rol__nombre__in=["MÉDICO", "DIRECCIÓN", "ENFERMERO", "SISTEMAS"],
+            rol__nombre__in=[
+                "MÉDICO",
+                "DIRECCIÓN",
+                "ENFERMERO",
+                "SISTEMAS",
+                "MANTENIMIENTO",
+            ],
         ).exists()
 
     return login_required(user_passes_test(tiene_permiso_medico)(view_func))
@@ -124,7 +150,13 @@ def permiso_farmacia_required(view_func):
             return True
         return UsuarioRol.objects.filter(
             usuario=user,
-            rol__nombre__in=["FARMACIA", "DIRECCIÓN", "SISTEMAS", "LABORATORIO"],
+            rol__nombre__in=[
+                "FARMACIA",
+                "DIRECCIÓN",
+                "SISTEMAS",
+                "LABORATORIO",
+                "MANTENIMIENTO",
+            ],
         ).exists()
 
     return login_required(user_passes_test(tiene_permiso_farmacia)(view_func))
@@ -133,7 +165,20 @@ def permiso_farmacia_required(view_func):
 # --- Decorador para cualquier usuario autenticado ---
 def permiso_basico_required(view_func):
     def tiene_permiso_basico(user):
-        return user.is_authenticated
+        if user.is_superuser:
+            return True
+        return UsuarioRol.objects.filter(
+            usuario=user,
+            rol__nombre__in=[
+                "MÉDICO",
+                "ENFERMERO",
+                "DIRECCIÓN",
+                "SISTEMAS",
+                "ADMINISTRACIÓN",
+                "FARMACIA",
+                "LABORATORIO",
+            ],
+        ).exists()
 
     return login_required(user_passes_test(tiene_permiso_basico)(view_func))
 

@@ -10,9 +10,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Insumo, MovimientoInventario
 from .forms import InsumoForm, MovimientoInventarioForm
 from acceso.mixins import PermisoAltoMixin, PermisoMedicoMixin
+from acceso.access import HospitalAccessMixin, visibles_para
 
 
-class InsumoListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
+class InsumoListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     model = Insumo
     template_name = "inventario/insumo_lista.html"
     context_object_name = "insumos"
@@ -20,32 +21,51 @@ class InsumoListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
     ordering = ["nombre"]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        nombre = self.request.GET.get("nombre", None)
-        if nombre:
-            queryset = queryset.filter(nombre__icontains=nombre)
-        return queryset
+        nombre = self.request.GET.get("nombre")
+        if not nombre:
+            return Insumo.objects.none()
+
+        qs = visibles_para(Insumo, self.request.user)
+        return qs.filter(nombre__icontains=nombre)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        params = self.request.GET.copy()
+        params.pop("page", None)
+        context["querystring"] = params.urlencode()
+        context["search_performed"] = bool(self.request.GET.get("nombre"))
+        return context
 
 
-class InsumoDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
+class InsumoDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
     model = Insumo
     template_name = "inventario/insumo_detalle.html"
     context_object_name = "insumo"
 
 
-class InsumoCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
+class InsumoCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
     model = Insumo
     form_class = InsumoForm
     template_name = "inventario/insumo_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy("inventario:detalle_insumo", kwargs={"pk": self.object.pk})
 
 
-class InsumoUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
+class InsumoUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
     model = Insumo
     form_class = InsumoForm
     template_name = "inventario/insumo_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy("inventario:detalle_insumo", kwargs={"pk": self.object.pk})
@@ -66,14 +86,18 @@ class MovimientoListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     ordering = ["-fecha"]
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related("insumo", "realizado_por")
-        nombre = self.request.GET.get("nombre", None)
+        qs = visibles_para(MovimientoInventario, self.request.user).select_related(
+            "insumo", "realizado_por"
+        )
+        nombre = self.request.GET.get("nombre")
         if nombre:
-            queryset = queryset.filter(insumo__nombre__icontains=nombre)
-        return queryset
+            qs = qs.filter(insumo__nombre__icontains=nombre)
+        return qs
 
 
-class MovimientoDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
+class MovimientoDetailView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, DetailView
+):
     model = MovimientoInventario
     template_name = "inventario/movimiento_detalle.html"
     context_object_name = "movimiento"

@@ -90,7 +90,11 @@
                         <div style="display: flex; gap: 10px;">
                         <a href="{% url 'farmacia:receta_detalle' r.id %}" class="btn">Ver</a>
                         <!-- Acción principal: surtir -->
-                        
+                         <a href="{% url 'farmacia:receta_delete' r.id %}" class="btn">
+                            {% csrf_token %}
+                            Eliminar
+                         </a>
+
                     </div>
                     </td>
                 </tr>

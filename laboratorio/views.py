@@ -13,7 +13,6 @@ from facturacion.models import Cargo
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from personal.models import Medico
-from paciente.models import Paciente
 from .models import (
     Estudio,
     SolicitudLaboratorio,
@@ -27,6 +26,11 @@ from .forms import (
 )
 from acceso.mixins import permiso_farmacia_required, permiso_medico_required
 from acceso.mixins import PermisoMedicoMixin, PermisoFarmaciaMixin, PermisoAltoMixin
+from acceso.access import HospitalAccessMixin, visibles_para
+from .models import SolicitudLaboratorio
+from rest_framework import viewsets
+from laboratorio.models import SolicitudLaboratorio
+from laboratorio.serializers import SolicitudLaboratorioSerializer
 
 
 @permiso_medico_required
@@ -47,7 +51,7 @@ def crear_factura_solicitud(solicitud):
 
     # Crear factura
     factura = Factura.objects.create(
-        hospital=solicitud.medico.hospital,  # Hospital del médico
+        hospital=solicitud.medico.usuario.usuariohospital_set.first().hospital,
         paciente=solicitud.paciente,
         solicitud=solicitud,
         total=total,
@@ -98,15 +102,22 @@ class EstudioDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     success_url = reverse_lazy("laboratorio:lista_estudio")
 
 
-class EstudioListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
+class EstudioListView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, ListView
+):
     model = Estudio
     template_name = "laboratorio/estudio_lista.html"
     context_object_name = "estudios"
     paginate_by = 10
     ordering = ["nombre"]
 
+    def get_queryset(self):
+        return visibles_para(Estudio, self.request.user)
 
-class EstudioDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
+
+class EstudioDetailView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, DetailView
+):
     model = Estudio
     template_name = "laboratorio/estudio_detalle.html"
     context_object_name = "estudio"
@@ -124,7 +135,9 @@ class EstudioUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
 
 
 # CRUD SolicitudLaboratorio
-class SolicitudListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
+class SolicitudListView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, ListView
+):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_lista.html"
     context_object_name = "solicitudes"
@@ -132,37 +145,26 @@ class SolicitudListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
     ordering = ["-fecha"]
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related("paciente", "medico")
+        qs = visibles_para(SolicitudLaboratorio, self.request.user).select_related(
+            "paciente", "medico"
+        )
 
-        # --- Filtros opcionales ---
+        # Filtros opcionales
         paciente_id = self.request.GET.get("paciente")
         medico_id = self.request.GET.get("medico")
         estado = self.request.GET.get("estado")
 
         if paciente_id:
-            queryset = queryset.filter(paciente_id=paciente_id)
-
+            qs = qs.filter(paciente_id=paciente_id)
         if medico_id:
-            queryset = queryset.filter(medico_id=medico_id)
+            qs = qs.filter(medico_id=medico_id)
+        if estado == "pendiente":
+            qs = qs.filter(estado=SolicitudLaboratorio.ESTADO_PENDIENTE)
+        elif estado == "finalizado":
+            qs = qs.filter(estado=SolicitudLaboratorio.ESTADO_FINALIZADO)
+        # Si "todos" o vacío, mostrar todos
 
-        if estado:
-            queryset = queryset.filter(estado=estado)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Para filtros en el template
-        context["pacientes"] = Paciente.objects.all().order_by("apellido", "nombre")
-        context["medicos"] = Medico.objects.all().order_by("apellido", "nombre")
-
-        # Mantener valores seleccionados
-        context["filtro_paciente"] = self.request.GET.get("paciente", "")
-        context["filtro_medico"] = self.request.GET.get("medico", "")
-        context["filtro_estado"] = self.request.GET.get("estado", "")
-
-        return context
+        return qs
 
 
 class SolicitudCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
@@ -183,8 +185,14 @@ class SolicitudCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
 
         # Crear la solicitud y asignar el médico
         solicitud = form.save(commit=False)
-        solicitud.medico = medico
+        solicitud.medico = medico_qs.first()
+        solicitud.user = self.request.user
         solicitud.save()
+
+        # Crear los detalles de la solicitud
+        estudios = form.cleaned_data.get("estudios")
+        for estudio in estudios:
+            SolicitudDetalle.objects.create(solicitud=solicitud, estudio=estudio)
 
         # Crear factura automáticamente
         crear_factura_solicitud(solicitud)
@@ -195,6 +203,11 @@ class SolicitudCreateView(LoginRequiredMixin, PermisoMedicoMixin, CreateView):
         return reverse_lazy(
             "laboratorio:detalle_solicitud", kwargs={"pk": self.object.pk}
         )
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class SolicitudUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
@@ -208,28 +221,31 @@ class SolicitudUpdateView(LoginRequiredMixin, PermisoMedicoMixin, UpdateView):
         )
 
 
-class SolicitudDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
-    model = SolicitudLaboratorio
-    template_name = "laboratorio/solicitud_confirmar_eliminar.html"
-    success_url = reverse_lazy("laboratorio:lista_solicitud")
-
-
-class SolicitudDetailView(LoginRequiredMixin, PermisoMedicoMixin, DetailView):
+class SolicitudDetailView(
+    LoginRequiredMixin, PermisoMedicoMixin, HospitalAccessMixin, DetailView
+):
     model = SolicitudLaboratorio
     template_name = "laboratorio/solicitud_detalle.html"
     context_object_name = "solicitud"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Agregar los estudios asociados a esta solicitud
         context["estudios"] = SolicitudDetalle.objects.filter(solicitud=self.object)
         return context
+
+
+class SolicitudDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
+    model = SolicitudLaboratorio
+    template_name = "laboratorio/solicitud_confirm_delete.html"
+    success_url = reverse_lazy("laboratorio:solicitud_list")
 
 
 # CRUD ResultadoLaboratorio
 
 
-class ResultadoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
+class ResultadoListView(
+    LoginRequiredMixin, PermisoFarmaciaMixin, HospitalAccessMixin, ListView
+):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_lista.html"
     context_object_name = "resultados"
@@ -237,49 +253,30 @@ class ResultadoListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     ordering = ["-fecha"]
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related("solicitud", "firmado_por")
+        qs = visibles_para(ResultadoLaboratorio, self.request.user).select_related(
+            "solicitud", "firmado_por"
+        )
 
-        # Obtener parámetros GET
         paciente = self.request.GET.get("paciente")
         estado = self.request.GET.get("estado")
         fecha = self.request.GET.get("fecha")
 
-        # Filtro por paciente (nombre o apellido)
         if paciente:
-            queryset = queryset.filter(
+            qs = qs.filter(
                 Q(solicitud__paciente__nombre__icontains=paciente)
                 | Q(solicitud__paciente__apellido__icontains=paciente)
             )
-
-        # Filtro por estado de la solicitud
         if estado and estado != "todos":
-            queryset = queryset.filter(solicitud__estado=estado)
-
-        # Filtro por fecha exacta del resultado
+            qs = qs.filter(solicitud__estado=estado)
         if fecha:
-            queryset = queryset.filter(fecha=fecha)
+            qs = qs.filter(fecha=fecha)
 
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Mantener valores seleccionados en el template
-        context["paciente_busqueda"] = self.request.GET.get("paciente", "")
-        context["estado_seleccionado"] = self.request.GET.get("estado", "todos")
-        context["fecha_busqueda"] = self.request.GET.get("fecha", "")
-
-        # Opciones de estado
-        context["estados"] = [
-            ("todos", "Todos"),
-            ("pendiente", "Pendiente"),
-            ("finalizado", "Finalizado"),
-        ]
-
-        return context
+        return qs
 
 
-class ResultadoDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
+class ResultadoDetailView(
+    LoginRequiredMixin, PermisoFarmaciaMixin, HospitalAccessMixin, DetailView
+):
     model = ResultadoLaboratorio
     template_name = "laboratorio/resultado_detalle.html"
     context_object_name = "resultado"
@@ -289,6 +286,11 @@ class ResultadoCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
     model = ResultadoLaboratorio
     form_class = ResultadoLaboratorioForm
     template_name = "laboratorio/resultado_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         resultado = form.save()
@@ -307,6 +309,11 @@ class ResultadoUpdateView(LoginRequiredMixin, PermisoFarmaciaMixin, UpdateView):
     model = ResultadoLaboratorio
     form_class = ResultadoLaboratorioForm
     template_name = "laboratorio/resultado_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -339,3 +346,8 @@ def finalizar_solicitud(request, id):
 
     messages.success(request, "Solicitud finalizada y cargos generados.")
     return redirect("laboratorio:solicitud_detalle", id)
+
+
+class SolicitudLaboratorioViewSet(viewsets.ModelViewSet):
+    queryset = SolicitudLaboratorio.objects.all()
+    serializer_class = SolicitudLaboratorioSerializer

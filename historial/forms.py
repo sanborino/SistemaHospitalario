@@ -1,6 +1,10 @@
+from acceso.access import filtrar_queryset
+from hospital.models import Hospital
+from paciente.models import Paciente
+from personal.models import Medico
+from cita.models import Cita
 from django import forms
 from .models import HistorialClinico
-from acceso.models import UsuarioRol, UsuarioHospital
 
 
 class HistorialClinicoForm(forms.ModelForm):
@@ -25,20 +29,29 @@ class HistorialClinicoForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        if user:
+            filtrar_queryset(self.fields["hospital"], Hospital, user)
+            filtrar_queryset(self.fields["paciente"], Paciente, user)
+            filtrar_queryset(self.fields["medico"], Medico, user)
+            # Para cita, si es necesario
+            if "cita" in self.fields:
+                filtrar_queryset(self.fields["cita"], Cita, user)
+
+            # Pre-seleccionar el hospital del usuario para creación
+            if not self.instance.pk:  # Solo para creación
+                hospital_usuario = user.usuariohospital_set.first()
+                if hospital_usuario:
+                    self.fields["hospital"].initial = hospital_usuario.hospital
+
+    def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)  # recibimos el usuario desde la vista
         super().__init__(*args, **kwargs)
 
         if user:
-            # Si es director → puede elegir hospital
-            if UsuarioRol.objects.filter(
-                usuario=user, rol__nombre="DIRECCIÓN"
-            ).exists():
-                self.fields["hospital"].queryset = HistorialClinico._meta.get_field(
-                    "hospital"
-                ).related_model.objects.all()
-            else:
-                # Si no es director → hospital fijo y campo oculto
-                hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
-                if hospital_usuario:
-                    self.fields["hospital"].initial = hospital_usuario.hospital
-                self.fields["hospital"].widget = forms.HiddenInput()
+            # 🔑 Centralizamos la lógica en access.py
+            filtrar_queryset(self.fields["hospital"], Hospital, user)
+            filtrar_queryset(self.fields["paciente"], Paciente, user)
+            filtrar_queryset(self.fields["medico"], Medico, user)
+            filtrar_queryset(self.fields["cita"], Cita, user)

@@ -1,6 +1,9 @@
 from django import forms
-from .models import Cita
-from acceso.models import UsuarioRol, UsuarioHospital
+from acceso.access import filtrar_queryset
+from paciente.models import Paciente
+from personal.models import Medico
+from hospital.models import Hospital  # asegúrate de importar tu modelo Hospital
+from cita.models import Cita
 
 
 class CitaForm(forms.ModelForm):
@@ -14,16 +17,11 @@ class CitaForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop("user", None)  # 👈 extraer el usuario si viene de la vista
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
         if user:
-            # Si no es director → ocultar hospital y fijar hospital asignado
-            if not UsuarioRol.objects.filter(
-                usuario=user, rol__nombre="DIRECCIÓN"
-            ).exists():
-                hospital_usuario = UsuarioHospital.objects.filter(usuario=user).first()
-                if hospital_usuario:
-                    self.fields["hospital"].initial = hospital_usuario.hospital
-                # ocultar el campo hospital en el formulario
-                self.fields["hospital"].widget = forms.HiddenInput()
+            # 🔑 Centralizamos la lógica en access.py
+            filtrar_queryset(self.fields["hospital"], Hospital, user)
+            filtrar_queryset(self.fields["paciente"], Paciente, user)
+            filtrar_queryset(self.fields["medico"], Medico, user)

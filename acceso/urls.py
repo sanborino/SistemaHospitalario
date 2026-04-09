@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
+from .views import UsuarioHospitalListView, usuariohospital_delete
 
 app_name = "acceso"
 
@@ -57,6 +58,16 @@ urlpatterns = [
         "usuarios/<int:usuario_id>/quitar-rol/<int:rol_id>/",
         views.quitar_rol_usuario,
         name="quitar_rol_usuario",
+    ),
+    path(
+        "usuariohospital/",
+        UsuarioHospitalListView.as_view(),
+        name="usuariohospital_list",
+    ),
+    path(
+        "usuariohospital/eliminar/<int:pk>/",
+        usuariohospital_delete,
+        name="usuariohospital_delete",
     ),
     # Roles
     path("roles/", views.rol_lista, name="rol_lista"),

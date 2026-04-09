@@ -16,6 +16,11 @@ from .views import (
     ResultadoUpdateView,
     ResultadoDeleteView,
 )
+from rest_framework.routers import DefaultRouter
+from laboratorio.views import SolicitudLaboratorioViewSet
+
+router = DefaultRouter()
+router.register(r"solicitudes", SolicitudLaboratorioViewSet)
 
 app_name = "laboratorio"
 

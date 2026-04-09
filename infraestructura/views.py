@@ -11,28 +11,37 @@ from .models import Area, Habitacion, Cama
 from .forms import AreaForm, HabitacionForm
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Habitacion, Cama, Area
-from acceso.mixins import PermisoAltoMixin
-from acceso.mixins import permiso_alto_required, permiso_medico_required
+from acceso.mixins import PermisoAltoMixin, PermisoFarmaciaMixin
+from acceso.mixins import permiso_farmacia_required
+from acceso.access import visibles_para
 
 
-class AreaListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
+class AreaListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     model = Area
     template_name = "infraestructura/area_lista.html"
     context_object_name = "areas"
     paginate_by = 10
     ordering = ["hospital__nombre", "nombre"]
 
+    def get_queryset(self):
+        return visibles_para(Area, self.request.user).select_related("hospital")
 
-class AreaDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
+
+class AreaDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
     model = Area
     template_name = "infraestructura/area_detalle.html"
     context_object_name = "area"
 
 
-class AreaCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
+class AreaCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
     model = Area
     form_class = AreaForm
     template_name = "infraestructura/area_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -40,10 +49,15 @@ class AreaCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
         )
 
 
-class AreaUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
+class AreaUpdateView(LoginRequiredMixin, PermisoFarmaciaMixin, UpdateView):
     model = Area
     form_class = AreaForm
     template_name = "infraestructura/area_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -57,24 +71,34 @@ class AreaDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
     success_url = reverse_lazy("infraestructura:lista_area")
 
 
-class HabitacionListView(LoginRequiredMixin, PermisoAltoMixin, ListView):
+class HabitacionListView(LoginRequiredMixin, PermisoFarmaciaMixin, ListView):
     model = Habitacion
     template_name = "infraestructura/habitacion_lista.html"
     context_object_name = "habitaciones"
     paginate_by = 10
     ordering = ["hospital__nombre", "area__nombre", "numero"]
 
+    def get_queryset(self):
+        return visibles_para(Habitacion, self.request.user).select_related(
+            "hospital", "area"
+        )
 
-class HabitacionDetailView(LoginRequiredMixin, PermisoAltoMixin, DetailView):
+
+class HabitacionDetailView(LoginRequiredMixin, PermisoFarmaciaMixin, DetailView):
     model = Habitacion
     template_name = "infraestructura/habitacion_detalle.html"
     context_object_name = "habitacion"
 
 
-class HabitacionCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
+class HabitacionCreateView(LoginRequiredMixin, PermisoFarmaciaMixin, CreateView):
     model = Habitacion
     form_class = HabitacionForm
     template_name = "infraestructura/habitacion_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -82,10 +106,15 @@ class HabitacionCreateView(LoginRequiredMixin, PermisoAltoMixin, CreateView):
         )
 
 
-class HabitacionUpdateView(LoginRequiredMixin, PermisoAltoMixin, UpdateView):
+class HabitacionUpdateView(LoginRequiredMixin, PermisoFarmaciaMixin, UpdateView):
     model = Habitacion
     form_class = HabitacionForm
     template_name = "infraestructura/habitacion_formulario.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -100,12 +129,12 @@ class HabitacionDeleteView(LoginRequiredMixin, PermisoAltoMixin, DeleteView):
 
 
 # Vista antigua residual si se usa como dashboard
-@permiso_alto_required
+@permiso_farmacia_required
 def infraestructura_dashboard(request):
     return render(request, "infraestructura/dashboard.html")
 
 
-@permiso_alto_required
+@permiso_farmacia_required
 def lista_habitaciones(request):
     habitaciones = Habitacion.objects.select_related("area", "hospital")
     return render(
@@ -115,49 +144,46 @@ def lista_habitaciones(request):
     )
 
 
-@permiso_alto_required
+@permiso_farmacia_required
 def lista_camas(request):
-    camas = Cama.objects.select_related("habitacion", "habitacion__area")
+    camas = visibles_para(Cama, request.user).select_related(
+        "habitacion", "habitacion__area"
+    )
     return render(request, "infraestructura/lista_camas.html", {"camas": camas})
 
 
-@permiso_alto_required
+@permiso_farmacia_required
 def crear_cama(request):
-    habitaciones = Habitacion.objects.all()
+    habitaciones = visibles_para(Habitacion, request.user)
 
     if request.method == "POST":
         habitacion_id = request.POST.get("habitacion")
-        numero = request.POST.get("numero")
-        tipo = request.POST.get("tipo")
-
-        habitacion = get_object_or_404(Habitacion, id=habitacion_id)
+        habitacion = get_object_or_404(habitaciones, id=habitacion_id)
 
         Cama.objects.create(
-            habitacion=habitacion, numero=numero, tipo=tipo, estado="DISPONIBLE"
+            habitacion=habitacion,
+            numero=request.POST.get("numero"),
+            tipo=request.POST.get("tipo"),
+            estado="DISPONIBLE",
         )
-
         return redirect("infraestructura:infra_lista_camas")
 
     return render(
-        request,
-        "infraestructura/crear_cama.html",
-        {
-            "habitaciones": habitaciones,
-        },
+        request, "infraestructura/crear_cama.html", {"habitaciones": habitaciones}
     )
 
 
-@permiso_alto_required
+@permiso_farmacia_required
 def editar_cama(request, cama_id):
-    cama = get_object_or_404(Cama, id=cama_id)
-    habitaciones = Habitacion.objects.all()
+    cama = get_object_or_404(visibles_para(Cama, request.user), id=cama_id)
+    habitaciones = visibles_para(Habitacion, request.user)
 
     if request.method == "POST":
         cama.numero = request.POST.get("numero")
         cama.tipo = request.POST.get("tipo")
         cama.estado = request.POST.get("estado")
         habitacion_id = request.POST.get("habitacion")
-        cama.habitacion = get_object_or_404(Habitacion, id=habitacion_id)
+        cama.habitacion = get_object_or_404(habitaciones, id=habitacion_id)
 
         cama.save()
         return redirect("infraestructura:infra_lista_camas")
@@ -172,9 +198,9 @@ def editar_cama(request, cama_id):
     )
 
 
-@permiso_alto_required
+@permiso_farmacia_required
 def eliminar_cama(request, cama_id):
-    cama = get_object_or_404(Cama, id=cama_id)
+    cama = get_object_or_404(visibles_para(Cama, request.user), id=cama_id)
 
     if request.method == "POST":
         cama.delete()

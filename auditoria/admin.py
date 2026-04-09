@@ -4,11 +4,12 @@ from .models import Auditoria
 
 @admin.register(Auditoria)
 class AuditoriaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tabla', 'operacion', 'registro_id', 'fecha')
-    search_fields = ('tabla', 'operacion', 'registro_id')
-    list_filter = ('tabla', 'operacion', 'fecha')
-    ordering = ('-fecha',)
-    
+    list_display = ("id", "tabla", "operacion", "registro_id", "fecha")
+    search_fields = ("tabla", "operacion", "registro_id")
+    list_filter = ("tabla", "operacion", "fecha")
+    ordering = ("fecha",)
+
+
 # Configuración del panel
 title = "Sistema Hospitalario"
 subtitle = "Panel de gestión"

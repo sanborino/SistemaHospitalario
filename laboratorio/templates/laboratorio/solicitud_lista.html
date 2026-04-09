@@ -32,10 +32,9 @@
 
                 <label class="form-label">Estado</label>
                 <select name="estado" class="form-select">
-                    <option value="">Todos</option>
-                    <option value="pendiente" {% if filtro_estado == "pendiente" %}selected{% endif %}>Pendiente</option>
-                    <option value="procesado" {% if filtro_estado == "procesado" %}selected{% endif %}>Procesado</option>
-                    <option value="entregado" {% if filtro_estado == "entregado" %}selected{% endif %}>Entregado</option>
+                    <option value="pendiente" {% if not filtro_estado or filtro_estado == "pendiente" %}selected{% endif %}>Pendientes</option>
+                    <option value="finalizado" {% if filtro_estado == "finalizado" %}selected{% endif %}>Finalizados</option>
+                    <option value="todos" {% if filtro_estado == "todos" %}selected{% endif %}>Todos</option>
                 </select>
 
             <button class="btn">Filtrar</button>

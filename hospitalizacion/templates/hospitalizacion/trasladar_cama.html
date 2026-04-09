@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
+
 <main class="container">
 <div class="box">
 <h2>Trasladar paciente de cama</h2>
-
+    <div class="row">
+        <div class="col">
 <p>
     Paciente: <strong>{{ paciente }}</strong><br>
     Cama actual: <strong>{{ asignacion.cama }}</strong><br>
     Ingreso: {{ asignacion.fecha_ingreso }}
 </p>
-    <div class="row">
-        <div class="col">
 <form method="POST">
     <section>
     {% csrf_token %}
@@ -39,4 +39,5 @@
 </div>
     </div>
 </div>
+</main>
 {% endblock %}

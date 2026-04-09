@@ -15,10 +15,7 @@
 
   <form method="get">
       <input type="number" name="paciente" placeholder="Filtrar por No de expediente" value="{{ request.GET.paciente }}">
-
-      {% if es_director %}
       <input type="number" name="hospital" placeholder="Filtrar por clave de hospital" value="{{ request.GET.hospital }}">
-      {% endif %}
 
       <div style="display: flex; gap: 10px;">
         <button class="btn" type="submit">Filtrar</button>
@@ -49,12 +46,7 @@
         <td>{{ h.paciente.pk }}</td>
         <td>{{ h.paciente }}</td>
         <td>{{ h.medico|default:"—" }}</td>
-        {% if es_director %}
-        <td>{{ h.hospital.id }}</td>
         <td>{{ h.hospital }}</td>
-        {% else %}
-        <td>{{ hospital_nombre }}</td>
-        {% endif %}
         <td>
           <div style="display: flex; gap: 10px;">
             <a class="btn" href="{% url 'historial:detalle_historial' h.pk %}">Ver</a>

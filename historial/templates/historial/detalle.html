@@ -10,15 +10,7 @@
         <p><strong>Fecha:</strong> {{ historial.fecha }}</p>
         <p><strong>Paciente:</strong> {{ historial.paciente }}</p>
         <p><strong>Médico:</strong> {{ historial.medico|default:"—" }}</p>
-
-        <p><strong>Hospital:</strong>
-        {% if es_director %}
-            {{ historial.hospital }}
-        {% else %}
-            {{ hospital_nombre }}
-        {% endif %}
-        </p>
-
+        <p><strong>Hospital:</strong>{{ historial.hospital }}</p>
         <h5>Diagnóstico</h5>
         <p style="white-space: pre-wrap;">{{ historial.diagnostico }}</p>
 
@@ -41,6 +33,4 @@
     </div>
 </div>
 </main>
-{% endblock %}
-
 {% endblock %}

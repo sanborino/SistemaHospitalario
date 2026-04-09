@@ -7,15 +7,15 @@ from .utils import cama_disponible, paciente_con_cama_activa
 from paciente.models import Paciente
 from facturacion.models import Cargo
 from acceso.mixins import permiso_medico_required
-
+from acceso.access import visibles_para
 
 from facturacion.models import Cargo
 
 
 @permiso_medico_required
 def asignar_cama(request, paciente_id):
-    paciente = get_object_or_404(Paciente, id=paciente_id)
-    camas = Cama.objects.filter(estado="DISPONIBLE")
+    camas = visibles_para(Cama, request.user).filter(estado="DISPONIBLE")
+    paciente = get_object_or_404(visibles_para(Paciente, request.user), id=paciente_id)
 
     if request.method == "POST":
         cama_id = request.POST.get("cama_id")
@@ -60,7 +60,9 @@ def asignar_cama(request, paciente_id):
 
 @permiso_medico_required
 def liberar_cama(request, asignacion_id):
-    asignacion = get_object_or_404(AsignacionCama, id=asignacion_id)
+    asignacion = get_object_or_404(
+        visibles_para(AsignacionCama, request.user), id=asignacion_id
+    )
 
     if request.method == "POST":
         if asignacion.fecha_salida:
@@ -92,8 +94,10 @@ def liberar_cama(request, asignacion_id):
 def trasladar_cama(request, asignacion_id):
     asignacion = get_object_or_404(AsignacionCama, id=asignacion_id)
     paciente = asignacion.paciente
-    camas_disponibles = Cama.objects.filter(estado="DISPONIBLE").exclude(
-        id=asignacion.cama.id
+    camas_disponibles = (
+        visibles_para(Cama, request.user)
+        .filter(estado="DISPONIBLE")
+        .exclude(id=asignacion.cama.id)
     )
 
     if request.method == "POST":
@@ -132,9 +136,10 @@ def trasladar_cama(request, asignacion_id):
 
 @permiso_medico_required
 def historial_asignaciones(request):
-    asignaciones = AsignacionCama.objects.select_related(
+    asignaciones = visibles_para(AsignacionCama, request.user).select_related(
         "paciente", "cama", "cama__habitacion", "cama__habitacion__area"
     )
+
     return render(
         request,
         "hospitalizacion/historial_asignaciones.html",

@@ -37,10 +37,15 @@ class RecetaDetalle(models.Model):
         return f"{self.medicamento} x {self.cantidad}"
 
 
+from django.conf import settings
+
+
 class Dispensacion(models.Model):
     receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
-    entregado_por = models.ForeignKey(Enfermero, on_delete=models.SET_NULL, null=True)
+    entregado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
+    )
     observaciones = models.TextField(blank=True, null=True)
 
     def __str__(self):
