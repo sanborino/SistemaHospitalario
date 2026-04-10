@@ -36,9 +36,6 @@ urlpatterns = [
     ),
     # Personal
     path("", views.PersonalListView.as_view(), name="personal_list"),
-    path(
-        "area/<str:area>/", views.PersonalListView.as_view(), name="personal_area_list"
-    ),
     path("nuevo/", views.PersonalCreateView.as_view(), name="personal_create"),
     path(
         "editar/<int:pk>/", views.PersonalUpdateView.as_view(), name="personal_update"
