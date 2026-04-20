@@ -134,10 +134,10 @@ class RecetaListView(LoginRequiredMixin, PermisoMedicoMixin, ListView):
             queryset = queryset.filter(id=numero)
 
         if fecha_desde:
-            queryset = queryset.filter(fecha__date__gte=fecha_desde)
+            queryset = queryset.filter(fecha__gte=fecha_desde)
 
         if fecha_hasta:
-            queryset = queryset.filter(fecha__date__lte=fecha_hasta)
+            queryset = queryset.filter(fecha__lte=fecha_hasta)
 
         return queryset.select_related("paciente", "medico")
 
