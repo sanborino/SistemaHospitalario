@@ -13,7 +13,7 @@ class AuditoriaListView(
 ):
     model = Auditoria
     template_name = "auditoria/auditoria_list.html"
-    ordering = ["fecha"]
+    ordering = ["-fecha"]
     paginate_by = 10
 
     def get_queryset(self):
