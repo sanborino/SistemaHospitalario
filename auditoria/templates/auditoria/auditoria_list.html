@@ -8,7 +8,15 @@
    <!-- Formulario de filtro -->
    <form method="get" class="mb-3">
        <label for="fecha">Filtrar por fecha:</label>
-       <input type="date" id="fecha" name="fecha" value="{{ request.GET.fecha }}">
+
+            <div style="display: flex; gap: 10px;">
+                <label class="form-label">Desde</label>
+                <input type="date" name="desde" class="form-control" value="{{ filtro_desde }}">
+
+                <label class="form-label">Hasta</label>
+                <input type="date" name="hasta" class="form-control" value="{{ filtro_hasta }}">
+            </div>
+
        <button type="submit" class="btn">Filtrar</button>
    </form>
 

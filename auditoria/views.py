@@ -26,10 +26,17 @@ class AuditoriaListView(
         # 🔹 Si tu modelo Auditoria no tiene hospital/usuario, quita select_related
         # qs = qs.select_related("hospital", "usuario")  # solo si existen esos campos
 
-        fecha = self.request.GET.get("fecha")
-        if fecha:
-            qs = qs.filter(fecha__date=fecha)
-        return qs
+        fecha_desde = self.request.GET.get("desde")
+        fecha_hasta = self.request.GET.get("hasta")
+
+        # 🔹 Filtro por rango de fechas
+        if fecha_desde and fecha_hasta:
+            qs = qs.filter(fecha__range=[fecha_desde, fecha_hasta])
+        elif fecha_desde:
+            qs = qs.filter(fecha__gte=fecha_desde)
+        elif fecha_hasta:
+            qs = qs.filter(fecha__lte=fecha_hasta)
+        return qs.order_by("-fecha")
 
 
 class AuditoriaDetailView(
